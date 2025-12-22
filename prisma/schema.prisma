@@ -1,0 +1,671 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// 1. USER & AUTHENTICATION TABLES
+// ============================================
+
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique @db.VarChar(255)
+  emailVerified     Boolean  @default(false)
+  accountStatus     String   @default("active") // active, suspended, closed
+  kycVerified       Boolean  @default(false)
+  kycLevel          String   @default("none") // none, basic, enhanced
+  gdprConsentGiven  Boolean  @default(false)
+  marketingConsent  Boolean  @default(false)
+  riskScore         Int      @default(0) @db.SmallInt // 0-100
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  profile           UserProfile?
+  password          UserPassword?
+  twoFactorAuth     TwoFactorAuth?
+  sessions          UserSession[]
+  accounts          Account[]
+  bets              Bet[]
+  transactions      Transaction[]
+  paymentMethods    PaymentMethod[]
+  fraudEvents       FraudEvent[]
+  bettingPatterns   BettingPattern[]
+  activityLogs      AccountActivityLog[]
+  devices           DeviceRegistry[]
+  consents          GdprConsent[]
+  deletionRequests  DataDeletionRequest[]
+  exportRequests    DataExportRequest[]
+  securityAlerts    SecurityAlert[]
+  bonuses           UserBonus[]
+  auditLogs         AuditLog[]
+
+  @@index([email])
+  @@index([accountStatus])
+  @@index([riskScore])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model UserProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  firstName       String?  @db.VarChar(100)
+  lastName        String?  @db.VarChar(100)
+  dateOfBirth     DateTime?
+  address         String?  @db.Text // Encrypted
+  phoneNumber     String?  @db.VarChar(20) // Encrypted
+  country         String?  @db.VarChar(2) // ISO 3166-1 alpha-2
+  timezone        String?  @db.VarChar(50)
+  language        String?  @default("en") @db.VarChar(10)
+  marketingOptIn  Boolean  @default(false)
+  responsibleGamingSettings Json? // Deposit limits, session limits, etc.
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model UserPassword {
+  id                    String   @id @default(cuid())
+  userId                 String   @unique
+  passwordHash           String   @db.VarChar(255) // bcrypt/argon2 hash
+  passwordHistory        Json?    // Last 5 password hashes
+  resetToken             String?  @db.VarChar(255)
+  resetTokenExpiresAt    DateTime?
+  passwordChangedAt      DateTime @default(now())
+  failedLoginAttempts    Int      @default(0)
+  lockedUntil            DateTime?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_passwords")
+}
+
+model TwoFactorAuth {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  method            String   @db.VarChar(20) // TOTP, SMS, Email
+  secretKey         String?  @db.Text // Encrypted TOTP secret
+  backupCodes       Json?    // Encrypted backup codes (hashed)
+  enabled           Boolean  @default(false)
+  lastVerifiedAt    DateTime?
+  recoveryEmail     String?  @db.VarChar(255) // Encrypted
+  recoveryPhone     String?  @db.VarChar(20) // Encrypted
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("two_factor_auth")
+}
+
+model UserSession {
+  id              String   @id @default(cuid())
+  userId          String
+  token           String   @unique @db.VarChar(500) // JWT refresh token
+  deviceFingerprint String @db.VarChar(64) // SHA-256 hash
+  ipAddressHash  String   @db.VarChar(64) // SHA-256 hash
+  userAgent       String?  @db.Text
+  lastActivityAt  DateTime @default(now())
+  expiresAt       DateTime
+  revoked         Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@index([token])
+  @@index([deviceFingerprint])
+  @@map("user_sessions")
+}
+
+model LoginAttempt {
+  id                String   @id @default(cuid())
+  emailHash         String   @db.VarChar(64) // SHA-256 hash
+  ipAddressHash     String   @db.VarChar(64) // SHA-256 hash
+  success           Boolean
+  deviceFingerprint String?  @db.VarChar(64)
+  country           String?  @db.VarChar(2)
+  region            String?  @db.VarChar(100)
+  city              String?  @db.VarChar(100)
+  riskScore         Int?     @db.SmallInt
+  userId            String?
+  createdAt         DateTime @default(now())
+
+  @@index([emailHash, createdAt])
+  @@index([ipAddressHash, createdAt])
+  @@index([success, createdAt])
+  @@map("login_attempts")
+}
+
+// ============================================
+// 2. BETTING TABLES
+// ============================================
+
+model Sport {
+  id          String   @id @default(cuid())
+  name        String   @unique @db.VarChar(100)
+  code        String   @unique @db.VarChar(10)
+  active      Boolean  @default(true)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  leagues     League[]
+  games       Game[]
+
+  @@map("sports")
+}
+
+model League {
+  id          String   @id @default(cuid())
+  sportId     String
+  name        String   @db.VarChar(100)
+  code        String   @db.VarChar(20)
+  country     String?  @db.VarChar(2)
+  region      String?  @db.VarChar(100)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sport       Sport    @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  teams       Team[]
+  games       Game[]
+
+  @@unique([sportId, code])
+  @@index([sportId])
+  @@map("leagues")
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  leagueId    String
+  name        String   @db.VarChar(100)
+  code        String   @db.VarChar(10)
+  logoUrl     String?  @db.Text
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  league      League   @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  homeGames   Game[]   @relation("HomeTeam")
+  awayGames   Game[]   @relation("AwayTeam")
+
+  @@unique([leagueId, code])
+  @@index([leagueId])
+  @@map("teams")
+}
+
+model Game {
+  id              String   @id @default(cuid())
+  sportId          String
+  leagueId         String
+  homeTeamId       String
+  awayTeamId       String
+  scheduledStartAt DateTime
+  status           String   @default("scheduled") // scheduled, live, finished, cancelled, postponed
+  homeScore        Int?
+  awayScore        Int?
+  metadata         Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  sport            Sport    @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  league           League   @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  homeTeam         Team     @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam         Team     @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  markets          BetMarket[]
+
+  @@index([sportId, status])
+  @@index([leagueId, scheduledStartAt])
+  @@index([status, scheduledStartAt])
+  @@map("games")
+}
+
+model BetMarket {
+  id          String   @id @default(cuid())
+  gameId      String
+  marketType  String   @db.VarChar(50) // moneyline, spread, total, props
+  name        String   @db.VarChar(200)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  game        Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  selections  BetSelection[]
+
+  @@index([gameId, active])
+  @@map("bet_markets")
+}
+
+model BetSelection {
+  id              String   @id @default(cuid())
+  marketId        String
+  name            String   @db.VarChar(200) // e.g., "Chiefs -3.5"
+  odds            Decimal  @db.Decimal(10, 3)
+  status          String   @default("active") // active, suspended, settled
+  result          String?  // won, lost, void, pending
+  lineMovementHistory Json? // Historical odds changes
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  market          BetMarket @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  betSelections   BetSelectionBet[]
+
+  @@index([marketId, status])
+  @@map("bet_selections")
+}
+
+model Bet {
+  id              String   @id @default(cuid())
+  userId          String
+  betType         String   @db.VarChar(20) // single, parlay, system
+  totalStake      Decimal  @db.Decimal(12, 2)
+  potentialPayout Decimal  @db.Decimal(12, 2)
+  actualPayout    Decimal? @db.Decimal(12, 2)
+  status          String   @default("pending") // pending, won, lost, void, cashout
+  placedAt        DateTime @default(now())
+  settledAt       DateTime?
+  cashoutAt       DateTime?
+  oddsSnapshot    Json?    // Odds at time of bet for audit
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  selections      BetSelectionBet[]
+
+  @@index([userId, status, placedAt])
+  @@index([status, placedAt])
+  @@index([userId, placedAt])
+  @@map("bets")
+}
+
+model BetSelectionBet {
+  id              String   @id @default(cuid())
+  betId           String
+  selectionId     String
+  oddsAtBet       Decimal  @db.Decimal(10, 3)
+  result          String?  // won, lost, void, pending
+  createdAt       DateTime @default(now())
+
+  bet             Bet          @relation(fields: [betId], references: [id], onDelete: Cascade)
+  selection       BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
+
+  @@unique([betId, selectionId])
+  @@index([betId])
+  @@index([selectionId])
+  @@map("bet_selections_bets")
+}
+
+// ============================================
+// 3. FINANCIAL TABLES
+// ============================================
+
+model Account {
+  id                    String   @id @default(cuid())
+  userId                String
+  accountType           String   @default("main") @db.VarChar(20) // main, bonus, free_bet
+  balance               Decimal  @default(0) @db.Decimal(12, 2)
+  availableBalance      Decimal  @default(0) @db.Decimal(12, 2)
+  lockedBalance         Decimal  @default(0) @db.Decimal(12, 2)
+  currency              String   @default("USD") @db.VarChar(3)
+  lastTransactionAt     DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions          Transaction[]
+
+  @@unique([userId, accountType])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Transaction {
+  id                    String   @id @default(cuid())
+  userId                String
+  accountId             String
+  transactionType       String   @db.VarChar(30) // deposit, withdrawal, bet_placed, bet_won, bet_lost, bonus, refund, fee
+  amount                Decimal  @db.Decimal(12, 2) // Signed: positive for credits, negative for debits
+  balanceBefore         Decimal  @db.Decimal(12, 2)
+  balanceAfter          Decimal  @db.Decimal(12, 2)
+  status                String   @default("pending") @db.VarChar(20) // pending, completed, failed, cancelled
+  paymentMethodId       String?
+  externalTransactionId String?  @db.VarChar(255)
+  description           String?  @db.Text
+  metadata              Json?
+  createdAt             DateTime @default(now())
+  processedAt           DateTime?
+
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account               Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  paymentMethod         PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  deposit               Deposit?
+  withdrawal            Withdrawal?
+
+  @@index([userId, createdAt])
+  @@index([accountId, createdAt])
+  @@index([transactionType, createdAt])
+  @@index([status, createdAt])
+  @@map("transactions")
+}
+
+model PaymentMethod {
+  id                String   @id @default(cuid())
+  userId            String
+  paymentType       String   @db.VarChar(30) // credit_card, debit_card, bank_account, e_wallet, crypto
+  provider          String   @db.VarChar(50) // stripe, paypal, etc.
+  tokenizedId       String   @db.VarChar(255) // PCI compliant tokenized identifier
+  last4Digits       String?  @db.VarChar(4)
+  expiryDate        String?  @db.VarChar(7) // Encrypted MM/YYYY
+  billingAddress    String?  @db.Text // Encrypted
+  isDefault         Boolean  @default(false)
+  verified          Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+  deposits          Deposit[]
+  withdrawals       Withdrawal[]
+
+  @@index([userId])
+  @@index([userId, isDefault])
+  @@map("payment_methods")
+}
+
+model Deposit {
+  id                    String   @id @default(cuid())
+  transactionId         String   @unique
+  paymentMethodId       String
+  amount                Decimal  @db.Decimal(12, 2)
+  feeAmount             Decimal  @default(0) @db.Decimal(12, 2)
+  netAmount             Decimal  @db.Decimal(12, 2)
+  providerTransactionId String?  @db.VarChar(255)
+  status                String   @default("pending") @db.VarChar(20) // pending, processing, completed, failed, refunded
+  providerResponse      Json?    // Encrypted
+  processedAt           DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  transaction          Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  paymentMethod        PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+
+  @@index([status, createdAt])
+  @@index([paymentMethodId])
+  @@map("deposits")
+}
+
+model Withdrawal {
+  id                    String   @id @default(cuid())
+  transactionId         String   @unique
+  paymentMethodId       String
+  amount                Decimal  @db.Decimal(12, 2)
+  feeAmount             Decimal  @default(0) @db.Decimal(12, 2)
+  netAmount             Decimal  @db.Decimal(12, 2)
+  status                String   @default("pending") @db.VarChar(20) // pending, processing, completed, failed, cancelled
+  providerTransactionId String?  @db.VarChar(255)
+  providerResponse      Json?    // Encrypted
+  kycVerificationRequired Boolean @default(false)
+  requestedAt           DateTime @default(now())
+  processedAt           DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  transaction          Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  paymentMethod        PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+
+  @@index([status, requestedAt])
+  @@index([paymentMethodId])
+  @@map("withdrawals")
+}
+
+// ============================================
+// 4. FRAUD DETECTION TABLES
+// ============================================
+
+model FraudEvent {
+  id            String   @id @default(cuid())
+  userId        String?
+  eventType     String   @db.VarChar(50) // suspicious_bet_pattern, account_takeover, payment_fraud, etc.
+  severity      String   @db.VarChar(20) // low, medium, high, critical
+  riskScore     Int      @db.SmallInt // 0-100
+  description   String?  @db.Text
+  metadata      Json?
+  status        String   @default("pending_review") @db.VarChar(30) // pending_review, reviewed, false_positive, confirmed
+  reviewedBy    String?  // Admin user ID
+  reviewedAt    DateTime?
+  createdAt     DateTime @default(now())
+
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([eventType, severity])
+  @@index([status, createdAt])
+  @@map("fraud_events")
+}
+
+model BettingPattern {
+  id            String   @id @default(cuid())
+  userId        String
+  patternType   String   @db.VarChar(50) // rapid_betting, unusual_stake_size, arbitrage_detection, etc.
+  patternDetails Json?
+  detectedAt    DateTime @default(now())
+  riskScore     Int      @db.SmallInt
+  actionTaken   String?  @db.VarChar(30) // none, flag, suspend, block
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, detectedAt])
+  @@index([patternType, riskScore])
+  @@map("betting_patterns")
+}
+
+model AccountActivityLog {
+  id                String   @id @default(cuid())
+  userId            String
+  activityType      String   @db.VarChar(50) // login, logout, password_change, 2fa_enabled, bet_placed, deposit, withdrawal, etc.
+  ipAddressHash     String   @db.VarChar(64) // SHA-256 hash
+  deviceFingerprint String?  @db.VarChar(64)
+  country           String?  @db.VarChar(2)
+  region            String?  @db.VarChar(100)
+  city              String?  @db.VarChar(100)
+  userAgent         String?  @db.Text
+  success           Boolean
+  metadata          Json?
+  createdAt         DateTime @default(now())
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([activityType, createdAt])
+  @@index([ipAddressHash, createdAt])
+  @@map("account_activity_log")
+}
+
+model DeviceRegistry {
+  id                String   @id @default(cuid())
+  userId            String
+  deviceFingerprint String   @db.VarChar(64) // SHA-256 hash
+  deviceName        String?  @db.VarChar(100) // User-provided
+  deviceType        String?  @db.VarChar(20) // mobile, desktop, tablet
+  os                String?  @db.VarChar(50)
+  browser           String?  @db.VarChar(50)
+  trusted           Boolean  @default(false)
+  blocked           Boolean  @default(false)
+  firstSeenAt       DateTime @default(now())
+  lastSeenAt        DateTime @default(now())
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceFingerprint])
+  @@index([userId])
+  @@index([deviceFingerprint])
+  @@map("device_registry")
+}
+
+model IpAddress {
+  id                String   @id @default(cuid())
+  ipAddressHash     String   @unique @db.VarChar(64) // SHA-256 hash
+  country           String?  @db.VarChar(2)
+  region            String?  @db.VarChar(100)
+  city              String?  @db.VarChar(100)
+  isp               String?  @db.VarChar(200)
+  isVpn             Boolean  @default(false)
+  isProxy            Boolean  @default(false)
+  riskScore         Int      @default(0) @db.SmallInt
+  blocked           Boolean  @default(false)
+  firstSeenAt       DateTime @default(now())
+  lastSeenAt        DateTime @default(now())
+
+  @@index([riskScore])
+  @@index([blocked])
+  @@map("ip_addresses")
+}
+
+// ============================================
+// 5. SECURITY & COMPLIANCE TABLES
+// ============================================
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  entityType    String   @db.VarChar(50) // user, bet, transaction, etc.
+  entityId      String
+  action        String   @db.VarChar(20) // create, update, delete, view
+  userId        String?  // Who performed the action
+  ipAddressHash String?  @db.VarChar(64)
+  changes       Json?    // Before/after changes
+  createdAt     DateTime @default(now())
+
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([userId, createdAt])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model GdprConsent {
+  id                String   @id @default(cuid())
+  userId            String
+  consentType       String   @db.VarChar(50) // marketing, analytics, cookies, data_sharing
+  consentStatus     String   @db.VarChar(20) // granted, denied, withdrawn
+  consentMethod     String   @db.VarChar(20) // explicit, implicit
+  ipAddressHash     String?  @db.VarChar(64)
+  withdrawnAt       DateTime?
+  createdAt         DateTime @default(now())
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, consentType])
+  @@index([consentStatus, createdAt])
+  @@map("gdpr_consents")
+}
+
+model DataDeletionRequest {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  status        String   @default("pending") @db.VarChar(20) // pending, processing, completed, rejected
+  requestedAt   DateTime @default(now())
+  processedAt   DateTime?
+  rejectionReason String? @db.Text
+  dataDeleted   Json?    // Summary of deleted data
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, requestedAt])
+  @@map("data_deletion_requests")
+}
+
+model DataExportRequest {
+  id            String   @id @default(cuid())
+  userId        String
+  status        String   @default("pending") @db.VarChar(20) // pending, processing, completed, failed
+  exportFormat  String   @default("json") @db.VarChar(10) // json, csv
+  filePath      String?  @db.Text // Encrypted, temporary
+  expiresAt     DateTime?
+  requestedAt   DateTime @default(now())
+  processedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([status, requestedAt])
+  @@map("data_export_requests")
+}
+
+model SecurityAlert {
+  id                String   @id @default(cuid())
+  userId            String?
+  alertType         String   @db.VarChar(50) // suspicious_login, password_breach, account_lockout, etc.
+  severity          String   @db.VarChar(20) // low, medium, high, critical
+  description       String?  @db.Text
+  actionRequired    String?  @db.Text
+  acknowledged      Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  user              User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, acknowledged])
+  @@index([severity, createdAt])
+  @@map("security_alerts")
+}
+
+// ============================================
+// 6. BONUS & PROMOTIONS TABLES
+// ============================================
+
+model Promotion {
+  id                String   @id @default(cuid())
+  name              String   @db.VarChar(200)
+  description       String?  @db.Text
+  promotionType     String   @db.VarChar(50) // welcome_bonus, deposit_match, free_bet, etc.
+  termsAndConditions String? @db.Text
+  startDate         DateTime
+  endDate           DateTime
+  active            Boolean  @default(true)
+  eligibilityCriteria Json?  // JSON criteria
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  userBonuses       UserBonus[]
+
+  @@index([active, startDate, endDate])
+  @@map("promotions")
+}
+
+model UserBonus {
+  id                String   @id @default(cuid())
+  userId            String
+  promotionId       String
+  bonusAmount       Decimal  @db.Decimal(12, 2)
+  wageringRequirement Decimal @db.Decimal(12, 2)
+  wageredAmount     Decimal  @default(0) @db.Decimal(12, 2)
+  status            String   @default("pending") @db.VarChar(20) // pending, active, completed, expired, forfeited
+  expiresAt         DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  promotion         Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([status, expiresAt])
+  @@map("user_bonuses")
+}

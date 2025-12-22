@@ -1,0 +1,17 @@
+{
+  "sqltools.connections": [
+    {
+      "pgOptions": {
+        "ssl": {
+          "rejectUnauthorized": true
+        }
+      },
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "bet-pro",
+      "connectString": "postgres://b4bfacba26c6d634331342a3c1bade3e30003d1dc89a63f9a32225f664657975:sk_Ge0ELT1emOFapFQnjVh08@db.prisma.io:5432/postgres?sslmode=require"
+    }
+  ]
+}

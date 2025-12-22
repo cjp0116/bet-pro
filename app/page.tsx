@@ -1,65 +1,130 @@
-import Image from "next/image";
+"use client"
+
+import { useState } from "react"
+import { Header } from "@/components/header"
+import { SportsSidebar } from "@/components/sports-sidebar"
+import { GameCard } from "@/components/game-card"
+import { BetSlip } from "@/components/bet-slip"
+import { PromoBanner } from "@/components/promo-banner"
+import { LiveGamesTicker } from "@/components/live-games-ticker"
+import { featuredGames, sports, type BetSelection } from "@/lib/betting-data"
 
 export default function Home() {
+  const [selectedSport, setSelectedSport] = useState<string | null>(null)
+  const [selectedBets, setSelectedBets] = useState<BetSelection[]>([])
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [balance] = useState(1250.0)
+
+  const filteredGames =
+    selectedSport && sports.find((s) => s.id === selectedSport)
+      ? featuredGames.filter((g) => g.sport === selectedSport)
+      : featuredGames
+
+  const handleSelectBet = (bet: BetSelection) => {
+    setSelectedBets((prev) => {
+      const exists = prev.find((b) => b.id === bet.id)
+      if (exists) {
+        return prev.filter((b) => b.id !== bet.id)
+      }
+      return [...prev, bet]
+    })
+  }
+
+  const handleRemoveBet = (id: string) => {
+    setSelectedBets((prev) => prev.filter((b) => b.id !== id))
+  }
+
+  const handleClearBets = () => {
+    setSelectedBets([])
+  }
+
+  const currentSport = sports.find((s) => s.id === selectedSport)
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen bg-background">
+      <Header
+        balance={balance}
+        onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        isMobileMenuOpen={isMobileMenuOpen}
+      />
+
+      <div className="flex">
+        <SportsSidebar
+          selectedSport={selectedSport}
+          onSelectSport={(sport) => {
+            setSelectedSport(sport)
+            setIsMobileMenuOpen(false)
+          }}
+          isOpen={isMobileMenuOpen}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+
+        {/* Overlay for mobile menu */}
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-background/80 backdrop-blur-sm lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        <main className="flex-1 p-4 lg:p-6">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+              <div className="space-y-6">
+                <PromoBanner />
+                <LiveGamesTicker />
+
+                <div>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h1 className="text-2xl font-bold">{currentSport ? currentSport.name : "Featured Games"}</h1>
+                    <div className="flex gap-2">
+                      <button className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80">
+                        All
+                      </button>
+                      <button className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground">
+                        Live
+                      </button>
+                      <button className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground">
+                        Upcoming
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {filteredGames.map((game) => (
+                      <GameCard key={game.id} game={game} selectedBets={selectedBets} onSelectBet={handleSelectBet} />
+                    ))}
+                  </div>
+
+                  {filteredGames.length === 0 && (
+                    <div className="rounded-xl border border-border bg-card p-12 text-center">
+                      <p className="text-lg font-medium text-muted-foreground">No games available for this sport</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Bet Slip - Fixed on mobile, sidebar on desktop */}
+              <div className="hidden lg:block">
+                <div className="sticky top-20">
+                  <BetSlip
+                    selections={selectedBets}
+                    onRemove={handleRemoveBet}
+                    onClear={handleClearBets}
+                    balance={balance}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* Mobile Bet Slip Toggle */}
+      {selectedBets.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-card p-4 lg:hidden">
+          <BetSlip selections={selectedBets} onRemove={handleRemoveBet} onClear={handleClearBets} balance={balance} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      )}
     </div>
-  );
+  )
 }
