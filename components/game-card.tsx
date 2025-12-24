@@ -58,8 +58,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
       <div className="mb-4 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image
-              placeholder='blur'
+            <img
               loading='lazy'
               src={game.awayTeam.logo || "/placeholder.svg"}
               alt={game.awayTeam.name}
@@ -71,8 +70,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image
-              placeholder='blur'
+            <img
               loading='lazy'
               src={game.homeTeam.logo || "/placeholder.svg"}
               alt={game.homeTeam.name}

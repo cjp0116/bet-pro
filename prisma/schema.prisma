@@ -215,6 +215,7 @@ model Game {
   homeTeamId       String
   awayTeamId       String
   scheduledStartAt DateTime
+  actualStartAt    DateTime?
   status           String   @default("scheduled") // scheduled, live, finished, cancelled, postponed
   homeScore        Int?
   awayScore        Int?
@@ -227,6 +228,7 @@ model Game {
   homeTeam         Team     @relation("HomeTeam", fields: [homeTeamId], references: [id])
   awayTeam         Team     @relation("AwayTeam", fields: [awayTeamId], references: [id])
   markets          BetMarket[]
+  syncStatus       OddsSyncStatus?
 
   @@index([sportId, status])
   @@index([leagueId, scheduledStartAt])
@@ -257,13 +259,16 @@ model BetSelection {
   odds            Decimal  @db.Decimal(10, 3)
   status          String   @default("active") // active, suspended, settled
   result          String?  // won, lost, void, pending
-  lineMovementHistory Json? // Historical odds changes
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   market          BetMarket @relation(fields: [marketId], references: [id], onDelete: Cascade)
   betSelections   BetSelectionBet[]
 
+  currentOdds     CurrentOdds?
+  oddsSnapshots   OddsSnapshot[]
+  
   @@index([marketId, status])
   @@map("bet_selections")
 }
@@ -668,4 +673,80 @@ model UserBonus {
   @@index([userId, status])
   @@index([status, expiresAt])
   @@map("user_bonuses")
+}
+
+// Add to your schema.prisma
+
+// ============================================
+// ODDS MANAGEMENT TABLES
+// ============================================
+
+// Real-time odds cache - stores current odds for active selections
+model CurrentOdds {
+  id                  String   @id @default(cuid())
+  selectionId         String   @unique
+  currentOdds         Decimal  @db.Decimal(10, 3)
+  previousOdds        Decimal? @db.Decimal(10, 3)
+  oddsMovement        String?  @db.VarChar(10) // up, down, stable
+  lastUpdatedAt       DateTime @default(now())
+  syncedAt            DateTime @default(now())
+  externalOddsId      String?  @db.VarChar(255) // ID from odds provider
+  suspended           Boolean  @default(false)
+  
+  selection           BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
+
+  @@index([lastUpdatedAt])
+  @@index([suspended])
+  @@map("current_odds")
+}
+
+// Historical odds snapshots - for analytics and auditing
+model OddsSnapshot {
+  id                  String   @id @default(cuid())
+  selectionId         String
+  odds                Decimal  @db.Decimal(10, 3)
+  timestamp           DateTime @default(now())
+  source              String   @default("api") @db.VarChar(20) // api, manual, calculated
+  metadata            Json?    // Additional context like volume, momentum
+  
+  selection           BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
+
+  @@index([selectionId, timestamp])
+  @@index([timestamp])
+  @@map("odds_snapshots")
+}
+
+// Odds sync status - tracks API polling health
+model OddsSyncStatus {
+  id                  String   @id @default(cuid())
+  gameId              String   @unique
+  lastSyncAt          DateTime @default(now())
+  nextSyncAt          DateTime?
+  syncStatus          String   @default("active") @db.VarChar(20) // active, paused, failed, completed
+  failureCount        Int      @default(0)
+  lastError           String?  @db.Text
+  syncInterval        Int      @default(2000) // milliseconds
+  
+  game                Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([syncStatus, nextSyncAt])
+  @@map("odds_sync_status")
+}
+
+// Odds change events - for WebSocket broadcasting
+model OddsChangeEvent {
+  id                  String   @id @default(cuid())
+  selectionId         String
+  gameId              String
+  oldOdds             Decimal  @db.Decimal(10, 3)
+  newOdds             Decimal  @db.Decimal(10, 3)
+  changePercentage    Decimal  @db.Decimal(6, 2)
+  changeType          String   @db.VarChar(20) // significant, minor, suspended, resumed
+  broadcasted         Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  
+  @@index([broadcasted, createdAt])
+  @@index([gameId, createdAt])
+  @@index([selectionId, createdAt])
+  @@map("odds_change_events")
 }
