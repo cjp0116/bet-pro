@@ -3,10 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { OddsPubSub } from '@/lib/upstash/qstash';
 import { OddsCache } from '@/lib/upstash/redis';
 import { prisma } from '@/lib/db/prisma';
-
+import { auth } from '@/auth';
 
 export async function POST(req: NextRequest) {
   try {
+    // Check authentication - only admin/system should trigger this
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { gameId } = await req.json();
 
     // Verify game exists and is live

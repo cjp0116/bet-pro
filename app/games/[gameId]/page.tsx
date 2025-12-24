@@ -1,9 +1,11 @@
 'use client';
 
 import { useOddsPolling } from '@/hooks/useOddsPolling';
+import { use } from 'react';
 
-export default function GamePage({ params }: { params: { gameId: string } }) {
-  const { odds, loading, error } = useOddsPolling(params.gameId, 2000);
+export default function GamePage({ params }: { params: Promise<{ gameId: string }> }) {
+  const { gameId } = use(params);
+  const { odds, loading, error } = useOddsPolling(gameId, 2000);
 
   if (loading) return <div>Loading odds...</div>;
   if (error) return <div>Error: {error}</div>;

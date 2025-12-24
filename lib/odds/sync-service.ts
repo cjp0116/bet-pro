@@ -1,8 +1,11 @@
 // src/lib/odds/sync-service.ts
-import { Decimal } from '../../generated/prisma/client';
+import { Prisma } from '../../generated/prisma/client';
 import { OddsCache } from '../upstash/redis';
 import { OddsPubSub } from '../upstash/qstash';
 import { prisma } from '../db/prisma';
+
+// Use Prisma.Decimal for Decimal type
+const Decimal = Prisma.Decimal;
 
 export interface OddsUpdate {
   selectionId: string;

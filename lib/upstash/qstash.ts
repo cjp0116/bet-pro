@@ -37,21 +37,22 @@ export class OddsPubSub {
         url: syncUrl,
         body: { gameId },
         delay: delaySeconds,
-      }); 
+      });
     } catch (error) {
       console.error('Failed to schedule odds sync:', error);
     }
   }
 
   // schedule recurring sync for live game
+  // Note: QStash doesn't support sub-minute cron, so we use chained delayed messages instead
   static async scheduleRecurringSync(gameId: string) {
     const syncUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/odds/sync`;
     try {
-      // schedule job to run every 2 seconds for 2 hours
+      // Schedule job to run every minute - for faster updates, use scheduleOddsSync with delay chaining
       await qstash.publishJSON({
         url: syncUrl,
         body: { gameId, isLive: true },
-        cron: '*/2 * * * * *' // every 2 seconds
+        cron: '* * * * *' // every minute (minimum supported)
       })
     } catch (error) {
       console.error('failed to schedule recurring odds sync:', error);
