@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import type { Game, BetSelection } from "@/lib/betting-data"
 import { formatOdds } from "@/lib/betting-data"
 import { Clock, Zap } from "lucide-react"
-
+import Image from 'next/image'
 interface GameCardProps {
   game: Game
   selectedBets: BetSelection[]
@@ -58,14 +58,26 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
       <div className="mb-4 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={game.awayTeam.logo || "/placeholder.svg"} alt={game.awayTeam.name} className="h-8 w-8 rounded" />
+            <Image
+              placeholder='blur'
+              loading='lazy'
+              src={game.awayTeam.logo || "/placeholder.svg"}
+              alt={game.awayTeam.name}
+              className="h-8 w-8 rounded"
+            />
             <span className="font-medium">{game.awayTeam.name}</span>
           </div>
           {game.status === "live" && <span className="text-lg font-bold">{game.awayTeam.score}</span>}
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={game.homeTeam.logo || "/placeholder.svg"} alt={game.homeTeam.name} className="h-8 w-8 rounded" />
+            <Image
+              placeholder='blur'
+              loading='lazy'
+              src={game.homeTeam.logo || "/placeholder.svg"}
+              alt={game.homeTeam.name}
+              className="h-8 w-8 rounded"
+            />
             <span className="font-medium">{game.homeTeam.name}</span>
           </div>
           {game.status === "live" && <span className="text-lg font-bold">{game.homeTeam.score}</span>}

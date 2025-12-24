@@ -4,7 +4,7 @@
  * Handles user data deletion requests and anonymization for GDPR compliance
  */
 
-import prisma from '../db/prisma'
+import { prisma } from '../db/prisma'
 import { hash } from '../security/encryption'
 
 /**

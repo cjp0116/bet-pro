@@ -4,7 +4,7 @@
  * Handles user data export requests for GDPR compliance
  */
 
-import prisma from '../db/prisma'
+import { prisma } from '../db/prisma'
 
 export type ExportFormat = 'json' | 'csv'
 

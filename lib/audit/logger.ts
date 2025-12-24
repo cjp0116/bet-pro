@@ -4,7 +4,7 @@
  * Comprehensive audit trail for all system actions
  */
 
-import prisma from '../db/prisma'
+import { prisma } from '../db/prisma'
 import { hash } from '../security/encryption'
 
 export type EntityType =
