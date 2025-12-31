@@ -41,7 +41,11 @@ export default function LoginPage() {
       })
 
       if (response?.error) {
-        setError("Invalid email or password. Please try again.")
+        if (response.error === "EMAIL_NOT_VERIFIED") {
+          setError("Please verify your email before signing in. Check your inbox for the verification link.")
+        } else {
+          setError("Invalid email or password. Please try again.")
+        }
       } else if (response?.ok) {
         router.push("/")
         router.refresh()

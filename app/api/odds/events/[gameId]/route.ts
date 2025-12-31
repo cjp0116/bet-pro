@@ -4,10 +4,10 @@ import { redis } from '@/lib/upstash/redis';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const { gameId } = params;
+    const { gameId } = await params;
     const since = req.nextUrl.searchParams.get('since');
 
     const eventKey = `odds:events:${gameId}`;

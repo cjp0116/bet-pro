@@ -4,7 +4,7 @@
  * Prevents multiple instances of Prisma Client in development
  */
 
-import { PrismaClient } from '../../generated/prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import { PrismaPg } from '@prisma/adapter-pg';
 // import { withAccelerate } from '@prisma/extension-accelerate';
 

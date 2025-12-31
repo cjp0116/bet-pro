@@ -79,24 +79,27 @@ export default function SignupPage() {
     setError("")
 
     try {
-      // TODO: Implement actual signup logic
-      // const response = await fetch("/api/auth/signup", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     firstName: formData.firstName,
-      //     lastName: formData.lastName,
-      //     email: formData.email,
-      //     password: formData.password,
-      //   }),
-      // })
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || "An error occurred. Please try again.")
+        return
+      }
 
       // Show verification step
       setStep("verification")
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -106,10 +109,8 @@ export default function SignupPage() {
   const handleGoogleSignUp = async () => {
     setIsGoogleLoading(true)
     try {
-      // TODO: Implement Google OAuth
-      // await signIn("google", { callbackUrl: "/" })
-      await new Promise(resolve => setTimeout(resolve, 1000))
-    } catch (err) {
+      await signIn("google", { callbackUrl: "/" })
+    } catch {
       setError("Failed to sign up with Google. Please try again.")
     } finally {
       setIsGoogleLoading(false)
@@ -118,11 +119,23 @@ export default function SignupPage() {
 
   const handleResendEmail = async () => {
     setIsLoading(true)
+    setError("")
     try {
-      // TODO: Implement resend email logic
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      // Show success message
-    } catch (err) {
+      const response = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || "Failed to resend email. Please try again.")
+        return
+      }
+
+      // Could show a success toast here
+    } catch {
       setError("Failed to resend email. Please try again.")
     } finally {
       setIsLoading(false)

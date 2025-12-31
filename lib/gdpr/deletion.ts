@@ -16,7 +16,7 @@ export async function anonymizeUserData(userId: string): Promise<void> {
     where: { id: userId },
     data: {
       email: `deleted_${hash(userId)}@deleted.local`,
-      emailVerified: false,
+      emailVerified: null,
       accountStatus: 'closed',
       gdprConsentGiven: false,
       marketingConsent: false

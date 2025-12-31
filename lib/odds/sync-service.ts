@@ -1,6 +1,8 @@
 // src/lib/odds/sync-service.ts
-import { Decimal } from '../../generated/prisma/client';
+import { Prisma } from '../generated/prisma';
 import { OddsCache } from '../upstash/redis';
+
+const Decimal = Prisma.Decimal;
 import { OddsPubSub } from '../upstash/qstash';
 import { prisma } from '../db/prisma';
 

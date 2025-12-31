@@ -5,10 +5,10 @@ import { prisma } from '@/lib/db/prisma';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const { gameId } = params;
+    const { gameId } = await params;
 
     // Try cache first
     let odds = await OddsCache.getGameOdds(gameId);
