@@ -48,7 +48,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       setError("An error occurred. Please try again.")
-      console.error(err)
+      console.error("Login error:", err instanceof Error ? err.message : "Unknown error")
     } finally {
       setIsLoading(false)
     }
@@ -60,7 +60,7 @@ export default function LoginPage() {
       // TODO: Implement Google OAuth
       await signIn("google", { callbackUrl: "/" })
     } catch (err) {
-      console.error(err)
+      console.error("Google sign-in error:", err instanceof Error ? err.message : "Unknown error")
       setError("Failed to sign in with Google. Please try again.")
     } finally {
       setIsGoogleLoading(false)
