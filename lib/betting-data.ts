@@ -11,8 +11,12 @@ export interface Game {
   league: string
   status: "upcoming" | "live" | "finished"
   startTime: string
+  commenceTime?: string // ISO timestamp
   quarter?: string
   clock?: string
+  gameTime?: string // e.g., "Q3 5:42", "2nd Half"
+  completed?: boolean
+  lastScoreUpdate?: string // ISO timestamp
   homeTeam: Team
   awayTeam: Team
   odds: {

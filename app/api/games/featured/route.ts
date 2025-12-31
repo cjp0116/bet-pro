@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const sportId = req.nextUrl.searchParams.get('sport');
     const forceRefresh = req.nextUrl.searchParams.get('refresh') === 'true';
+    const includeScores = req.nextUrl.searchParams.get('scores') !== 'false'; // Default true
 
     // Force refresh if requested (for admin/debug)
     if (forceRefresh) {
@@ -16,9 +17,14 @@ export async function GET(req: NextRequest) {
     let result;
 
     if (sportId) {
-      result = await UnifiedOddsSync.syncSport(sportId);
+      // Use scores-enabled sync if scores requested
+      result = includeScores
+        ? await UnifiedOddsSync.syncSportWithScores(sportId)
+        : await UnifiedOddsSync.syncSport(sportId);
     } else {
-      result = await UnifiedOddsSync.syncFeatured();
+      result = includeScores
+        ? await UnifiedOddsSync.syncFeaturedWithScores()
+        : await UnifiedOddsSync.syncFeatured();
     }
 
     // Set cache headers for client-side caching
@@ -33,6 +39,7 @@ export async function GET(req: NextRequest) {
         isStale: result.isStale,
         ageSeconds: result.ageSeconds,
         dbPersisted: result.dbPersisted,
+        includeScores,
         timestamp: new Date().toISOString(),
       },
     }, { headers });

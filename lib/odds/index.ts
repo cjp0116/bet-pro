@@ -11,7 +11,3 @@
 export { UnifiedOddsSync, type SyncResult } from './unified-sync';
 export { GamesCache, type CachedGame } from './games-cache';
 
-// Legacy exports (deprecated - use UnifiedOddsSync instead)
-export { OddsSyncService } from './sync-service';
-export { ExternalOddsSync } from './external-sync';
-

@@ -4,7 +4,7 @@ import { memo, useMemo } from "react"
 import { cn } from "@/lib/utils"
 import type { Game, BetSelection } from "@/lib/betting-data"
 import { formatOdds } from "@/lib/betting-data"
-import { Clock, Zap } from "lucide-react"
+import { Clock, Zap, CheckCircle2 } from "lucide-react"
 
 interface GameCardProps {
   game: Game
@@ -44,22 +44,43 @@ export const GameCard = memo(function GameCard({ game, selectedBets, onSelectBet
     onSelectBet(bet)
   }
 
+  // Check if we have scores to display
+  const hasScores = game.homeTeam.score !== undefined || game.awayTeam.score !== undefined
+  const showScores = hasScores && (game.status === "live" || game.status === "finished")
+
+  // Determine winning team for finished games
+  const homeWinning = showScores && (game.homeTeam.score ?? 0) > (game.awayTeam.score ?? 0)
+  const awayWinning = showScores && (game.awayTeam.score ?? 0) > (game.homeTeam.score ?? 0)
+
   return (
-    <div className="rounded-xl border border-border bg-card p-4 transition-colors hover:border-border/80">
+    <div className={cn(
+      "rounded-xl border border-border bg-card p-4 transition-colors hover:border-border/80",
+      game.status === "finished" && "opacity-75"
+    )}>
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium text-muted-foreground">{game.league}</span>
           {game.status === "live" && (
-            <span className="flex items-center gap-1 rounded bg-(--live)/20 px-2 py-0.5 text-[10px] font-semibold uppercase text-live">
+            <span className="flex items-center gap-1 rounded bg-red-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase text-red-500">
               <Zap className="h-3 w-3" />
               Live
+            </span>
+          )}
+          {game.status === "finished" && (
+            <span className="flex items-center gap-1 rounded bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground">
+              <CheckCircle2 className="h-3 w-3" />
+              Final
             </span>
           )}
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          {game.status === "live" ? `${game.quarter} ${game.clock}` : game.startTime}
+          {game.status === "live"
+            ? (game.gameTime || `${game.quarter || ''} ${game.clock || ''}`.trim() || 'In Progress')
+            : game.status === "finished"
+              ? "Final"
+              : game.startTime}
         </div>
       </div>
 
@@ -73,9 +94,20 @@ export const GameCard = memo(function GameCard({ game, selectedBets, onSelectBet
               alt={game.awayTeam.name}
               className="h-8 w-8 rounded"
             />
-            <span className="font-medium">{game.awayTeam.name}</span>
+            <span className={cn(
+              "font-medium",
+              game.status === "finished" && awayWinning && "font-bold"
+            )}>{game.awayTeam.name}</span>
           </div>
-          {game.status === "live" && <span className="text-lg font-bold">{game.awayTeam.score}</span>}
+          {showScores && (
+            <span className={cn(
+              "text-lg font-bold tabular-nums",
+              game.status === "finished" && awayWinning && "text-green-500",
+              game.status === "live" && "text-red-500"
+            )}>
+              {game.awayTeam.score ?? 0}
+            </span>
+          )}
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -85,9 +117,20 @@ export const GameCard = memo(function GameCard({ game, selectedBets, onSelectBet
               alt={game.homeTeam.name}
               className="h-8 w-8 rounded"
             />
-            <span className="font-medium">{game.homeTeam.name}</span>
+            <span className={cn(
+              "font-medium",
+              game.status === "finished" && homeWinning && "font-bold"
+            )}>{game.homeTeam.name}</span>
           </div>
-          {game.status === "live" && <span className="text-lg font-bold">{game.homeTeam.score}</span>}
+          {showScores && (
+            <span className={cn(
+              "text-lg font-bold tabular-nums",
+              game.status === "finished" && homeWinning && "text-green-500",
+              game.status === "live" && "text-red-500"
+            )}>
+              {game.homeTeam.score ?? 0}
+            </span>
+          )}
         </div>
       </div>
 

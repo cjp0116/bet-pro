@@ -26,6 +26,10 @@ export interface CachedGame {
     moneyline: { home: number; away: number };
     total: { line: number; over: number; under: number };
   };
+  // Live game details
+  completed?: boolean;
+  gameTime?: string; // e.g., "Q3 5:42", "3rd Period", "2nd Half"
+  lastScoreUpdate?: string; // ISO timestamp
   lastUpdated: string;
 }
 

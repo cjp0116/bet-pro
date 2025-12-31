@@ -47,6 +47,22 @@ interface OddsApiEvent {
   bookmakers: OddsApiBookmaker[];
 }
 
+// Scores API types
+interface ScoresApiEvent {
+  id: string;
+  sport_key: string;
+  sport_title: string;
+  commence_time: string;
+  completed: boolean;
+  home_team: string;
+  away_team: string;
+  scores: {
+    name: string;
+    score: string;
+  }[] | null;
+  last_update: string | null;
+}
+
 // Sport mappings
 const FEATURED_SPORTS = [
   'americanfootball_nfl',
@@ -88,9 +104,9 @@ const SPORT_ID_TO_API_KEYS: Record<string, string[]> = {
   basketball: ['basketball_nba', 'basketball_ncaab'],
   baseball: ['baseball_mlb'],
   hockey: ['icehockey_nhl'],
-  soccer: ['soccer_epl', 'soccer_usa_mls', 'soccer_spain_la_liga', 'soccer_germany_bundesliga', 'soccer_italy_serie_a'],
+  soccer: ['soccer_epl', 'soccer_usa_mls', 'soccer_spain_la_liga', 'soccer_germany_bundesliga', 'soccer_italy_serie_a', 'soccer_france_ligue_one'],
   mma: ['mma_mixed_martial_arts'],
-  tennis: ['tennis_atp_australian_open', 'tennis_wta_australian_open', 'tennis_atp_us_open', 'tennis_wta_us_open'],
+  tennis: ['tennis_atp_australian_open', 'tennis_wta_australian_open', 'tennis_atp_us_open', 'tennis_wta_us_open', 'tennis_atp_french_open', 'tennis_wta_french_open', 'tennis_atp_wimbledon', 'tennis_wta_wimbledon'],
   golf: ['golf_pga_championship_winner', 'golf_masters_tournament_winner', 'golf_us_open_winner', 'golf_the_open_championship_winner'],
 };
 
@@ -226,11 +242,15 @@ export class UnifiedOddsSync {
         url.searchParams.set('regions', 'us');
         url.searchParams.set('markets', 'h2h,spreads,totals');
         url.searchParams.set('oddsFormat', 'american');
-
+        console.log(`[UnifiedSync] Fetching ${sportKey}`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
         const response = await fetch(url.toString(), {
           headers: { 'Accept': 'application/json' },
           cache: 'no-store',
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           console.error(`[UnifiedSync] Odds API error for ${sportKey}: ${response.status}`);
@@ -260,6 +280,133 @@ export class UnifiedOddsSync {
     );
 
     return { games: allGames, rawEvents: allEvents };
+  }
+
+  /**
+   * Fetch live scores from Scores API
+   */
+  static async fetchScores(sportKeys: string[]): Promise<Map<string, ScoresApiEvent>> {
+    const apiKey = process.env.ODDS_API_KEY;
+    const scoresMap = new Map<string, ScoresApiEvent>();
+
+    if (!apiKey) {
+      console.error('[UnifiedSync] ODDS_API_KEY not configured');
+      return scoresMap;
+    }
+
+    for (const sportKey of sportKeys) {
+      try {
+        // The Odds API scores endpoint - only fetches games from last 3 days
+        const url = new URL(`https://api.the-odds-api.com/v4/sports/${sportKey}/scores`);
+        url.searchParams.set('apiKey', apiKey);
+        url.searchParams.set('daysFrom', '3'); // Get scores from last 3 days
+
+        console.log(`[UnifiedSync] Fetching scores for ${sportKey}`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const response = await fetch(url.toString(), {
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          console.error(`[UnifiedSync] Scores API error for ${sportKey}: ${response.status}`);
+          continue;
+        }
+
+        const remaining = response.headers.get('x-requests-remaining');
+        console.log(`[UnifiedSync] ${sportKey} scores fetched, ${remaining} requests remaining`);
+
+        const events: ScoresApiEvent[] = await response.json();
+
+        for (const event of events) {
+          scoresMap.set(event.id, event);
+        }
+      } catch (error) {
+        console.error(`[UnifiedSync] Failed to fetch scores for ${sportKey}:`, error);
+      }
+    }
+
+    return scoresMap;
+  }
+
+  /**
+   * Merge scores into cached games
+   */
+  static mergeScoresIntoGames(games: CachedGame[], scores: Map<string, ScoresApiEvent>): CachedGame[] {
+    return games.map(game => {
+      const scoreData = scores.get(game.id);
+      if (!scoreData || !scoreData.scores) {
+        return game;
+      }
+
+      // Find home and away scores
+      const homeScore = scoreData.scores.find(s => s.name === game.homeTeam.name);
+      const awayScore = scoreData.scores.find(s => s.name === game.awayTeam.name);
+
+      // Determine game status
+      let status: 'upcoming' | 'live' | 'finished' = game.status;
+      if (scoreData.completed) {
+        status = 'finished';
+      } else if (scoreData.scores && scoreData.scores.length > 0) {
+        status = 'live';
+      }
+
+      return {
+        ...game,
+        status,
+        completed: scoreData.completed,
+        homeTeam: {
+          ...game.homeTeam,
+          score: homeScore ? parseInt(homeScore.score, 10) : undefined,
+        },
+        awayTeam: {
+          ...game.awayTeam,
+          score: awayScore ? parseInt(awayScore.score, 10) : undefined,
+        },
+        lastScoreUpdate: scoreData.last_update || undefined,
+      };
+    });
+  }
+
+  /**
+   * Sync games with scores - combines odds and scores in one call
+   */
+  static async syncSportWithScores(sportId: string): Promise<SyncResult> {
+    // First get the regular sync result
+    const result = await this.syncSport(sportId);
+
+    // Then fetch and merge scores
+    const apiKeys = SPORT_ID_TO_API_KEYS[sportId] || [];
+    if (apiKeys.length > 0 && result.games.length > 0) {
+      const scores = await this.fetchScores(apiKeys);
+      if (scores.size > 0) {
+        result.games = this.mergeScoresIntoGames(result.games, scores);
+        // Update cache with scores
+        await GamesCache.setGames(result.games, sportId);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Sync featured games with scores
+   */
+  static async syncFeaturedWithScores(): Promise<SyncResult> {
+    const result = await this.syncFeatured();
+
+    if (result.games.length > 0) {
+      const scores = await this.fetchScores(FEATURED_SPORTS);
+      if (scores.size > 0) {
+        result.games = this.mergeScoresIntoGames(result.games, scores);
+        await GamesCache.setGames(result.games);
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -370,7 +517,7 @@ export class UnifiedOddsSync {
         await prisma.$transaction(async (tx) => {
           // Store raw API snapshots for full audit trail
           for (const snapshot of snapshots) {
-            await (tx as any).apiOddsSnapshot.upsert({
+            await tx.apiOddsSnapshot.upsert({
               where: {
                 externalGameId_timestamp: {
                   externalGameId: snapshot.externalGameId,
@@ -394,9 +541,9 @@ export class UnifiedOddsSync {
           }
 
           // Store odds change events for fraud detection
-          for (const change of changes) {
-            await (tx as any).oddsAuditLog.create({
-              data: {
+          if (changes.length > 0) {
+            await tx.oddsAuditLog.createMany({
+              data: changes.map(change => ({
                 externalGameId: change.externalGameId,
                 sportKey: change.sportKey,
                 marketKey: change.marketKey,
@@ -405,8 +552,8 @@ export class UnifiedOddsSync {
                 newOdds: new Decimal(change.newOdds),
                 changePercent: new Decimal(change.changePercent),
                 changeType: Math.abs(change.changePercent) > 10 ? 'significant' : 'minor',
-              },
-            });
+              }))
+            })
           }
         });
 

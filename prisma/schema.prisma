@@ -15,23 +15,23 @@ datasource db {
 // ============================================
 
 model User {
-  id                String    @id @default(cuid())
-  name              String?
-  email             String    @unique @db.VarChar(255)
-  emailVerified     DateTime? // NextAuth requires DateTime, not Boolean
-  image             String?
-  accountStatus     String    @default("active") // active, suspended, closed
-  kycVerified       Boolean   @default(false)
-  kycLevel          String    @default("none") // none, basic, enhanced
-  gdprConsentGiven  Boolean   @default(false)
-  marketingConsent  Boolean   @default(false)
-  riskScore         Int       @default(0) @db.SmallInt // 0-100
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique @db.VarChar(255)
+  emailVerified    DateTime? // NextAuth requires DateTime, not Boolean
+  image            String?
+  accountStatus    String    @default("active") // active, suspended, closed
+  kycVerified      Boolean   @default(false)
+  kycLevel         String    @default("none") // none, basic, enhanced
+  gdprConsentGiven Boolean   @default(false)
+  marketingConsent Boolean   @default(false)
+  riskScore        Int       @default(0) @db.SmallInt // 0-100
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   // NextAuth Relations
-  accounts          Account[]  // OAuth accounts (Google, etc.)
-  sessions          Session[]  // NextAuth sessions
+  accounts Account[] // OAuth accounts (Google, etc.)
+  sessions Session[] // NextAuth sessions
 
   // App Relations
   profile           UserProfile?
@@ -106,75 +106,75 @@ model VerificationToken {
 }
 
 model UserProfile {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  firstName       String?  @db.VarChar(100)
-  lastName        String?  @db.VarChar(100)
-  dateOfBirth     DateTime?
-  address         String?  @db.Text // Encrypted
-  phoneNumber     String?  @db.VarChar(20) // Encrypted
-  country         String?  @db.VarChar(2) // ISO 3166-1 alpha-2
-  timezone        String?  @db.VarChar(50)
-  language        String?  @default("en") @db.VarChar(10)
-  marketingOptIn  Boolean  @default(false)
+  id                        String    @id @default(cuid())
+  userId                    String    @unique
+  firstName                 String?   @db.VarChar(100)
+  lastName                  String?   @db.VarChar(100)
+  dateOfBirth               DateTime?
+  address                   String?   @db.Text // Encrypted
+  phoneNumber               String?   @db.VarChar(20) // Encrypted
+  country                   String?   @db.VarChar(2) // ISO 3166-1 alpha-2
+  timezone                  String?   @db.VarChar(50)
+  language                  String?   @default("en") @db.VarChar(10)
+  marketingOptIn            Boolean   @default(false)
   responsibleGamingSettings Json? // Deposit limits, session limits, etc.
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
 
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_profiles")
 }
 
 model UserPassword {
-  id                    String   @id @default(cuid())
-  userId                 String   @unique
-  passwordHash           String   @db.VarChar(255) // bcrypt/argon2 hash
-  passwordHistory        Json?    // Last 5 password hashes
-  resetToken             String?  @db.VarChar(255)
-  resetTokenExpiresAt    DateTime?
-  passwordChangedAt      DateTime @default(now())
-  failedLoginAttempts    Int      @default(0)
-  lockedUntil            DateTime?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  passwordHash        String    @db.VarChar(255) // bcrypt/argon2 hash
+  passwordHistory     Json? // Last 5 password hashes
+  resetToken          String?   @db.VarChar(255)
+  resetTokenExpiresAt DateTime?
+  passwordChangedAt   DateTime  @default(now())
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_passwords")
 }
 
 model TwoFactorAuth {
-  id                String   @id @default(cuid())
-  userId            String   @unique
-  method            String   @db.VarChar(20) // TOTP, SMS, Email
-  secretKey         String?  @db.Text // Encrypted TOTP secret
-  backupCodes       Json?    // Encrypted backup codes (hashed)
-  enabled           Boolean  @default(false)
-  lastVerifiedAt    DateTime?
-  recoveryEmail     String?  @db.VarChar(255) // Encrypted
-  recoveryPhone     String?  @db.VarChar(20) // Encrypted
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  method         String    @db.VarChar(20) // TOTP, SMS, Email
+  secretKey      String?   @db.Text // Encrypted TOTP secret
+  backupCodes    Json? // Encrypted backup codes (hashed)
+  enabled        Boolean   @default(false)
+  lastVerifiedAt DateTime?
+  recoveryEmail  String?   @db.VarChar(255) // Encrypted
+  recoveryPhone  String?   @db.VarChar(20) // Encrypted
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("two_factor_auth")
 }
 
 model UserSession {
-  id              String   @id @default(cuid())
-  userId          String
-  token           String   @unique @db.VarChar(500) // JWT refresh token
-  deviceFingerprint String @db.VarChar(64) // SHA-256 hash
-  ipAddressHash  String   @db.VarChar(64) // SHA-256 hash
-  userAgent       String?  @db.Text
-  lastActivityAt  DateTime @default(now())
-  expiresAt       DateTime
-  revoked         Boolean  @default(false)
-  createdAt       DateTime @default(now())
+  id                String   @id @default(cuid())
+  userId            String
+  token             String   @unique @db.VarChar(500) // JWT refresh token
+  deviceFingerprint String   @db.VarChar(64) // SHA-256 hash
+  ipAddressHash     String   @db.VarChar(64) // SHA-256 hash
+  userAgent         String?  @db.Text
+  lastActivityAt    DateTime @default(now())
+  expiresAt         DateTime
+  revoked           Boolean  @default(false)
+  createdAt         DateTime @default(now())
 
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, expiresAt])
   @@index([token])
@@ -206,34 +206,34 @@ model LoginAttempt {
 // ============================================
 
 model Sport {
-  id          String   @id @default(cuid())
-  name        String   @unique @db.VarChar(100)
-  code        String   @unique @db.VarChar(10)
-  active      Boolean  @default(true)
-  displayOrder Int     @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String   @unique @db.VarChar(100)
+  code         String   @unique @db.VarChar(10)
+  active       Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  leagues     League[]
-  games       Game[]
+  leagues League[]
+  games   Game[]
 
   @@map("sports")
 }
 
 model League {
-  id          String   @id @default(cuid())
-  sportId     String
-  name        String   @db.VarChar(100)
-  code        String   @db.VarChar(20)
-  country     String?  @db.VarChar(2)
-  region      String?  @db.VarChar(100)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  sportId   String
+  name      String   @db.VarChar(100)
+  code      String   @db.VarChar(20)
+  country   String?  @db.VarChar(2)
+  region    String?  @db.VarChar(100)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  sport       Sport    @relation(fields: [sportId], references: [id], onDelete: Cascade)
-  teams       Team[]
-  games       Game[]
+  sport Sport  @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  teams Team[]
+  games Game[]
 
   @@unique([sportId, code])
   @@index([sportId])
@@ -241,18 +241,18 @@ model League {
 }
 
 model Team {
-  id          String   @id @default(cuid())
-  leagueId    String
-  name        String   @db.VarChar(100)
-  code        String   @db.VarChar(10)
-  logoUrl     String?  @db.Text
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  leagueId  String
+  name      String   @db.VarChar(100)
+  code      String   @db.VarChar(10)
+  logoUrl   String?  @db.Text
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  league      League   @relation(fields: [leagueId], references: [id], onDelete: Cascade)
-  homeGames   Game[]   @relation("HomeTeam")
-  awayGames   Game[]   @relation("AwayTeam")
+  league    League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  homeGames Game[] @relation("HomeTeam")
+  awayGames Game[] @relation("AwayTeam")
 
   @@unique([leagueId, code])
   @@index([leagueId])
@@ -260,26 +260,26 @@ model Team {
 }
 
 model Game {
-  id              String   @id @default(cuid())
+  id               String    @id @default(cuid())
   sportId          String
   leagueId         String
   homeTeamId       String
   awayTeamId       String
   scheduledStartAt DateTime
   actualStartAt    DateTime?
-  status           String   @default("scheduled") // scheduled, live, finished, cancelled, postponed
+  status           String    @default("scheduled") // scheduled, live, finished, cancelled, postponed
   homeScore        Int?
   awayScore        Int?
   metadata         Json?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  sport            Sport    @relation(fields: [sportId], references: [id], onDelete: Cascade)
-  league           League   @relation(fields: [leagueId], references: [id], onDelete: Cascade)
-  homeTeam         Team     @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam         Team     @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  markets          BetMarket[]
-  syncStatus       OddsSyncStatus?
+  sport      Sport           @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  league     League          @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  homeTeam   Team            @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam   Team            @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  markets    BetMarket[]
+  syncStatus OddsSyncStatus?
 
   @@index([sportId, status])
   @@index([leagueId, scheduledStartAt])
@@ -288,59 +288,59 @@ model Game {
 }
 
 model BetMarket {
-  id          String   @id @default(cuid())
-  gameId      String
-  marketType  String   @db.VarChar(50) // moneyline, spread, total, props
-  name        String   @db.VarChar(200)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  gameId     String
+  marketType String   @db.VarChar(50) // moneyline, spread, total, props
+  name       String   @db.VarChar(200)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  game        Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  selections  BetSelection[]
+  game       Game           @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  selections BetSelection[]
 
   @@index([gameId, active])
   @@map("bet_markets")
 }
 
 model BetSelection {
-  id              String   @id @default(cuid())
-  marketId        String
-  name            String   @db.VarChar(200) // e.g., "Chiefs -3.5"
-  odds            Decimal  @db.Decimal(10, 3)
-  status          String   @default("active") // active, suspended, settled
-  result          String?  // won, lost, void, pending
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id       String  @id @default(cuid())
+  marketId String
+  name     String  @db.VarChar(200) // e.g., "Chiefs -3.5"
+  odds     Decimal @db.Decimal(10, 3)
+  status   String  @default("active") // active, suspended, settled
+  result   String? // won, lost, void, pending
 
-  market          BetMarket @relation(fields: [marketId], references: [id], onDelete: Cascade)
-  betSelections   BetSelectionBet[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  currentOdds     CurrentOdds?
-  oddsSnapshots   OddsSnapshot[]
-  
+  market        BetMarket         @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  betSelections BetSelectionBet[]
+
+  currentOdds   CurrentOdds?
+  oddsSnapshots OddsSnapshot[]
+
   @@index([marketId, status])
   @@map("bet_selections")
 }
 
 model Bet {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   userId          String
-  betType         String   @db.VarChar(20) // single, parlay, system
-  totalStake      Decimal  @db.Decimal(12, 2)
-  potentialPayout Decimal  @db.Decimal(12, 2)
-  actualPayout    Decimal? @db.Decimal(12, 2)
-  status          String   @default("pending") // pending, won, lost, void, cashout
-  placedAt        DateTime @default(now())
+  betType         String    @db.VarChar(20) // single, parlay, system
+  totalStake      Decimal   @db.Decimal(12, 2)
+  potentialPayout Decimal   @db.Decimal(12, 2)
+  actualPayout    Decimal?  @db.Decimal(12, 2)
+  status          String    @default("pending") // pending, won, lost, void, cashout
+  placedAt        DateTime  @default(now())
   settledAt       DateTime?
   cashoutAt       DateTime?
-  oddsSnapshot    Json?    // Odds at time of bet for audit
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  oddsSnapshot    Json? // Odds at time of bet for audit
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  selections      BetSelectionBet[]
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  selections BetSelectionBet[]
 
   @@index([userId, status, placedAt])
   @@index([status, placedAt])
@@ -349,15 +349,15 @@ model Bet {
 }
 
 model BetSelectionBet {
-  id              String   @id @default(cuid())
-  betId           String
-  selectionId     String
-  oddsAtBet       Decimal  @db.Decimal(10, 3)
-  result          String?  // won, lost, void, pending
-  createdAt       DateTime @default(now())
+  id          String   @id @default(cuid())
+  betId       String
+  selectionId String
+  oddsAtBet   Decimal  @db.Decimal(10, 3)
+  result      String? // won, lost, void, pending
+  createdAt   DateTime @default(now())
 
-  bet             Bet          @relation(fields: [betId], references: [id], onDelete: Cascade)
-  selection       BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
+  bet       Bet          @relation(fields: [betId], references: [id], onDelete: Cascade)
+  selection BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
 
   @@unique([betId, selectionId])
   @@index([betId])
@@ -370,19 +370,19 @@ model BetSelectionBet {
 // ============================================
 
 model FinancialAccount {
-  id                    String   @id @default(cuid())
-  userId                String
-  accountType           String   @default("main") @db.VarChar(20) // main, bonus, free_bet
-  balance               Decimal  @default(0) @db.Decimal(12, 2)
-  availableBalance      Decimal  @default(0) @db.Decimal(12, 2)
-  lockedBalance         Decimal  @default(0) @db.Decimal(12, 2)
-  currency              String   @default("USD") @db.VarChar(3)
-  lastTransactionAt     DateTime?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                String    @id @default(cuid())
+  userId            String
+  accountType       String    @default("main") @db.VarChar(20) // main, bonus, free_bet
+  balance           Decimal   @default(0) @db.Decimal(12, 2)
+  availableBalance  Decimal   @default(0) @db.Decimal(12, 2)
+  lockedBalance     Decimal   @default(0) @db.Decimal(12, 2)
+  currency          String    @default("USD") @db.VarChar(3)
+  lastTransactionAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions          Transaction[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
 
   @@unique([userId, accountType])
   @@index([userId])
@@ -390,26 +390,26 @@ model FinancialAccount {
 }
 
 model Transaction {
-  id                    String   @id @default(cuid())
+  id                    String    @id @default(cuid())
   userId                String
   accountId             String
-  transactionType       String   @db.VarChar(30) // deposit, withdrawal, bet_placed, bet_won, bet_lost, bonus, refund, fee
-  amount                Decimal  @db.Decimal(12, 2) // Signed: positive for credits, negative for debits
-  balanceBefore         Decimal  @db.Decimal(12, 2)
-  balanceAfter          Decimal  @db.Decimal(12, 2)
-  status                String   @default("pending") @db.VarChar(20) // pending, completed, failed, cancelled
+  transactionType       String    @db.VarChar(30) // deposit, withdrawal, bet_placed, bet_won, bet_lost, bonus, refund, fee
+  amount                Decimal   @db.Decimal(12, 2) // Signed: positive for credits, negative for debits
+  balanceBefore         Decimal   @db.Decimal(12, 2)
+  balanceAfter          Decimal   @db.Decimal(12, 2)
+  status                String    @default("pending") @db.VarChar(20) // pending, completed, failed, cancelled
   paymentMethodId       String?
-  externalTransactionId String?  @db.VarChar(255)
-  description           String?  @db.Text
+  externalTransactionId String?   @db.VarChar(255)
+  description           String?   @db.Text
   metadata              Json?
-  createdAt             DateTime @default(now())
+  createdAt             DateTime  @default(now())
   processedAt           DateTime?
 
-  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account               FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  paymentMethod         PaymentMethod?   @relation(fields: [paymentMethodId], references: [id])
-  deposit               Deposit?
-  withdrawal            Withdrawal?
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account       FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  paymentMethod PaymentMethod?   @relation(fields: [paymentMethodId], references: [id])
+  deposit       Deposit?
+  withdrawal    Withdrawal?
 
   @@index([userId, createdAt])
   @@index([accountId, createdAt])
@@ -419,23 +419,23 @@ model Transaction {
 }
 
 model PaymentMethod {
-  id                String   @id @default(cuid())
-  userId            String
-  paymentType       String   @db.VarChar(30) // credit_card, debit_card, bank_account, e_wallet, crypto
-  provider          String   @db.VarChar(50) // stripe, paypal, etc.
-  tokenizedId       String   @db.VarChar(255) // PCI compliant tokenized identifier
-  last4Digits       String?  @db.VarChar(4)
-  expiryDate        String?  @db.VarChar(7) // Encrypted MM/YYYY
-  billingAddress    String?  @db.Text // Encrypted
-  isDefault         Boolean  @default(false)
-  verified          Boolean  @default(false)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id             String   @id @default(cuid())
+  userId         String
+  paymentType    String   @db.VarChar(30) // credit_card, debit_card, bank_account, e_wallet, crypto
+  provider       String   @db.VarChar(50) // stripe, paypal, etc.
+  tokenizedId    String   @db.VarChar(255) // PCI compliant tokenized identifier
+  last4Digits    String?  @db.VarChar(4)
+  expiryDate     String?  @db.VarChar(7) // Encrypted MM/YYYY
+  billingAddress String?  @db.Text // Encrypted
+  isDefault      Boolean  @default(false)
+  verified       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions      Transaction[]
-  deposits          Deposit[]
-  withdrawals       Withdrawal[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  deposits     Deposit[]
+  withdrawals  Withdrawal[]
 
   @@index([userId])
   @@index([userId, isDefault])
@@ -443,21 +443,21 @@ model PaymentMethod {
 }
 
 model Deposit {
-  id                    String   @id @default(cuid())
-  transactionId         String   @unique
+  id                    String    @id @default(cuid())
+  transactionId         String    @unique
   paymentMethodId       String
-  amount                Decimal  @db.Decimal(12, 2)
-  feeAmount             Decimal  @default(0) @db.Decimal(12, 2)
-  netAmount             Decimal  @db.Decimal(12, 2)
-  providerTransactionId String?  @db.VarChar(255)
-  status                String   @default("pending") @db.VarChar(20) // pending, processing, completed, failed, refunded
-  providerResponse      Json?    // Encrypted
+  amount                Decimal   @db.Decimal(12, 2)
+  feeAmount             Decimal   @default(0) @db.Decimal(12, 2)
+  netAmount             Decimal   @db.Decimal(12, 2)
+  providerTransactionId String?   @db.VarChar(255)
+  status                String    @default("pending") @db.VarChar(20) // pending, processing, completed, failed, refunded
+  providerResponse      Json? // Encrypted
   processedAt           DateTime?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  transaction          Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  paymentMethod        PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  transaction   Transaction   @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  paymentMethod PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 
   @@index([status, createdAt])
   @@index([paymentMethodId])
@@ -465,23 +465,23 @@ model Deposit {
 }
 
 model Withdrawal {
-  id                    String   @id @default(cuid())
-  transactionId         String   @unique
-  paymentMethodId       String
-  amount                Decimal  @db.Decimal(12, 2)
-  feeAmount             Decimal  @default(0) @db.Decimal(12, 2)
-  netAmount             Decimal  @db.Decimal(12, 2)
-  status                String   @default("pending") @db.VarChar(20) // pending, processing, completed, failed, cancelled
-  providerTransactionId String?  @db.VarChar(255)
-  providerResponse      Json?    // Encrypted
-  kycVerificationRequired Boolean @default(false)
-  requestedAt           DateTime @default(now())
-  processedAt           DateTime?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                      String    @id @default(cuid())
+  transactionId           String    @unique
+  paymentMethodId         String
+  amount                  Decimal   @db.Decimal(12, 2)
+  feeAmount               Decimal   @default(0) @db.Decimal(12, 2)
+  netAmount               Decimal   @db.Decimal(12, 2)
+  status                  String    @default("pending") @db.VarChar(20) // pending, processing, completed, failed, cancelled
+  providerTransactionId   String?   @db.VarChar(255)
+  providerResponse        Json? // Encrypted
+  kycVerificationRequired Boolean   @default(false)
+  requestedAt             DateTime  @default(now())
+  processedAt             DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
-  transaction          Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  paymentMethod        PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  transaction   Transaction   @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  paymentMethod PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 
   @@index([status, requestedAt])
   @@index([paymentMethodId])
@@ -493,19 +493,19 @@ model Withdrawal {
 // ============================================
 
 model FraudEvent {
-  id            String   @id @default(cuid())
-  userId        String?
-  eventType     String   @db.VarChar(50) // suspicious_bet_pattern, account_takeover, payment_fraud, etc.
-  severity      String   @db.VarChar(20) // low, medium, high, critical
-  riskScore     Int      @db.SmallInt // 0-100
-  description   String?  @db.Text
-  metadata      Json?
-  status        String   @default("pending_review") @db.VarChar(30) // pending_review, reviewed, false_positive, confirmed
-  reviewedBy    String?  // Admin user ID
-  reviewedAt    DateTime?
-  createdAt     DateTime @default(now())
+  id          String    @id @default(cuid())
+  userId      String?
+  eventType   String    @db.VarChar(50) // suspicious_bet_pattern, account_takeover, payment_fraud, etc.
+  severity    String    @db.VarChar(20) // low, medium, high, critical
+  riskScore   Int       @db.SmallInt // 0-100
+  description String?   @db.Text
+  metadata    Json?
+  status      String    @default("pending_review") @db.VarChar(30) // pending_review, reviewed, false_positive, confirmed
+  reviewedBy  String? // Admin user ID
+  reviewedAt  DateTime?
+  createdAt   DateTime  @default(now())
 
-  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
   @@index([eventType, severity])
@@ -514,15 +514,15 @@ model FraudEvent {
 }
 
 model BettingPattern {
-  id            String   @id @default(cuid())
-  userId        String
-  patternType   String   @db.VarChar(50) // rapid_betting, unusual_stake_size, arbitrage_detection, etc.
+  id             String   @id @default(cuid())
+  userId         String
+  patternType    String   @db.VarChar(50) // rapid_betting, unusual_stake_size, arbitrage_detection, etc.
   patternDetails Json?
-  detectedAt    DateTime @default(now())
-  riskScore     Int      @db.SmallInt
-  actionTaken   String?  @db.VarChar(30) // none, flag, suspend, block
+  detectedAt     DateTime @default(now())
+  riskScore      Int      @db.SmallInt
+  actionTaken    String?  @db.VarChar(30) // none, flag, suspend, block
 
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, detectedAt])
   @@index([patternType, riskScore])
@@ -543,7 +543,7 @@ model AccountActivityLog {
   metadata          Json?
   createdAt         DateTime @default(now())
 
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
   @@index([activityType, createdAt])
@@ -564,7 +564,7 @@ model DeviceRegistry {
   firstSeenAt       DateTime @default(now())
   lastSeenAt        DateTime @default(now())
 
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, deviceFingerprint])
   @@index([userId])
@@ -573,18 +573,18 @@ model DeviceRegistry {
 }
 
 model IpAddress {
-  id                String   @id @default(cuid())
-  ipAddressHash     String   @unique @db.VarChar(64) // SHA-256 hash
-  country           String?  @db.VarChar(2)
-  region            String?  @db.VarChar(100)
-  city              String?  @db.VarChar(100)
-  isp               String?  @db.VarChar(200)
-  isVpn             Boolean  @default(false)
-  isProxy            Boolean  @default(false)
-  riskScore         Int      @default(0) @db.SmallInt
-  blocked           Boolean  @default(false)
-  firstSeenAt       DateTime @default(now())
-  lastSeenAt        DateTime @default(now())
+  id            String   @id @default(cuid())
+  ipAddressHash String   @unique @db.VarChar(64) // SHA-256 hash
+  country       String?  @db.VarChar(2)
+  region        String?  @db.VarChar(100)
+  city          String?  @db.VarChar(100)
+  isp           String?  @db.VarChar(200)
+  isVpn         Boolean  @default(false)
+  isProxy       Boolean  @default(false)
+  riskScore     Int      @default(0) @db.SmallInt
+  blocked       Boolean  @default(false)
+  firstSeenAt   DateTime @default(now())
+  lastSeenAt    DateTime @default(now())
 
   @@index([riskScore])
   @@index([blocked])
@@ -600,12 +600,12 @@ model AuditLog {
   entityType    String   @db.VarChar(50) // user, bet, transaction, etc.
   entityId      String
   action        String   @db.VarChar(20) // create, update, delete, view
-  userId        String?  // Who performed the action
+  userId        String? // Who performed the action
   ipAddressHash String?  @db.VarChar(64)
-  changes       Json?    // Before/after changes
+  changes       Json? // Before/after changes
   createdAt     DateTime @default(now())
 
-  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([entityType, entityId])
   @@index([userId, createdAt])
@@ -614,16 +614,16 @@ model AuditLog {
 }
 
 model GdprConsent {
-  id                String   @id @default(cuid())
-  userId            String
-  consentType       String   @db.VarChar(50) // marketing, analytics, cookies, data_sharing
-  consentStatus     String   @db.VarChar(20) // granted, denied, withdrawn
-  consentMethod     String   @db.VarChar(20) // explicit, implicit
-  ipAddressHash     String?  @db.VarChar(64)
-  withdrawnAt       DateTime?
-  createdAt         DateTime @default(now())
+  id            String    @id @default(cuid())
+  userId        String
+  consentType   String    @db.VarChar(50) // marketing, analytics, cookies, data_sharing
+  consentStatus String    @db.VarChar(20) // granted, denied, withdrawn
+  consentMethod String    @db.VarChar(20) // explicit, implicit
+  ipAddressHash String?   @db.VarChar(64)
+  withdrawnAt   DateTime?
+  createdAt     DateTime  @default(now())
 
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, consentType])
   @@index([consentStatus, createdAt])
@@ -631,35 +631,35 @@ model GdprConsent {
 }
 
 model DataDeletionRequest {
-  id            String   @id @default(cuid())
-  userId        String   @unique
-  status        String   @default("pending") @db.VarChar(20) // pending, processing, completed, rejected
-  requestedAt   DateTime @default(now())
-  processedAt   DateTime?
-  rejectionReason String? @db.Text
-  dataDeleted   Json?    // Summary of deleted data
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  status          String    @default("pending") @db.VarChar(20) // pending, processing, completed, rejected
+  requestedAt     DateTime  @default(now())
+  processedAt     DateTime?
+  rejectionReason String?   @db.Text
+  dataDeleted     Json? // Summary of deleted data
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([status, requestedAt])
   @@map("data_deletion_requests")
 }
 
 model DataExportRequest {
-  id            String   @id @default(cuid())
-  userId        String
-  status        String   @default("pending") @db.VarChar(20) // pending, processing, completed, failed
-  exportFormat  String   @default("json") @db.VarChar(10) // json, csv
-  filePath      String?  @db.Text // Encrypted, temporary
-  expiresAt     DateTime?
-  requestedAt   DateTime @default(now())
-  processedAt   DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String    @id @default(cuid())
+  userId       String
+  status       String    @default("pending") @db.VarChar(20) // pending, processing, completed, failed
+  exportFormat String    @default("json") @db.VarChar(10) // json, csv
+  filePath     String?   @db.Text // Encrypted, temporary
+  expiresAt    DateTime?
+  requestedAt  DateTime  @default(now())
+  processedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, status])
   @@index([status, requestedAt])
@@ -667,16 +667,16 @@ model DataExportRequest {
 }
 
 model SecurityAlert {
-  id                String   @id @default(cuid())
-  userId            String?
-  alertType         String   @db.VarChar(50) // suspicious_login, password_breach, account_lockout, etc.
-  severity          String   @db.VarChar(20) // low, medium, high, critical
-  description       String?  @db.Text
-  actionRequired    String?  @db.Text
-  acknowledged      Boolean  @default(false)
-  createdAt         DateTime @default(now())
+  id             String   @id @default(cuid())
+  userId         String?
+  alertType      String   @db.VarChar(50) // suspicious_login, password_breach, account_lockout, etc.
+  severity       String   @db.VarChar(20) // low, medium, high, critical
+  description    String?  @db.Text
+  actionRequired String?  @db.Text
+  acknowledged   Boolean  @default(false)
+  createdAt      DateTime @default(now())
 
-  user              User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId, acknowledged])
   @@index([severity, createdAt])
@@ -688,38 +688,38 @@ model SecurityAlert {
 // ============================================
 
 model Promotion {
-  id                String   @id @default(cuid())
-  name              String   @db.VarChar(200)
-  description       String?  @db.Text
-  promotionType     String   @db.VarChar(50) // welcome_bonus, deposit_match, free_bet, etc.
-  termsAndConditions String? @db.Text
-  startDate         DateTime
-  endDate           DateTime
-  active            Boolean  @default(true)
-  eligibilityCriteria Json?  // JSON criteria
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  name                String   @db.VarChar(200)
+  description         String?  @db.Text
+  promotionType       String   @db.VarChar(50) // welcome_bonus, deposit_match, free_bet, etc.
+  termsAndConditions  String?  @db.Text
+  startDate           DateTime
+  endDate             DateTime
+  active              Boolean  @default(true)
+  eligibilityCriteria Json? // JSON criteria
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  userBonuses       UserBonus[]
+  userBonuses UserBonus[]
 
   @@index([active, startDate, endDate])
   @@map("promotions")
 }
 
 model UserBonus {
-  id                String   @id @default(cuid())
-  userId            String
-  promotionId       String
-  bonusAmount       Decimal  @db.Decimal(12, 2)
-  wageringRequirement Decimal @db.Decimal(12, 2)
-  wageredAmount     Decimal  @default(0) @db.Decimal(12, 2)
-  status            String   @default("pending") @db.VarChar(20) // pending, active, completed, expired, forfeited
-  expiresAt         DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  userId              String
+  promotionId         String
+  bonusAmount         Decimal   @db.Decimal(12, 2)
+  wageringRequirement Decimal   @db.Decimal(12, 2)
+  wageredAmount       Decimal   @default(0) @db.Decimal(12, 2)
+  status              String    @default("pending") @db.VarChar(20) // pending, active, completed, expired, forfeited
+  expiresAt           DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  promotion         Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  promotion Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
 
   @@index([userId, status])
   @@index([status, expiresAt])
@@ -734,17 +734,17 @@ model UserBonus {
 
 // Real-time odds cache - stores current odds for active selections
 model CurrentOdds {
-  id                  String   @id @default(cuid())
-  selectionId         String   @unique
-  currentOdds         Decimal  @db.Decimal(10, 3)
-  previousOdds        Decimal? @db.Decimal(10, 3)
-  oddsMovement        String?  @db.VarChar(10) // up, down, stable
-  lastUpdatedAt       DateTime @default(now())
-  syncedAt            DateTime @default(now())
-  externalOddsId      String?  @db.VarChar(255) // ID from odds provider
-  suspended           Boolean  @default(false)
-  
-  selection           BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
+  id             String   @id @default(cuid())
+  selectionId    String   @unique
+  currentOdds    Decimal  @db.Decimal(10, 3)
+  previousOdds   Decimal? @db.Decimal(10, 3)
+  oddsMovement   String?  @db.VarChar(10) // up, down, stable
+  lastUpdatedAt  DateTime @default(now())
+  syncedAt       DateTime @default(now())
+  externalOddsId String?  @db.VarChar(255) // ID from odds provider
+  suspended      Boolean  @default(false)
+
+  selection BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
 
   @@index([lastUpdatedAt])
   @@index([suspended])
@@ -753,14 +753,14 @@ model CurrentOdds {
 
 // Historical odds snapshots - for analytics and auditing
 model OddsSnapshot {
-  id                  String   @id @default(cuid())
-  selectionId         String
-  odds                Decimal  @db.Decimal(10, 3)
-  timestamp           DateTime @default(now())
-  source              String   @default("api") @db.VarChar(20) // api, manual, calculated
-  metadata            Json?    // Additional context like volume, momentum
-  
-  selection           BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  selectionId String
+  odds        Decimal  @db.Decimal(10, 3)
+  timestamp   DateTime @default(now())
+  source      String   @default("api") @db.VarChar(20) // api, manual, calculated
+  metadata    Json? // Additional context like volume, momentum
+
+  selection BetSelection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
 
   @@index([selectionId, timestamp])
   @@index([timestamp])
@@ -769,16 +769,16 @@ model OddsSnapshot {
 
 // Odds sync status - tracks API polling health
 model OddsSyncStatus {
-  id                  String   @id @default(cuid())
-  gameId              String   @unique
-  lastSyncAt          DateTime @default(now())
-  nextSyncAt          DateTime?
-  syncStatus          String   @default("active") @db.VarChar(20) // active, paused, failed, completed
-  failureCount        Int      @default(0)
-  lastError           String?  @db.Text
-  syncInterval        Int      @default(2000) // milliseconds
-  
-  game                Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  id           String    @id @default(cuid())
+  gameId       String    @unique
+  lastSyncAt   DateTime  @default(now())
+  nextSyncAt   DateTime?
+  syncStatus   String    @default("active") @db.VarChar(20) // active, paused, failed, completed
+  failureCount Int       @default(0)
+  lastError    String?   @db.Text
+  syncInterval Int       @default(2000) // milliseconds
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@index([syncStatus, nextSyncAt])
   @@map("odds_sync_status")
@@ -786,16 +786,16 @@ model OddsSyncStatus {
 
 // Odds change events - for WebSocket broadcasting
 model OddsChangeEvent {
-  id                  String   @id @default(cuid())
-  selectionId         String
-  gameId              String
-  oldOdds             Decimal  @db.Decimal(10, 3)
-  newOdds             Decimal  @db.Decimal(10, 3)
-  changePercentage    Decimal  @db.Decimal(6, 2)
-  changeType          String   @db.VarChar(20) // significant, minor, suspended, resumed
-  broadcasted         Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  
+  id               String   @id @default(cuid())
+  selectionId      String
+  gameId           String
+  oldOdds          Decimal  @db.Decimal(10, 3)
+  newOdds          Decimal  @db.Decimal(10, 3)
+  changePercentage Decimal  @db.Decimal(6, 2)
+  changeType       String   @db.VarChar(20) // significant, minor, suspended, resumed
+  broadcasted      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
   @@index([broadcasted, createdAt])
   @@index([gameId, createdAt])
   @@index([selectionId, createdAt])
@@ -809,17 +809,17 @@ model OddsChangeEvent {
 
 // Raw API response snapshots - full audit trail
 model ApiOddsSnapshot {
-  id              String   @id @default(cuid())
-  externalGameId  String   @db.VarChar(100) // ID from Odds API
-  sportKey        String   @db.VarChar(50)
-  homeTeam        String   @db.VarChar(100)
-  awayTeam        String   @db.VarChar(100)
-  commenceTime    DateTime
-  bookmaker       String   @db.VarChar(50)
-  rawData         Json     // Full market data from API
-  timestamp       DateTime @default(now())
-  
-  @@unique([externalGameId, timestamp])
+  id             String   @id @default(cuid())
+  externalGameId String   @db.VarChar(100) // ID from Odds API
+  sportKey       String   @db.VarChar(50)
+  homeTeam       String   @db.VarChar(100)
+  awayTeam       String   @db.VarChar(100)
+  commenceTime   DateTime
+  bookmaker      String   @db.VarChar(50)
+  rawData        Json // Full market data from API
+  timestamp      DateTime @default(now())
+
+  @@unique([externalGameId, bookmaker, timestamp])
   @@index([sportKey, timestamp])
   @@index([externalGameId])
   @@index([timestamp])
@@ -828,18 +828,20 @@ model ApiOddsSnapshot {
 
 // Odds change audit log - for fraud detection
 model OddsAuditLog {
-  id              String   @id @default(cuid())
-  externalGameId  String   @db.VarChar(100)
-  sportKey        String   @db.VarChar(50)
-  marketKey       String   @db.VarChar(20) // h2h, spreads, totals
-  selectionName   String   @db.VarChar(200)
-  oldOdds         Decimal  @db.Decimal(10, 3)
-  newOdds         Decimal  @db.Decimal(10, 3)
-  changePercent   Decimal  @db.Decimal(6, 2)
-  changeType      String   @db.VarChar(20) // significant, minor
-  createdAt       DateTime @default(now())
-  
+  id             String   @id @default(cuid())
+  externalGameId String   @db.VarChar(100)
+  sportKey       String   @db.VarChar(50)
+  marketKey      String   @db.VarChar(20) // h2h, spreads, totals
+  selectionName  String   @db.VarChar(200)
+  bookmaker      String   @db.VarChar(50)
+  oldOdds        Decimal  @db.Decimal(10, 3)
+  newOdds        Decimal  @db.Decimal(10, 3)
+  changePercent  Decimal  @db.Decimal(6, 2)
+  changeType     String   @db.VarChar(20) // significant, minor
+  createdAt      DateTime @default(now())
+
   @@index([externalGameId, createdAt])
+  @@index([bookmaker, createdAt])
   @@index([changeType, createdAt])
   @@index([sportKey, createdAt])
   @@map("odds_audit_log")

@@ -10,6 +10,7 @@ export default function GamePage({ params }: { params: Promise<{ gameId: string 
   if (loading) return <div>Loading odds...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  
   return (
     <div className="space-y-4">
       <h1>Live Odds</h1>
@@ -24,6 +25,7 @@ export default function GamePage({ params }: { params: Promise<{ gameId: string 
               <span className="font-semibold">{data.odds.toFixed(2)}</span>
 
               {data.movement && data.movement !== 'stable' && (
+                
                 <span
                   className={`text-sm ${data.movement === 'up' ? 'text-green-500' : 'text-red-500'
                     }`}
