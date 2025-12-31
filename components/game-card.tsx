@@ -1,19 +1,28 @@
 "use client"
 
+import { memo, useMemo } from "react"
 import { cn } from "@/lib/utils"
 import type { Game, BetSelection } from "@/lib/betting-data"
 import { formatOdds } from "@/lib/betting-data"
 import { Clock, Zap } from "lucide-react"
-import Image from 'next/image'
+
 interface GameCardProps {
   game: Game
   selectedBets: BetSelection[]
   onSelectBet: (bet: BetSelection) => void
 }
 
-export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
-  const isSelected = (gameId: string, type: string, selection: string) => {
-    return selectedBets.some((bet) => bet.gameId === gameId && bet.type === type && bet.selection === selection)
+export const GameCard = memo(function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
+  // Memoize selected bet IDs for this game to avoid recalculating on every render
+  const selectedBetIds = useMemo(() => {
+    return new Set(
+      selectedBets
+        .filter(bet => bet.gameId === game.id)
+        .map(bet => `${bet.type}-${bet.selection}`)
+    )
+  }, [selectedBets, game.id])
+  const isSelected = (type: string, selection: string) => {
+    return selectedBetIds.has(`${type}-${selection}`)
   }
 
   const handleBetClick = (
@@ -93,7 +102,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
             }
             className={cn(
               "w-full rounded-lg border border-border bg-secondary p-2 text-center transition-all hover:border-primary/50 hover:bg-secondary/80",
-              isSelected(game.id, "spread", "away") && "border-primary bg-primary/10",
+              isSelected("spread", "away") && "border-primary bg-primary/10",
             )}
           >
             <span className="block text-xs font-semibold">{game.odds.spread.away}</span>
@@ -105,7 +114,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
             }
             className={cn(
               "w-full rounded-lg border border-border bg-secondary p-2 text-center transition-all hover:border-primary/50 hover:bg-secondary/80",
-              isSelected(game.id, "spread", "home") && "border-primary bg-primary/10",
+              isSelected("spread", "home") && "border-primary bg-primary/10",
             )}
           >
             <span className="block text-xs font-semibold">{game.odds.spread.home}</span>
@@ -120,7 +129,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
             onClick={() => handleBetClick("moneyline", "away", game.odds.moneyline.away, game.awayTeam.abbr)}
             className={cn(
               "w-full rounded-lg border border-border bg-secondary p-2 text-center transition-all hover:border-primary/50 hover:bg-secondary/80",
-              isSelected(game.id, "moneyline", "away") && "border-primary bg-primary/10",
+              isSelected("moneyline", "away") && "border-primary bg-primary/10",
             )}
           >
             <span className="block text-sm font-semibold">{formatOdds(game.odds.moneyline.away)}</span>
@@ -129,7 +138,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
             onClick={() => handleBetClick("moneyline", "home", game.odds.moneyline.home, game.homeTeam.abbr)}
             className={cn(
               "w-full rounded-lg border border-border bg-secondary p-2 text-center transition-all hover:border-primary/50 hover:bg-secondary/80",
-              isSelected(game.id, "moneyline", "home") && "border-primary bg-primary/10",
+              isSelected("moneyline", "home") && "border-primary bg-primary/10",
             )}
           >
             <span className="block text-sm font-semibold">{formatOdds(game.odds.moneyline.home)}</span>
@@ -145,7 +154,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
             }
             className={cn(
               "w-full rounded-lg border border-border bg-secondary p-2 text-center transition-all hover:border-primary/50 hover:bg-secondary/80",
-              isSelected(game.id, "total", "over") && "border-primary bg-primary/10",
+              isSelected("total", "over") && "border-primary bg-primary/10",
             )}
           >
             <span className="block text-xs font-semibold">O {game.odds.total.line}</span>
@@ -157,7 +166,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
             }
             className={cn(
               "w-full rounded-lg border border-border bg-secondary p-2 text-center transition-all hover:border-primary/50 hover:bg-secondary/80",
-              isSelected(game.id, "total", "under") && "border-primary bg-primary/10",
+              isSelected("total", "under") && "border-primary bg-primary/10",
             )}
           >
             <span className="block text-xs font-semibold">U {game.odds.total.line}</span>
@@ -167,4 +176,7 @@ export function GameCard({ game, selectedBets, onSelectBet }: GameCardProps) {
       </div>
     </div>
   )
-}
+})
+
+// Custom comparison function for memo - only re-render if game data or relevant selections changed
+GameCard.displayName = 'GameCard'
