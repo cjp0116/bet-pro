@@ -801,3 +801,46 @@ model OddsChangeEvent {
   @@index([selectionId, createdAt])
   @@map("odds_change_events")
 }
+
+// ============================================
+// API ODDS AUDIT TABLES
+// For fraud detection and audit trail
+// ============================================
+
+// Raw API response snapshots - full audit trail
+model ApiOddsSnapshot {
+  id              String   @id @default(cuid())
+  externalGameId  String   @db.VarChar(100) // ID from Odds API
+  sportKey        String   @db.VarChar(50)
+  homeTeam        String   @db.VarChar(100)
+  awayTeam        String   @db.VarChar(100)
+  commenceTime    DateTime
+  bookmaker       String   @db.VarChar(50)
+  rawData         Json     // Full market data from API
+  timestamp       DateTime @default(now())
+  
+  @@unique([externalGameId, timestamp])
+  @@index([sportKey, timestamp])
+  @@index([externalGameId])
+  @@index([timestamp])
+  @@map("api_odds_snapshots")
+}
+
+// Odds change audit log - for fraud detection
+model OddsAuditLog {
+  id              String   @id @default(cuid())
+  externalGameId  String   @db.VarChar(100)
+  sportKey        String   @db.VarChar(50)
+  marketKey       String   @db.VarChar(20) // h2h, spreads, totals
+  selectionName   String   @db.VarChar(200)
+  oldOdds         Decimal  @db.Decimal(10, 3)
+  newOdds         Decimal  @db.Decimal(10, 3)
+  changePercent   Decimal  @db.Decimal(6, 2)
+  changeType      String   @db.VarChar(20) // significant, minor
+  createdAt       DateTime @default(now())
+  
+  @@index([externalGameId, createdAt])
+  @@index([changeType, createdAt])
+  @@index([sportKey, createdAt])
+  @@map("odds_audit_log")
+}

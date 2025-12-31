@@ -35,7 +35,6 @@ export default function GamePage({ params }: { params: Promise<{ gameId: string 
                 </span>
               )}
             </div>
-
             {data.lastUpdated && (
               <div className="text-xs text-gray-500 mt-1">
                 Updated: {new Date(data.lastUpdated).toLocaleTimeString()}

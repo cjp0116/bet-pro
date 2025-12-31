@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef, Suspense } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { SportsSidebar } from "@/components/sports-sidebar"
 import { GameCard } from "@/components/game-card"
@@ -62,8 +63,12 @@ interface OddsMeta {
   timestamp: string
 }
 
-export default function Home() {
-  const [selectedSport, setSelectedSport] = useState<string | null>(null)
+function HomeContent() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const sportFromUrl = searchParams.get("sport")
+  
+  const [selectedSport, setSelectedSport] = useState<string | null>(sportFromUrl)
   const [selectedBets, setSelectedBets] = useState<BetSelection[]>([])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [balance] = useState(1250.0)
@@ -72,6 +77,11 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [oddsMeta, setOddsMeta] = useState<OddsMeta | null>(null)
   const isInitialLoad = useRef(true)
+
+  // Sync URL params with state
+  useEffect(() => {
+    setSelectedSport(sportFromUrl)
+  }, [sportFromUrl])
 
   // Check if selected sport is a valid sport category (not a quick link)
   const isValidSportId = selectedSport && sports.some(s => s.id === selectedSport)
@@ -182,6 +192,12 @@ export default function Home() {
           onSelectSport={(sport) => {
             setSelectedSport(sport)
             setIsMobileMenuOpen(false)
+            // Update URL to keep it in sync
+            if (sport) {
+              router.push(`/?sport=${sport}`, { scroll: false })
+            } else {
+              router.push("/", { scroll: false })
+            }
           }}
           isOpen={isMobileMenuOpen}
         />
@@ -278,5 +294,19 @@ export default function Home() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <HomeContent />
+    </Suspense>
   )
 }

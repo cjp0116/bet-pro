@@ -1,7 +1,7 @@
-// Cron job to sync odds from external API to cache
+// Cron job to sync odds from external API to cache + DB
 // Can be called by Vercel Cron, QStash, or any scheduler
 import { NextRequest, NextResponse } from 'next/server';
-import { ExternalOddsSync } from '@/lib/odds/external-sync';
+import { UnifiedOddsSync } from '@/lib/odds/unified-sync';
 import { GamesCache } from '@/lib/odds/games-cache';
 
 // Verify cron secret to prevent unauthorized access
@@ -26,22 +26,22 @@ export async function GET(req: NextRequest) {
     if (sportId) {
       // Sync specific sport
       await GamesCache.invalidate(sportId);
-      const result = await ExternalOddsSync.syncSport(sportId);
-      results.push({ sport: sportId, games: result.games.length, fromCache: result.fromCache });
+      const result = await UnifiedOddsSync.syncSport(sportId);
+      results.push({ sport: sportId, games: result.games.length, fromCache: result.fromCache, dbPersisted: result.dbPersisted });
     } else {
       // Sync all supported sports
-      const sports = ExternalOddsSync.getSupportedSports();
+      const sports = UnifiedOddsSync.getSupportedSports();
 
       for (const sport of sports) {
         await GamesCache.invalidate(sport);
-        const result = await ExternalOddsSync.syncSport(sport);
-        results.push({ sport, games: result.games.length, fromCache: result.fromCache });
+        const result = await UnifiedOddsSync.syncSport(sport);
+        results.push({ sport, games: result.games.length, fromCache: result.fromCache, dbPersisted: result.dbPersisted });
       }
 
       // Also sync featured
       await GamesCache.invalidate();
-      const featured = await ExternalOddsSync.syncFeatured();
-      results.push({ sport: 'featured', games: featured.games.length, fromCache: featured.fromCache });
+      const featured = await UnifiedOddsSync.syncFeatured();
+      results.push({ sport: 'featured', games: featured.games.length, fromCache: featured.fromCache, dbPersisted: featured.dbPersisted });
     }
 
     return NextResponse.json({

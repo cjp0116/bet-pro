@@ -3,10 +3,11 @@
 import { cn } from "@/lib/utils"
 import { sports } from "@/lib/betting-data"
 import { Home, TrendingUp, Clock, Star, Trophy, Zap } from "lucide-react"
+import { useRouter, usePathname } from "next/navigation"
 
 interface SportsSidebarProps {
   selectedSport: string | null
-  onSelectSport: (sport: string | null) => void
+  onSelectSport?: (sport: string | null) => void
   isOpen: boolean
 }
 
@@ -20,6 +21,24 @@ const quickLinks = [
 ]
 
 export function SportsSidebar({ selectedSport, onSelectSport, isOpen }: SportsSidebarProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const isHomePage = pathname === "/"
+
+  const handleSelectSport = (sportId: string | null) => {
+    if (isHomePage && onSelectSport) {
+      // On home page, use the callback for smooth state update
+      onSelectSport(sportId)
+    } else {
+      // On other pages, navigate to home with sport param
+      if (sportId) {
+        router.push(`/?sport=${sportId}`)
+      } else {
+        router.push("/")
+      }
+    }
+  }
+
   return (
     <aside
       className={cn(
@@ -33,7 +52,7 @@ export function SportsSidebar({ selectedSport, onSelectSport, isOpen }: SportsSi
           {quickLinks.map((link) => (
             <button
               key={link.id}
-              onClick={() => onSelectSport(link.id === "home" ? null : link.id)}
+              onClick={() => handleSelectSport(link.id === "home" ? null : link.id)}
               className={cn(
                 "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 selectedSport === link.id || (link.id === "home" && selectedSport === null)
@@ -60,7 +79,7 @@ export function SportsSidebar({ selectedSport, onSelectSport, isOpen }: SportsSi
             {sports.map((sport) => (
               <button
                 key={sport.id}
-                onClick={() => onSelectSport(sport.id)}
+                onClick={() => handleSelectSport(sport.id)}
                 className={cn(
                   "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   selectedSport === sport.id

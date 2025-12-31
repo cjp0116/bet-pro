@@ -1,6 +1,6 @@
-// Fetch featured games - prioritizes fresh odds data
+// Fetch featured games - Redis cache + DB persistence for audit
 import { NextRequest, NextResponse } from 'next/server';
-import { ExternalOddsSync } from '@/lib/odds/external-sync';
+import { UnifiedOddsSync } from '@/lib/odds/unified-sync';
 import { GamesCache } from '@/lib/odds/games-cache';
 
 export async function GET(req: NextRequest) {
@@ -16,14 +16,13 @@ export async function GET(req: NextRequest) {
     let result;
 
     if (sportId) {
-      result = await ExternalOddsSync.syncSport(sportId);
+      result = await UnifiedOddsSync.syncSport(sportId);
     } else {
-      result = await ExternalOddsSync.syncFeatured();
+      result = await UnifiedOddsSync.syncFeatured();
     }
 
     // Set cache headers for client-side caching
     const headers = new Headers();
-    // Short cache for fresh data, encourage frequent updates
     headers.set('Cache-Control', 'public, max-age=5, stale-while-revalidate=10');
 
     return NextResponse.json({
@@ -33,6 +32,7 @@ export async function GET(req: NextRequest) {
         fromCache: result.fromCache,
         isStale: result.isStale,
         ageSeconds: result.ageSeconds,
+        dbPersisted: result.dbPersisted,
         timestamp: new Date().toISOString(),
       },
     }, { headers });
