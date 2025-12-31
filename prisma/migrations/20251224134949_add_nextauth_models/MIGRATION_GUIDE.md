@@ -15,6 +15,16 @@ This migration will cause **data loss** if not handled properly:
 - All `users.emailVerified` values will be lost
 - All `accounts` table data will be lost
 
+## Migration Files
+
+| File                              | Purpose                                       |
+| --------------------------------- | --------------------------------------------- |
+| `pre-migration-data-backup.sql`   | Creates backup tables + audit metadata        |
+| `migration.sql`                   | Prisma schema migration (auto-generated)      |
+| `post-migration-data-restore.sql` | Restores data with idempotency + verification |
+| `post-migration-cleanup.sql`      | Drops backup tables after verification        |
+| `test-migration.sql`              | Validation script for staging                 |
+
 ## Prerequisites
 
 1. **Database Backup**: Export a full database backup before proceeding
@@ -27,49 +37,64 @@ This migration will cause **data loss** if not handled properly:
 
 3. **Maintenance Window**: Schedule a maintenance window for production
 
-## Migration Steps
+---
 
-### Choose Your Approach
+## Migration Workflow
 
-**Option A: Temp Tables (Same Session Required)**
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        MIGRATION WORKFLOW DIAGRAM                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐       │
+│  │  1. BACKUP      │────▶│  2. MIGRATE     │────▶│  3. RESTORE     │       │
+│  │  (pre-backup)   │     │  (prisma)       │     │  (post-restore) │       │
+│  └─────────────────┘     └─────────────────┘     └─────────────────┘       │
+│         │                                               │                   │
+│         ▼                                               ▼                   │
+│  ┌─────────────────┐                          ┌─────────────────┐          │
+│  │ migration_backups│                          │  4. VERIFY      │          │
+│  │ audit table     │                          │  (manual checks)│          │
+│  └─────────────────┘                          └────────┬────────┘          │
+│                                                        │                   │
+│                     ┌──────────────────────────────────┤                   │
+│                     ▼                                  ▼                   │
+│              ┌─────────────┐                    ┌─────────────┐            │
+│              │ FAIL?       │                    │ SUCCESS?    │            │
+│              │ Investigate │                    │ 5. CLEANUP  │            │
+│              │ + Rollback  │                    │ (cleanup)   │            │
+│              └─────────────┘                    └─────────────┘            │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-- Use `pre-migration-data-backup.sql` and `post-migration-data-restore.sql`
-- Faster, automatic cleanup
-- **Requires**: Backup and restore in the same database session
+---
 
-**Option B: Persistent Tables (Separate Sessions OK)**
-
-- Use `pre-migration-data-backup-persistent.sql` and `post-migration-data-restore-persistent.sql`
-- Can run backup and restore in separate sessions
-- **Requires**: Manual cleanup of backup tables after verification
+## Step-by-Step Instructions
 
 ### Step 1: Pre-Migration Backup
 
-#### Option A: Temp Tables (Same Session)
-
-Run the pre-migration backup script **in the same database session** where you'll run the restore:
+Run the backup script to create backup tables and audit metadata:
 
 ```bash
 psql -h localhost -U your_user -d your_database -f pre-migration-data-backup.sql
 ```
 
-**Important**: Keep the database connection open after running this script.
+This script:
 
-#### Option B: Persistent Tables (Separate Sessions)
+- Creates `migration_backups` audit table (persistent)
+- Creates `users_emailverified_backup` table
+- Creates `accounts_backup` table
+- Records row counts, checksums, and balances for verification
+- Validates data integrity before migration
 
-Run the persistent backup script:
+**Verify backup:**
 
-```bash
-psql -h localhost -U your_user -d your_database -f pre-migration-data-backup-persistent.sql
+```sql
+SELECT source_table, backup_table, row_count, checksum_value, total_balance, status
+FROM migration_backups
+WHERE migration_name = '20251224134949_add_nextauth_models';
 ```
-
-This creates permanent backup tables that persist across sessions.
-
-Both scripts:
-
-- Back up `users.emailVerified` (converts BOOLEAN to TIMESTAMP)
-- Back up all `accounts` table data
-- Validate data integrity
 
 ### Step 2: Apply Schema Migration
 
@@ -77,65 +102,116 @@ Apply the main Prisma migration:
 
 ```bash
 npx prisma migrate deploy
-# OR
+# OR for manual application:
 npx prisma migrate resolve --applied 20251224134949_add_nextauth_models
 ```
 
 ### Step 3: Post-Migration Restore
 
-#### Option A: Temp Tables (Same Session)
-
-**Immediately after** the schema migration, in the **same database session**, run:
+Run the restore script to migrate data to the new schema:
 
 ```bash
 psql -h localhost -U your_user -d your_database -f post-migration-data-restore.sql
 ```
 
-#### Option B: Persistent Tables (Separate Sessions)
+This script:
 
-After the schema migration, run:
-
-```bash
-psql -h localhost -U your_user -d your_database -f post-migration-data-restore-persistent.sql
-```
-
-**After verification**, manually clean up backup tables:
-
-```sql
-DROP TABLE IF EXISTS _migration_emailverified_backup;
-DROP TABLE IF EXISTS _migration_accounts_backup;
-```
-
-Both scripts:
-
-- Restore `emailVerified` values (converted to TIMESTAMP)
-- Migrate `accounts` data to `financial_accounts`
-- Validate data integrity
+- Validates backup tables exist
+- Restores `emailVerified` values (BOOLEAN → TIMESTAMP conversion)
+- Migrates `accounts` data to `financial_accounts`
+- Uses `ON CONFLICT` for idempotency (safe to re-run)
+- Validates checksums and balances match audit records
+- Updates audit trail with restore status
 
 ### Step 4: Verification
 
-Run these verification queries:
+Run these verification queries before cleanup:
 
 ```sql
--- Verify emailVerified restoration
+-- 1. Verify emailVerified restoration
 SELECT
-    COUNT(*) as users_with_verified_email,
-    COUNT(*) FILTER (WHERE "emailVerified" IS NOT NULL) as verified_count
-FROM users;
+  (SELECT COUNT(*) FROM users_emailverified_backup) as backup_count,
+  (SELECT COUNT(*) FROM users u
+   INNER JOIN users_emailverified_backup b ON u.id = b.user_id
+   WHERE (u."emailVerified" = b.email_verified_timestamp)
+      OR (u."emailVerified" IS NULL AND b.email_verified_timestamp IS NULL)) as restored_count;
 
--- Verify account migration
+-- 2. Verify account migration
 SELECT
-    COUNT(*) as financial_accounts_count,
-    SUM(balance) as total_balance
-FROM financial_accounts;
+  (SELECT COUNT(*) FROM accounts_backup) as backup_count,
+  (SELECT COUNT(*) FROM financial_accounts fa
+   WHERE EXISTS (SELECT 1 FROM accounts_backup ab WHERE ab.id = fa.id)) as migrated_count;
 
--- Verify transaction foreign keys
+-- 3. Verify balances match
+SELECT
+  (SELECT COALESCE(SUM(balance), 0) FROM accounts_backup) as backup_balance,
+  (SELECT COALESCE(SUM(balance), 0) FROM financial_accounts) as current_balance;
+
+-- 4. Check for orphaned transactions (should be 0)
 SELECT COUNT(*) as orphaned_transactions
 FROM transactions t
-WHERE NOT EXISTS (
-    SELECT 1 FROM financial_accounts fa WHERE fa.id = t."accountId"
-);
+WHERE NOT EXISTS (SELECT 1 FROM financial_accounts fa WHERE fa.id = t."accountId");
+
+-- 5. View complete audit trail
+SELECT id, source_table, row_count, checksum_value, total_balance,
+       backup_timestamp, restore_timestamp, status, notes
+FROM migration_backups
+WHERE migration_name = '20251224134949_add_nextauth_models'
+ORDER BY backup_timestamp;
 ```
+
+**All checks must pass before proceeding to cleanup.**
+
+### Step 5: Cleanup (Only After Verification)
+
+Once verification is complete and application is tested:
+
+```bash
+psql -h localhost -U your_user -d your_database -f post-migration-cleanup.sql
+```
+
+This script:
+
+- Performs final verification checks (fail-safe)
+- Archives metadata in `migration_backups`
+- Drops backup tables
+- Updates audit trail with cleanup status
+
+---
+
+## Audit Trail: `migration_backups` Table
+
+The `migration_backups` table provides a permanent audit trail:
+
+| Column              | Description                         |
+| ------------------- | ----------------------------------- |
+| `id`                | Auto-incrementing primary key       |
+| `migration_name`    | Migration identifier                |
+| `source_table`      | Original table name                 |
+| `backup_table`      | Backup table name                   |
+| `row_count`         | Number of rows backed up            |
+| `checksum_value`    | MD5 hash for verification           |
+| `total_balance`     | Sum of balances (financial tables)  |
+| `backup_timestamp`  | When backup was created             |
+| `restore_timestamp` | When restore was completed          |
+| `cleanup_timestamp` | When cleanup was completed          |
+| `operator`          | Database user who ran the operation |
+| `status`            | Current status of the backup        |
+| `notes`             | Additional information              |
+
+**Status values:**
+
+- `in_progress` - Backup operation started
+- `backup_created` - Backup table created with data
+- `backup_complete` - All backups completed successfully
+- `restore_started` - Restore operation initiated
+- `restored` - Data restored from backup
+- `restore_complete` - All restores completed
+- `cleanup_started` - Cleanup initiated
+- `cleaned_up` - Backup tables dropped, migration complete
+- `failed` - Operation failed (investigate)
+
+---
 
 ## Data Transformation Rules
 
@@ -152,69 +228,172 @@ The `accounts` table maps directly to `financial_accounts`:
 - All IDs are preserved
 - All foreign key relationships are maintained
 
+---
+
 ## Rollback Plan
 
-If the migration fails:
+### Before Cleanup (Backup Tables Exist)
 
-1. **DO NOT** drop the temporary backup tables
-2. Restore from database backup
-3. Investigate the failure
-4. Fix issues and retry
+If issues are found before running `post-migration-cleanup.sql`:
+
+1. Backup tables still exist - data can be re-verified
+2. Investigate the specific failure
+3. Re-run `post-migration-data-restore.sql` (idempotent)
+4. If migration itself failed, restore from full database backup
+
+### After Cleanup
+
+If issues are found after cleanup:
+
+1. Restore from the full database backup created in prerequisites
+2. The `migration_backups` table contains checksums and balances for validation
+3. Contact database administrator
+
+---
+
+## Idempotency
+
+All scripts are designed to be safely re-run:
+
+| Script                            | Idempotency Mechanism                                                    |
+| --------------------------------- | ------------------------------------------------------------------------ |
+| `pre-migration-data-backup.sql`   | `CREATE TABLE IF NOT EXISTS`, deletes existing backup data before insert |
+| `post-migration-data-restore.sql` | `ON CONFLICT DO NOTHING`, `IS DISTINCT FROM` checks                      |
+| `post-migration-cleanup.sql`      | `DROP TABLE IF EXISTS`, status checks before operations                  |
+
+---
 
 ## Testing Checklist
 
 Before production:
 
+- [ ] Export full database backup
 - [ ] Run `test-migration.sql` on staging snapshot
-- [ ] Test full migration process on staging
+- [ ] Run complete workflow: backup → migrate → restore → verify
 - [ ] Verify all `emailVerified` values restored correctly
 - [ ] Verify all accounts migrated to `financial_accounts`
 - [ ] Verify transaction foreign keys intact
 - [ ] Verify no orphaned records
 - [ ] Verify balance totals match
+- [ ] Verify audit trail is complete
 - [ ] Test application functionality
-- [ ] Export production backup
+- [ ] Run cleanup on staging
+- [ ] Verify staging is fully functional post-cleanup
+
+---
 
 ## Production Deployment
 
-1. **Export backup**: `pg_dump > backup.sql`
-2. **Run pre-migration backup**: `pre-migration-data-backup.sql`
-3. **Apply schema migration**: `npx prisma migrate deploy`
-4. **Run post-migration restore**: `post-migration-data-restore.sql`
-5. **Verify data integrity**: Run verification queries
-6. **Test application**: Verify critical paths work
-7. **Monitor**: Watch for errors in logs
+```bash
+# 1. Export backup
+pg_dump -h localhost -U your_user -d your_database > backup_$(date +%Y%m%d_%H%M%S).sql
+
+# 2. Run pre-migration backup
+psql -h localhost -U your_user -d your_database -f pre-migration-data-backup.sql
+
+# 3. Apply schema migration
+npx prisma migrate deploy
+
+# 4. Run post-migration restore
+psql -h localhost -U your_user -d your_database -f post-migration-data-restore.sql
+
+# 5. Verify data integrity (run verification queries)
+
+# 6. Test application functionality
+
+# 7. If all verified, run cleanup
+psql -h localhost -U your_user -d your_database -f post-migration-cleanup.sql
+
+# 8. Monitor for errors in logs
+```
+
+---
 
 ## Troubleshooting
 
-### Temp Tables Not Found
+### Backup Table Not Found
 
-If you see "relation does not exist" errors:
+```
+ERROR: relation "users_emailverified_backup" does not exist
+```
 
-- You must run pre-migration and post-migration scripts in the **same database session**
-- Temp tables are session-scoped in PostgreSQL
+**Solution:** Run `pre-migration-data-backup.sql` first.
 
 ### Data Count Mismatch
 
-If verification shows count mismatches:
+```
+ERROR: EmailVerified restoration mismatch
+```
+
+**Solution:**
 
 - Check for constraint violations
 - Check for duplicate IDs
 - Review migration logs
+- Verify source data wasn't modified during migration
 
 ### Balance Mismatch
 
-If balances don't match:
+```
+ERROR: Balance mismatch after migration
+```
+
+**Solution:**
 
 - Check for rounding issues (tolerance: 0.01)
 - Verify all accounts were migrated
 - Check for NULL values
+- Compare with audit trail: `SELECT total_balance FROM migration_backups WHERE source_table = 'accounts'`
+
+### Checksum Mismatch
+
+```
+ERROR: Accounts checksum mismatch
+```
+
+**Solution:**
+
+- Data may have been modified between backup and restore
+- Check for deleted or added records
+- Re-run backup if source data is authoritative
+
+### Orphaned Transactions
+
+```
+WARNING: Found N transactions with invalid accountId
+```
+
+**Solution:**
+
+- Some accounts may not have been migrated
+- Check for accounts in backup but not in financial_accounts
+- Investigate specific transaction accountIds
+
+---
 
 ## Support
 
 If you encounter issues:
 
-1. Check migration logs
-2. Review verification queries
-3. Restore from backup if needed
-4. Contact database administrator
+1. Check the audit trail: `SELECT * FROM migration_backups ORDER BY backup_timestamp DESC`
+2. Review migration logs
+3. Run verification queries
+4. Restore from backup if needed
+5. Contact database administrator
+
+---
+
+## Files Reference
+
+```
+prisma/migrations/20251224134949_add_nextauth_models/
+├── migration.sql                      # Prisma-generated schema migration
+├── pre-migration-data-backup.sql      # Step 1: Backup script
+├── post-migration-data-restore.sql    # Step 3: Restore script
+├── post-migration-cleanup.sql         # Step 5: Cleanup script
+├── pre-migration-data-backup-persistent.sql   # Alternative: persistent backup
+├── post-migration-data-restore-persistent.sql # Alternative: persistent restore
+├── test-migration.sql                 # Staging validation script
+├── MIGRATION_GUIDE.md                 # This guide
+└── README.md                          # Quick reference
+```

@@ -74,10 +74,10 @@ const SPORT_ID_TO_API_KEYS: Record<string, string[]> = {
   basketball: ['basketball_nba', 'basketball_ncaab'],
   baseball: ['baseball_mlb'],
   hockey: ['icehockey_nhl'],
-  soccer: ['soccer_epl', 'soccer_usa_mls', 'soccer_spain_la_liga', 'soccer_germany_bundesliga'],
+  soccer: ['soccer_epl', 'soccer_usa_mls', 'soccer_spain_la_liga', 'soccer_germany_bundesliga', 'soccer_italy_serie_a'],
   mma: ['mma_mixed_martial_arts'],
   tennis: ['tennis_atp_australian_open', 'tennis_wta_australian_open', 'tennis_atp_us_open', 'tennis_wta_us_open'],
-  golf: ['golf_pga_championship_winner', 'golf_masters_tournament_winner'],
+  golf: ['golf_pga_championship_winner', 'golf_masters_tournament_winner', 'golf_us_open_winner', 'golf_the_open_championship_winner'],
 };
 
 const PREFERRED_BOOKMAKERS = ['fanduel', 'draftkings', 'betmgm', 'caesars', 'pointsbetus'];

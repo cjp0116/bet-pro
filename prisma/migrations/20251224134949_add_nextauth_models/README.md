@@ -6,25 +6,58 @@ This directory contains scripts to safely migrate data when applying the `202512
 
 ### Core Migration Scripts
 
-1. **`pre-migration-data-backup.sql`** - Backup script using temp tables (requires same session)
-2. **`post-migration-data-restore.sql`** - Restore script for temp tables
-3. **`pre-migration-data-backup-persistent.sql`** - Backup script using persistent tables
-4. **`post-migration-data-restore-persistent.sql`** - Restore script for persistent tables
+| #   | File                              | Description                                             |
+| --- | --------------------------------- | ------------------------------------------------------- |
+| 1   | `pre-migration-data-backup.sql`   | Creates backup tables + `migration_backups` audit table |
+| 2   | `migration.sql`                   | Prisma-generated schema migration                       |
+| 3   | `post-migration-data-restore.sql` | Restores data with idempotency + FK validation          |
+| 4   | `post-migration-cleanup.sql`      | Drops backup tables after verification                  |
+
+### Alternative Scripts (Persistent Tables)
+
+| File                                         | Description                                           |
+| -------------------------------------------- | ----------------------------------------------------- |
+| `pre-migration-data-backup-persistent.sql`   | Backup using persistent tables (separate sessions OK) |
+| `post-migration-data-restore-persistent.sql` | Restore for persistent tables                         |
 
 ### Testing & Documentation
 
-5. **`test-migration.sql`** - Validation script to test migration on staging
-6. **`MIGRATION_GUIDE.md`** - Complete migration guide with instructions
-7. **`README.md`** - This file
+| File                 | Description                   |
+| -------------------- | ----------------------------- |
+| `test-migration.sql` | Validation script for staging |
+| `MIGRATION_GUIDE.md` | **Complete migration guide**  |
+| `README.md`          | This file                     |
 
 ## Quick Start
 
-1. **Read the guide**: `MIGRATION_GUIDE.md`
-2. **Test first**: Run `test-migration.sql` on staging
-3. **Backup**: Run pre-migration script
-4. **Migrate**: Apply Prisma migration
-5. **Restore**: Run post-migration script
-6. **Verify**: Check data integrity
+```bash
+# 1. Backup database
+pg_dump -h localhost -U user -d database > backup_$(date +%Y%m%d).sql
+
+# 2. Run pre-migration backup
+psql -f pre-migration-data-backup.sql
+
+# 3. Apply Prisma migration
+npx prisma migrate deploy
+
+# 4. Run post-migration restore
+psql -f post-migration-data-restore.sql
+
+# 5. Verify (run queries in MIGRATION_GUIDE.md)
+
+# 6. Cleanup
+psql -f post-migration-cleanup.sql
+```
+
+## Workflow Diagram
+
+```
+BACKUP ──▶ MIGRATE ──▶ RESTORE ──▶ VERIFY ──▶ CLEANUP
+  │                        │          │
+  ▼                        ▼          ▼
+audit                   validate    fail-safe
+table                   checksums   checks
+```
 
 ## What Gets Migrated
 
@@ -38,18 +71,34 @@ This directory contains scripts to safely migrate data when applying the `202512
   - All IDs preserved
   - All foreign keys maintained
 
+## Audit Trail
+
+The `migration_backups` table provides a permanent audit trail:
+
+```sql
+SELECT source_table, row_count, checksum_value, total_balance, status
+FROM migration_backups
+WHERE migration_name = '20251224134949_add_nextauth_models';
+```
+
 ## Safety Features
 
 - ✅ Transaction-wrapped operations
-- ✅ Data integrity validation
-- ✅ Foreign key verification
+- ✅ Idempotent scripts (safe to re-run)
+- ✅ Checksum verification
 - ✅ Balance reconciliation
-- ✅ Comprehensive error handling
+- ✅ Foreign key validation
+- ✅ Fail-safe checks before cleanup
+- ✅ Comprehensive audit trail
 - ✅ Rollback support via database backup
 
 ## Important Notes
 
 - **Always backup** your database before running migrations
 - **Test on staging** first using `test-migration.sql`
-- **Choose the right version**: temp tables (same session) vs persistent (separate sessions)
-- **Verify** data integrity after migration
+- **Verify** data integrity before running cleanup
+- The `migration_backups` table is retained permanently for audit compliance
+
+## Full Documentation
+
+See **[MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)** for complete instructions.
