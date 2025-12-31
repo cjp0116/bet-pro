@@ -9,6 +9,8 @@ export default {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      // Allow linking Google to existing email accounts
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: 'credentials',
@@ -21,16 +23,28 @@ export default {
           return null;
         }
 
-        const email = credentials.email as string;
+        const email = (credentials.email as string).toLowerCase();
         const password = credentials.password as string;
 
-        // Find user by email
+        // Find user by email with accounts to check for OAuth
         const user = await prisma.user.findUnique({
           where: { email },
-          include: { password: true },
+          include: { 
+            password: true,
+            accounts: true,
+          },
         });
 
-        if (!user || !user.password) {
+        if (!user) {
+          return null;
+        }
+
+        // Check if user only has OAuth account (no password set)
+        if (!user.password) {
+          const hasGoogleAccount = user.accounts.some(acc => acc.provider === 'google');
+          if (hasGoogleAccount) {
+            throw new Error('OAUTH_ACCOUNT_ONLY');
+          }
           return null;
         }
 
@@ -59,9 +73,30 @@ export default {
     error: '/login',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      // For OAuth providers (like Google), auto-verify email
+      if (account?.provider === 'google' && user.email) {
+        // Check if user exists and update emailVerified if needed
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email.toLowerCase() },
+        });
+
+        if (existingUser && !existingUser.emailVerified) {
+          await prisma.user.update({
+            where: { id: existingUser.id },
+            data: { emailVerified: new Date() },
+          });
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
+      }
+      // Store provider info in token for reference
+      if (account) {
+        token.provider = account.provider;
       }
       return token;
     },

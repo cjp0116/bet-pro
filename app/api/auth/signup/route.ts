@@ -39,11 +39,60 @@ export async function POST(request: NextRequest) {
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
+      include: {
+        accounts: true,  // Check for OAuth accounts
+        password: true,  // Check if password exists
+      },
     })
 
     if (existingUser) {
-      // Don't reveal if email exists for security reasons
-      // But if email is not verified, allow re-registration
+      // Check if user signed up via OAuth (e.g., Google)
+      const hasOAuthAccount = existingUser.accounts.length > 0
+      
+      if (hasOAuthAccount && existingUser.emailVerified) {
+        // User has OAuth account - check if they also have a password
+        if (existingUser.password) {
+          return NextResponse.json(
+            { error: 'An account with this email already exists' },
+            { status: 409 }
+          )
+        }
+        
+        // Allow adding password to existing OAuth account
+        const passwordHash = await hashPassword(password)
+        
+        await prisma.userPassword.create({
+          data: {
+            userId: existingUser.id,
+            passwordHash,
+          },
+        })
+
+        // Update profile if not set
+        const existingProfile = await prisma.userProfile.findUnique({
+          where: { userId: existingUser.id },
+        })
+
+        if (!existingProfile) {
+          await prisma.userProfile.create({
+            data: {
+              userId: existingUser.id,
+              firstName,
+              lastName,
+            },
+          })
+        }
+
+        return NextResponse.json(
+          {
+            success: true,
+            message: 'Password added to your account. You can now sign in with either Google or email/password.',
+          },
+          { status: 200 }
+        )
+      }
+
+      // User has verified email account (not OAuth)
       if (existingUser.emailVerified) {
         return NextResponse.json(
           { error: 'An account with this email already exists' },

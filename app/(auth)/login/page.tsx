@@ -43,6 +43,8 @@ export default function LoginPage() {
       if (response?.error) {
         if (response.error === "EMAIL_NOT_VERIFIED") {
           setError("Please verify your email before signing in. Check your inbox for the verification link.")
+        } else if (response.error === "OAUTH_ACCOUNT_ONLY") {
+          setError("This account uses Google sign-in. Please click 'Continue with Google' above.")
         } else {
           setError("Invalid email or password. Please try again.")
         }
