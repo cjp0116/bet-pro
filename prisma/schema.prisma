@@ -15,24 +15,30 @@ datasource db {
 // ============================================
 
 model User {
-  id                String   @id @default(cuid())
-  email             String   @unique @db.VarChar(255)
-  emailVerified     Boolean  @default(false)
-  accountStatus     String   @default("active") // active, suspended, closed
-  kycVerified       Boolean  @default(false)
-  kycLevel          String   @default("none") // none, basic, enhanced
-  gdprConsentGiven  Boolean  @default(false)
-  marketingConsent  Boolean  @default(false)
-  riskScore         Int      @default(0) @db.SmallInt // 0-100
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                String    @id @default(cuid())
+  name              String?
+  email             String    @unique @db.VarChar(255)
+  emailVerified     DateTime? // NextAuth requires DateTime, not Boolean
+  image             String?
+  accountStatus     String    @default("active") // active, suspended, closed
+  kycVerified       Boolean   @default(false)
+  kycLevel          String    @default("none") // none, basic, enhanced
+  gdprConsentGiven  Boolean   @default(false)
+  marketingConsent  Boolean   @default(false)
+  riskScore         Int       @default(0) @db.SmallInt // 0-100
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  // Relations
+  // NextAuth Relations
+  accounts          Account[]  // OAuth accounts (Google, etc.)
+  sessions          Session[]  // NextAuth sessions
+
+  // App Relations
   profile           UserProfile?
   password          UserPassword?
   twoFactorAuth     TwoFactorAuth?
-  sessions          UserSession[]
-  accounts          Account[]
+  userSessions      UserSession[] // Custom sessions
+  financialAccounts FinancialAccount[]
   bets              Bet[]
   transactions      Transaction[]
   paymentMethods    PaymentMethod[]
@@ -52,6 +58,51 @@ model User {
   @@index([riskScore])
   @@index([createdAt])
   @@map("users")
+}
+
+// NextAuth Account model for OAuth providers
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("oauth_accounts")
+}
+
+// NextAuth Session model
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sessionToken])
+  @@map("auth_sessions")
+}
+
+// NextAuth VerificationToken model
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
 model UserProfile {
@@ -318,7 +369,7 @@ model BetSelectionBet {
 // 3. FINANCIAL TABLES
 // ============================================
 
-model Account {
+model FinancialAccount {
   id                    String   @id @default(cuid())
   userId                String
   accountType           String   @default("main") @db.VarChar(20) // main, bonus, free_bet
@@ -335,7 +386,7 @@ model Account {
 
   @@unique([userId, accountType])
   @@index([userId])
-  @@map("accounts")
+  @@map("financial_accounts")
 }
 
 model Transaction {
@@ -354,9 +405,9 @@ model Transaction {
   createdAt             DateTime @default(now())
   processedAt           DateTime?
 
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account               Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  paymentMethod         PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account               FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  paymentMethod         PaymentMethod?   @relation(fields: [paymentMethodId], references: [id])
   deposit               Deposit?
   withdrawal            Withdrawal?
 

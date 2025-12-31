@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 
+import { signIn } from 'next-auth/react';
+
 export default function LoginPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
@@ -32,20 +34,21 @@ export default function LoginPage() {
     setError("")
 
     try {
-      // TODO: Implement actual login logic with your auth provider
-      // const response = await signIn("credentials", {
-      //   email: formData.email,
-      //   password: formData.password,
-      //   redirect: false,
-      // })
+      const response = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false, // Don't redirect, handle manually
+      })
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-
-      // For demo purposes - redirect to home
-      router.push("/")
+      if (response?.error) {
+        setError("Invalid email or password. Please try again.")
+      } else if (response?.ok) {
+        router.push("/")
+        router.refresh()
+      }
     } catch (err) {
-      setError("Invalid email or password. Please try again.")
+      setError("An error occurred. Please try again.")
+      console.error("Login error:", err instanceof Error ? err.message : "Unknown error")
     } finally {
       setIsLoading(false)
     }
@@ -55,10 +58,9 @@ export default function LoginPage() {
     setIsGoogleLoading(true)
     try {
       // TODO: Implement Google OAuth
-      // await signIn("google", { callbackUrl: "/" })
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      router.push("/")
+      await signIn("google", { callbackUrl: "/" })
     } catch (err) {
+      console.error("Google sign-in error:", err instanceof Error ? err.message : "Unknown error")
       setError("Failed to sign in with Google. Please try again.")
     } finally {
       setIsGoogleLoading(false)
