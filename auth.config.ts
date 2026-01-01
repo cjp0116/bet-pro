@@ -1,10 +1,14 @@
 import { NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import EmailProvider from 'next-auth/providers/nodemailer';
 import { prisma } from '@/lib/db/prisma';
-import { verifyPassword } from './lib/security/hashing';
-import { logSignInAttempt } from './lib/auth/signin-logger';
+import { verifyPassword } from '@/lib/security/hashing';
+import { logSignInAttempt } from '@/lib/auth/signin-logger';
 import { headers } from 'next/headers';
+import { generateEmailVerificationToken } from '@/lib/auth/email';
+import { sendVerificationEmail } from '@/lib/auth/mailer';
+
 
 // Helper to get request metadata
 async function getRequestInfo() {
@@ -25,7 +29,10 @@ export default {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      allowDangerousEmailAccountLinking: true
+      allowDangerousEmailAccountLinking: true,
+      profile(profile) {
+        return { role: profile.role ?? 'user', ...profile };
+      }
     }),
     CredentialsProvider({
       name: 'Credentials',
@@ -150,37 +157,60 @@ export default {
         }
       },
     }),
+    EmailProvider({
+      server: process.env.EMAIL_SERVER as string,
+      from: process.env.EMAIL_FROM as string,
+      sendVerificationRequest: async ({ identifier: email, url }) => {
+        const user = await prisma.user.findUnique({
+          where: { email: email },
+          include: { profile: true },
+        });
+
+        // For magic link sign-in, generate and send verification email
+        const { token } = generateEmailVerificationToken(email);
+        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+        const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
+        const firstName = user?.profile?.firstName || user?.name?.split(' ')[0] || email.split('@')[0];
+
+        // Store token in database
+        const { hash: hashFn } = await import('@/lib/security/encryption');
+        await prisma.verificationToken.upsert({
+          where: { identifier_token: { identifier: email, token: hashFn(token) } },
+          create: {
+            identifier: email,
+            token: hashFn(token),
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          },
+          update: {
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          },
+        });
+
+        await sendVerificationEmail(email, verificationUrl, firstName);
+        console.log('[Auth EmailProvider] Verification email sent to:', email);
+      },
+    }),
   ],
   pages: {
     signIn: '/login',
     error: '/login',
   },
   callbacks: {
-    async signIn({ user, account }) {
-      // Log OAuth sign-ins (Google, etc.)
-      if (account?.provider && account.provider !== 'credentials' && user.id && user.email) {
-        const { ip, userAgent } = await getRequestInfo();
-
-        await logSignInAttempt({
-          userId: user.id,
-          email: user.email,
-          provider: account.provider,
-          ip,
-          userAgent,
-          success: true,
-        });
-      }
+    async signIn() {
+      // OAuth logging moved to events.signIn (runs AFTER user is persisted)
       return true;
     },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
     },

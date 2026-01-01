@@ -23,16 +23,17 @@ function VerifyEmailContent() {
 
     const verifyEmail = async () => {
       try {
-        // TODO: Implement actual verification logic
-        // const response = await fetch(`/api/auth/verify-email?token=${token}`)
-        // const data = await response.json()
+        const response = await fetch(`/api/auth/verify-email?token=${token}`)
+        const data = await response.json()
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000))
-
-        // Simulate success (in real implementation, check response)
-        setStatus("success")
-      } catch (err) {
+        if (data.success) {
+          setStatus("success")
+        } else if (data.error === "expired") {
+          setStatus("expired")
+        } else {
+          setStatus("error")
+        }
+      } catch {
         setStatus("error")
       }
     }

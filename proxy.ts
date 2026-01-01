@@ -1,7 +1,7 @@
 import authConfig from './auth.config';
 import NextAuth from 'next-auth';
 
-const { auth } = NextAuth(authConfig);
+const { auth  } = NextAuth(authConfig);
 
 export default auth;
 
@@ -12,6 +12,7 @@ export const config = {
     '/my-bets/:path*',
     '/transactions/:path*',
     '/settings/:path*',
+    '/',
     // Exclude public routes and static files
     '/((?!api/auth|_next/static|_next/image|favicon.ico|login|signup|forgot-password|verify-email|$).*)',
   ],

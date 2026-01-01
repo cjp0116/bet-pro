@@ -20,18 +20,21 @@ export default function ForgotPasswordPage() {
     setError("")
 
     try {
-      // TODO: Implement actual password reset logic
-      // const response = await fetch("/api/auth/forgot-password", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ email }),
-      // })
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || "An error occurred. Please try again.")
+        return
+      }
 
       setIsSubmitted(true)
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.")
     } finally {
       setIsLoading(false)

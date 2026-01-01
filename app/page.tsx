@@ -10,6 +10,7 @@ import { PromoBanner } from "@/components/promo-banner"
 import { LiveGamesTicker } from "@/components/live-games-ticker"
 import { featuredGames as fallbackGames, sports, type BetSelection, type Game } from "@/lib/betting-data"
 import { Loader2 } from "lucide-react"
+import { useSession, SessionProvider } from "next-auth/react";
 
 // Check if game odds have changed
 function hasOddsChanged(oldGame: Game, newGame: Game): boolean {
@@ -64,10 +65,12 @@ interface OddsMeta {
 }
 
 function HomeContent() {
+  const session = useSession();
+  console.log(session.data);
   const searchParams = useSearchParams()
   const router = useRouter()
   const sportFromUrl = searchParams.get("sport")
-  
+
   const [selectedSport, setSelectedSport] = useState<string | null>(sportFromUrl)
   const [selectedBets, setSelectedBets] = useState<BetSelection[]>([])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -179,6 +182,7 @@ function HomeContent() {
   const currentSport = sports.find((s) => s.id === selectedSport)
 
   return (
+
     <div className="min-h-screen bg-background">
       <Header
         balance={balance}
@@ -294,6 +298,7 @@ function HomeContent() {
         </div>
       )}
     </div>
+
   )
 }
 
@@ -306,7 +311,9 @@ export default function Home() {
         </div>
       }
     >
-      <HomeContent />
+      <SessionProvider>
+        <HomeContent />
+      </SessionProvider>
     </Suspense>
   )
 }

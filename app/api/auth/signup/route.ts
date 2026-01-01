@@ -8,6 +8,7 @@ import {
   parseBrowser,
   parseOS,
 } from '@/lib/security/device-fingerprint';
+import { sendVerificationEmail } from '@/lib/auth/mailer';
 
 export async function POST(req: NextRequest) {
   try {
@@ -209,9 +210,18 @@ export async function POST(req: NextRequest) {
       return { user, verificationToken };
     });
 
-    // TODO: Send verification email
-    // await sendVerificationEmail(normalizedEmail, result.verificationToken);
-    console.log('[Signup] Verification token:', result.verificationToken); // Remove in production
+    // Send verification email
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const verificationUrl = `${baseUrl}/verify-email?token=${result.verificationToken}`;
+    const displayName = firstName || normalizedEmail.split('@')[0];
+
+    const emailSent = await sendVerificationEmail(normalizedEmail, verificationUrl, displayName);
+
+    if (!emailSent) {
+      console.error('[Signup] Failed to send verification email to:', normalizedEmail);
+    } else {
+      console.log('[Signup] Verification email sent to:', normalizedEmail);
+    }
 
     return NextResponse.json({
       success: true,
