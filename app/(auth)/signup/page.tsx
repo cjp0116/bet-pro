@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { signIn} from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 
 
 interface PasswordRequirement {
@@ -79,23 +79,29 @@ export default function SignupPage() {
     setError("")
 
     try {
-      // TODO: Implement actual signup logic
-      // const response = await fetch("/api/auth/signup", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     firstName: formData.firstName,
-      //     lastName: formData.lastName,
-      //     email: formData.email,
-      //     password: formData.password,
-      //   }),
-      // })
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const data = await response.json()
 
-      // Show verification step
-      setStep("verification")
+      if (response.ok) {
+        setStep("verification")
+      } else {
+        // Display specific error from API
+        if (data.details && Array.isArray(data.details)) {
+          setError(data.details.join(". "))
+        } else {
+          setError(data.error || "Failed to create account. Please try again.")
+        }
+      }
     } catch (err) {
       setError("An error occurred. Please try again.")
     } finally {
@@ -107,8 +113,7 @@ export default function SignupPage() {
     setIsGoogleLoading(true)
     try {
       // TODO: Implement Google OAuth
-      // await signIn("google", { callbackUrl: "/" })
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await signIn("google", { callbackUrl: "/" })
     } catch (err) {
       setError("Failed to sign up with Google. Please try again.")
     } finally {

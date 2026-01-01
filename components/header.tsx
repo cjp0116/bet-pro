@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { signOut } from "next-auth/react"
 
 interface HeaderProps {
   balance: number
@@ -108,7 +109,11 @@ export function Header({ balance, onMenuToggle, isMobileMenuOpen }: HeaderProps)
               <DropdownMenuItem>Responsible Gaming</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">Sign Out</DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive hover:cursor-pointer"
+                onClick={() => signOut({ callbackUrl: "/login" })}>
+                Sign Out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

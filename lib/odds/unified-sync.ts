@@ -232,6 +232,9 @@ export class UnifiedOddsSync {
       return { games: [], rawEvents: [] };
     }
 
+    // Debug: log API key info (first/last 4 chars only for security)
+    console.log(`[UnifiedSync] API Key: ${apiKey.slice(0, 4)}...${apiKey.slice(-4)} (length: ${apiKey.length})`);
+
     const allGames: CachedGame[] = [];
     const allEvents: OddsApiEvent[] = [];
 
@@ -253,7 +256,10 @@ export class UnifiedOddsSync {
         clearTimeout(timeoutId);
 
         if (!response.ok) {
+          const errorBody = await response.text();
           console.error(`[UnifiedSync] Odds API error for ${sportKey}: ${response.status}`);
+          console.error(`[UnifiedSync] Error body: ${errorBody}`);
+          console.error(`[UnifiedSync] Request URL: ${url.toString().replace(apiKey, 'REDACTED')}`);
           continue;
         }
 
@@ -336,11 +342,13 @@ export class UnifiedOddsSync {
    * Merge scores into cached games
    */
   static mergeScoresIntoGames(games: CachedGame[], scores: Map<string, ScoresApiEvent>): CachedGame[] {
-    return games.map(game => {
+    let mergedCount = 0;
+    const result = games.map(game => {
       const scoreData = scores.get(game.id);
       if (!scoreData || !scoreData.scores) {
         return game;
       }
+      mergedCount++;
 
       // Find home and away scores
       const homeScore = scoreData.scores.find(s => s.name === game.homeTeam.name);
@@ -369,6 +377,12 @@ export class UnifiedOddsSync {
         lastScoreUpdate: scoreData.last_update || undefined,
       };
     });
+
+    if (mergedCount > 0) {
+      console.log(`[UnifiedSync] Merged scores for ${mergedCount}/${games.length} games`);
+    }
+
+    return result;
   }
 
   /**

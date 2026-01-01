@@ -3,6 +3,22 @@ import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/db/prisma';
 import { verifyPassword } from './lib/security/hashing';
+import { logSignInAttempt } from './lib/auth/signin-logger';
+import { headers } from 'next/headers';
+
+// Helper to get request metadata
+async function getRequestInfo() {
+  try {
+    const headersList = await headers();
+    const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || headersList.get('x-real-ip')
+      || 'unknown';
+    const userAgent = headersList.get('user-agent') || '';
+    return { ip, userAgent };
+  } catch {
+    return { ip: 'unknown', userAgent: '' };
+  }
+}
 
 export default {
   providers: [
@@ -18,6 +34,8 @@ export default {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        const { ip, userAgent } = await getRequestInfo();
+
         try {
           if (!credentials?.email || !credentials?.password) {
             console.log('[Auth] Missing credentials');
@@ -46,6 +64,18 @@ export default {
           // Check if account is locked
           if (user.password.lockedUntil && user.password.lockedUntil > new Date()) {
             console.log('[Auth] Account is locked until:', user.password.lockedUntil);
+
+            // Log failed attempt due to lock
+            await logSignInAttempt({
+              userId: user.id,
+              email: user.email,
+              provider: 'credentials',
+              ip,
+              userAgent,
+              success: false,
+              errorMessage: 'Account locked',
+            });
+
             throw new Error('Account is temporarily locked. Please try again later.');
           }
 
@@ -62,10 +92,21 @@ export default {
               where: { userId: user.id },
               data: {
                 failedLoginAttempts: failedAttempts,
-                lockedUntil: failedAttempts >= maxAttempts 
+                lockedUntil: failedAttempts >= maxAttempts
                   ? new Date(Date.now() + lockDuration)
                   : null,
               },
+            });
+
+            // Log failed attempt
+            await logSignInAttempt({
+              userId: user.id,
+              email: user.email,
+              provider: 'credentials',
+              ip,
+              userAgent,
+              success: false,
+              errorMessage: 'Invalid password',
             });
 
             console.log('[Auth] Invalid password for user:', email, `(attempt ${failedAttempts}/${maxAttempts})`);
@@ -82,6 +123,16 @@ export default {
               },
             });
           }
+
+          // Log successful sign-in
+          await logSignInAttempt({
+            userId: user.id,
+            email: user.email,
+            provider: 'credentials',
+            ip,
+            userAgent,
+            success: true,
+          });
 
           return {
             id: user.id,
@@ -105,6 +156,22 @@ export default {
     error: '/login',
   },
   callbacks: {
+    async signIn({ user, account }) {
+      // Log OAuth sign-ins (Google, etc.)
+      if (account?.provider && account.provider !== 'credentials' && user.id && user.email) {
+        const { ip, userAgent } = await getRequestInfo();
+
+        await logSignInAttempt({
+          userId: user.id,
+          email: user.email,
+          provider: account.provider,
+          ip,
+          userAgent,
+          success: true,
+        });
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
