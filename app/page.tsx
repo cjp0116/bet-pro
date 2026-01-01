@@ -66,7 +66,6 @@ interface OddsMeta {
 
 function HomeContent() {
   const session = useSession();
-  console.log(session.data);
   const searchParams = useSearchParams()
   const router = useRouter()
   const sportFromUrl = searchParams.get("sport")

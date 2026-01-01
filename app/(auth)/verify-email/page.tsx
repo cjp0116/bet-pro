@@ -23,17 +23,16 @@ function VerifyEmailContent() {
 
     const verifyEmail = async () => {
       try {
-        const response = await fetch(`/api/auth/verify-email?token=${token}`)
-        const data = await response.json()
-
-        if (data.success) {
-          setStatus("success")
-        } else if (data.error === "expired") {
-          setStatus("expired")
-        } else {
+        const response = await fetch(`/api/auth/verify-email?token=${encodeURIComponent(token)}`)
+        if (!response.ok) {
           setStatus("error")
+          return
         }
-      } catch {
+
+        const data = await response.json()
+        setStatus(data.success ? "success" : data.error === "expired" ? "expired" : "error")
+      } catch (error) {
+        console.error("[VerifyEmail] Error:", error)
         setStatus("error")
       }
     }

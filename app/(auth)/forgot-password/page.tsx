@@ -24,6 +24,7 @@ export default function ForgotPasswordPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
+        signal: AbortSignal.timeout(10000), // 10 second timeout
       })
 
       const data = await response.json()
@@ -35,6 +36,7 @@ export default function ForgotPasswordPage() {
 
       setIsSubmitted(true)
     } catch {
+      console.error("[ForgotPassword] Error:", error)
       setError("An error occurred. Please try again.")
     } finally {
       setIsLoading(false)

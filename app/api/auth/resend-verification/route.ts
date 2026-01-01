@@ -48,19 +48,19 @@ export async function POST(req: NextRequest) {
     const { token, expiresAt } = generateEmailVerificationToken(normalizedEmail);
     const tokenHash = hash(token);
 
-    // Delete any existing tokens for this email
-    await prisma.verificationToken.deleteMany({
-      where: { identifier: normalizedEmail },
-    });
-
-    // Store new token
-    await prisma.verificationToken.create({
-      data: {
-        identifier: normalizedEmail,
-        token: tokenHash,
-        expires: expiresAt,
-      },
-    });
+    // Delete any existing token atomically
+    await prisma.$transaction([
+      prisma.verificationToken.deleteMany({
+        where: { identifier: normalizedEmail },
+      }),
+      prisma.verificationToken.create({
+        data: {
+          identifier: normalizedEmail,
+          token: tokenHash,
+          expires: expiresAt,
+        },
+      })
+    ]);
 
     // Build verification URL
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';

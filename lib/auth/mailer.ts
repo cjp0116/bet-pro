@@ -5,8 +5,13 @@
 import nodemailer from 'nodemailer';
 import { generateVerificationEmailHtml, generatePasswordResetEmailHtml } from './email';
 
+export type Transporter = nodemailer.Transporter | { sendMail: (options: nodemailer.SendMailOptions) => Promise<{ messageId: string }> };
+
+// Cached transporter instance (lazy initialized)
+let cachedTransporter: Transporter | null = null;
+
 // Create transporter - configure based on environment
-function createTransporter() {
+function createTransporter(): Transporter {
   // For production, use proper SMTP settings
   if (process.env.EMAIL_SERVER) {
     // Parse EMAIL_SERVER connection string
@@ -15,7 +20,7 @@ function createTransporter() {
   }
 
   // For development, use ethereal email or console logging
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     // Log emails to console in development
     return {
       sendMail: async (options: nodemailer.SendMailOptions) => {
@@ -27,15 +32,30 @@ function createTransporter() {
         console.log('=================================\n');
         return { messageId: 'dev-' + Date.now() };
       },
-    };
+    } as nodemailer.Transporter;
   }
 
   throw new Error('EMAIL_SERVER environment variable is not configured');
 }
 
-const transporter = createTransporter();
+/**
+ * Get or create the transporter (lazy initialization)
+ */
+export function getTransporter(): Transporter {
+  if (!cachedTransporter) {
+    cachedTransporter = createTransporter();
+  }
+  return cachedTransporter;
+}
 
-interface SendEmailOptions {
+/**
+ * Set a custom transporter (for testing)
+ */
+export function setTransporter(transporter: Transporter | null): void {
+  cachedTransporter = transporter;
+}
+
+export interface SendEmailOptions {
   to: string;
   subject: string;
   html: string;
@@ -49,7 +69,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
   try {
     const from = process.env.EMAIL_FROM || 'BetPro <noreply@betpro.com>';
 
-    await transporter.sendMail({
+    await getTransporter().sendMail({
       from,
       to: options.to,
       subject: options.subject,
@@ -59,9 +79,14 @@ export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
 
     console.log(`[Mailer] Email sent successfully to ${options.to}`);
     return true;
-  } catch (error) {
-    console.error('[Mailer] Failed to send email:', error);
-    return false;
+  }
+  catch (error) {
+    console.error('[Mailer] Failed to send email:', {
+      error: error instanceof Error ? error.message : String(error),
+      to: options.to,
+      subject: options.subject
+    });
+    throw error; // let the caller handle the error
   }
 }
 

@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { hashPassword, checkPasswordStrength } from '@/lib/security/hashing';
+import { hashPassword, checkPasswordStrength, verifyPassword } from '@/lib/security/hashing';
 import { hash } from '@/lib/security/encryption';
 
 export async function POST(req: NextRequest) {
@@ -65,34 +65,42 @@ export async function POST(req: NextRequest) {
 
     // Get current password history
     const passwordHistory = (userPassword.passwordHistory as string[] | null) || [];
-
+    const allPasswordHistory = [userPassword.passwordHash, ...passwordHistory];
+    for (const oldHash of allPasswordHistory) {
+      if(await verifyPassword(password, oldHash)) {
+        return NextResponse.json(
+          { error: 'Cannot reuse a recent password. Please choose a different password.' },
+          { status: 400 }
+        );
+      }
+    }
     // Add current password to history (keep last 5)
     const updatedHistory = [userPassword.passwordHash, ...passwordHistory].slice(0, 5);
 
     // Update password and clear reset token
-    await prisma.userPassword.update({
-      where: { id: userPassword.id },
-      data: {
-        passwordHash: newPasswordHash,
-        passwordHistory: updatedHistory,
-        resetToken: null,
-        resetTokenExpiresAt: null,
-        passwordChangedAt: new Date(),
-        failedLoginAttempts: 0, // Reset failed attempts
-        lockedUntil: null, // Unlock account
-      },
-    });
-
-    // Log password change activity
-    await prisma.accountActivityLog.create({
-      data: {
-        userId: userPassword.userId,
-        activityType: 'password_reset',
-        ipAddressHash: hash(req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'),
-        success: true,
-        metadata: { method: 'email_reset' },
-      },
-    });
+    await prisma.$transaction([
+      prisma.userPassword.update({
+        where: { id: userPassword.id },
+        data: {
+          passwordHash: newPasswordHash,
+          passwordHistory: updatedHistory,
+          resetToken: null,
+          resetTokenExpiresAt: null,
+          passwordChangedAt: new Date(),
+          failedLoginAttempts: 0, // Reset failed attempts
+          lockedUntil: null, // Unlock account
+        },
+      }),
+      prisma.accountActivityLog.create({
+        data: {
+          userId: userPassword.userId,
+          activityType: 'password_reset',
+          ipAddressHash: hash(req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'),
+          success: true,
+          metadata: { method: 'email_reset' },
+        },
+      }),
+    ]);
 
     console.log('[ResetPassword] Password reset successful for user:', userPassword.userId);
 
@@ -138,7 +146,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({
         valid: false,
         error: 'Invalid or expired token',
-      });
+      }, { status: 400 });
     }
 
     return NextResponse.json({

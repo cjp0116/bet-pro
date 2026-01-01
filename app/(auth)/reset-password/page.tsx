@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { checkPasswordStrength } from "@/lib/security/hashing"
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams()
@@ -35,7 +36,17 @@ function ResetPasswordContent() {
 
     const validateToken = async () => {
       try {
-        const response = await fetch(`/api/auth/reset-password?token=${token}`)
+        const response = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, action: 'validate' }),
+        })
+
+        if (!response.ok) {
+          setTokenValid(false)
+          return
+        }
+
         const data = await response.json()
         setTokenValid(data.valid)
       } catch {
@@ -70,8 +81,8 @@ function ResetPasswordContent() {
     }
 
     // Basic password validation
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters")
+    if(!checkPasswordStrength(password).meetsRequirements) {
+      setError(checkPasswordStrength(password).feedback.join(", "))
       return
     }
 
@@ -218,7 +229,7 @@ function ResetPasswordContent() {
                 }}
                 required
                 disabled={isLoading}
-                minLength={8}
+                minLength={12}
               />
               <button
                 type="button"
@@ -247,7 +258,7 @@ function ResetPasswordContent() {
                 }}
                 required
                 disabled={isLoading}
-                minLength={8}
+                minLength={12}
               />
               <button
                 type="button"
@@ -262,7 +273,7 @@ function ResetPasswordContent() {
 
           <div className="p-3 rounded-lg bg-muted/50 border border-border">
             <p className="text-xs text-muted-foreground">
-              Password must be at least 8 characters and include uppercase, lowercase, number, and special character.
+              Password must be at least 12 characters and include uppercase, lowercase, number, and special character.
             </p>
           </div>
 

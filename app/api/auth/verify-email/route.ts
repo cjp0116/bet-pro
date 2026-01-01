@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
         success: false,
         error: 'expired',
         message: 'Invalid or expired verification token',
-      });
+      }, { status: 400 });
     }
 
     // Find user by email (identifier)

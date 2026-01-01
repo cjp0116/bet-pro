@@ -211,23 +211,34 @@ export async function POST(req: NextRequest) {
     });
 
     // Send verification email
+    if (!process.env.NEXTAUTH_URL) {
+      console.error('[Signup] NEXTAUTH_URL environment variable is not set');
+      return NextResponse.json(
+        { error: 'Server configuration error. Please contact support.' },
+        { status: 500 }
+      );
+    }
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
     const verificationUrl = `${baseUrl}/verify-email?token=${result.verificationToken}`;
-    const displayName = firstName || normalizedEmail.split('@')[0];
+    const displayName = firstName || normalizedEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\d+$/, '').trim()
 
     const emailSent = await sendVerificationEmail(normalizedEmail, verificationUrl, displayName);
 
     if (!emailSent) {
       console.error('[Signup] Failed to send verification email to:', normalizedEmail);
-    } else {
-      console.log('[Signup] Verification email sent to:', normalizedEmail);
+      return NextResponse.json(
+        { error: 'Account created but failed to send verification email. Please contact support.' },
+        { status: 500 }
+      );
     }
 
+    console.log('[Signup] Verification email sent to:', normalizedEmail);
     return NextResponse.json({
       success: true,
       message: 'Account created successfully. Please check your email to verify your account.',
       userId: result.user.id,
     });
+
 
   } catch (error) {
     console.error('[Signup] Error:', error);

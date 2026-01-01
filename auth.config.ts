@@ -6,7 +6,6 @@ import { prisma } from '@/lib/db/prisma';
 import { verifyPassword } from '@/lib/security/hashing';
 import { logSignInAttempt } from '@/lib/auth/signin-logger';
 import { headers } from 'next/headers';
-import { generateEmailVerificationToken } from '@/lib/auth/email';
 import { sendVerificationEmail } from '@/lib/auth/mailer';
 
 
@@ -146,6 +145,7 @@ export default {
             email: user.email,
             name: user.name || user.profile?.firstName || user.email.split('@')[0],
             image: user.image,
+            role: user.profile?.role ?? 'user'
           };
         } catch (error) {
           console.error('[Auth] Error in credentials authorize:', error);
@@ -166,19 +166,26 @@ export default {
           include: { profile: true },
         });
 
-        // For magic link sign-in, generate and send verification email
-        const { token } = generateEmailVerificationToken(email);
-        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
+        // For magic link sign-in, extract token from NextAuth's URL and store hashed
+        const urlObj = new URL(url);
+        const token = urlObj.searchParams.get('token');
         const firstName = user?.profile?.firstName || user?.name?.split(' ')[0] || email.split('@')[0];
 
-        // Store token in database
+        if (!token) {
+          console.error('[Auth EmailProvider] No token in URL:', url);
+          throw new Error('Missing verification token');
+        }
+
+        // Hash once and reuse
         const { hash: hashFn } = await import('@/lib/security/encryption');
+        const hashedToken = hashFn(token);
+
+        // Store hashed token in database
         await prisma.verificationToken.upsert({
-          where: { identifier_token: { identifier: email, token: hashFn(token) } },
+          where: { identifier_token: { identifier: email, token: hashedToken } },
           create: {
             identifier: email,
-            token: hashFn(token),
+            token: hashedToken,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
           },
           update: {
@@ -186,7 +193,8 @@ export default {
           },
         });
 
-        await sendVerificationEmail(email, verificationUrl, firstName);
+        // Use NextAuth's provided URL directly
+        await sendVerificationEmail(email, url, firstName);
         console.log('[Auth EmailProvider] Verification email sent to:', email);
       },
     }),
@@ -203,14 +211,14 @@ export default {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role;
+        token.role = (user as any).role ?? 'user';
       }
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.role = (token.role as string) ?? 'user';
       }
       return session;
     },
