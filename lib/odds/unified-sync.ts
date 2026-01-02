@@ -245,7 +245,9 @@ export class UnifiedOddsSync {
         url.searchParams.set('regions', 'us');
         url.searchParams.set('markets', 'h2h,spreads,totals');
         url.searchParams.set('oddsFormat', 'american');
+        
         console.log(`[UnifiedSync] Fetching ${sportKey}`);
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
         const response = await fetch(url.toString(), {
@@ -253,6 +255,7 @@ export class UnifiedOddsSync {
           cache: 'no-store',
           signal: controller.signal,
         });
+        
         clearTimeout(timeoutId);
 
         if (!response.ok) {

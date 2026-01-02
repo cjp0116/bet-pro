@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { signOut } from "next-auth/react"
 
+
 interface HeaderProps {
   balance: number
   onMenuToggle: () => void
@@ -95,7 +96,9 @@ export function Header({ balance, onMenuToggle, isMobileMenuOpen }: HeaderProps)
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>My Account</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/account">My Account</Link>
+              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/my-bets">My Bets</Link>
               </DropdownMenuItem>
@@ -103,11 +106,19 @@ export function Header({ balance, onMenuToggle, isMobileMenuOpen }: HeaderProps)
                 <Link href="/transactions">Transaction History</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Deposit</DropdownMenuItem>
-              <DropdownMenuItem>Withdraw</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/deposit">Deposit</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/withdraw">Withdraw</Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Responsible Gaming</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/responsible-gaming">Responsible Gaming</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/settings">Settings</Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive hover:cursor-pointer"
@@ -117,7 +128,12 @@ export function Header({ balance, onMenuToggle, isMobileMenuOpen }: HeaderProps)
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button className="hidden sm:flex">Deposit</Button>
+          <Button className="hidden sm:flex" asChild>
+            <Link href="/deposit">
+              <Wallet className="h-4 w-4" />
+              <span className="font-semibold">Deposit</span>
+            </Link>
+          </Button>
         </div>
       </div>
 

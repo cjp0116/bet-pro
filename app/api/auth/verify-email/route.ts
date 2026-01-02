@@ -51,6 +51,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    if (user.emailVerified) {
+      return NextResponse.json({
+        success: true,
+        message: 'Email already verified',
+      }, { status: 200 });
+    }
     // Update user's email verification status
     await prisma.$transaction([
       prisma.user.update({
@@ -85,7 +91,8 @@ export async function GET(req: NextRequest) {
       success: true,
       message: 'Email verified successfully',
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.error('[VerifyEmail] Error:', error);
     return NextResponse.json(
       { success: false, error: 'An error occurred. Please try again.' },

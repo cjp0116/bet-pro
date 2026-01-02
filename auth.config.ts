@@ -1,12 +1,10 @@
 import { NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import EmailProvider from 'next-auth/providers/nodemailer';
 import { prisma } from '@/lib/db/prisma';
 import { verifyPassword } from '@/lib/security/hashing';
 import { logSignInAttempt } from '@/lib/auth/signin-logger';
 import { headers } from 'next/headers';
-import { sendVerificationEmail } from '@/lib/auth/mailer';
 
 
 // Helper to get request metadata
@@ -155,47 +153,6 @@ export default {
           }
           return null;
         }
-      },
-    }),
-    EmailProvider({
-      server: process.env.EMAIL_SERVER as string,
-      from: process.env.EMAIL_FROM as string,
-      sendVerificationRequest: async ({ identifier: email, url }) => {
-        const user = await prisma.user.findUnique({
-          where: { email: email },
-          include: { profile: true },
-        });
-
-        // For magic link sign-in, extract token from NextAuth's URL and store hashed
-        const urlObj = new URL(url);
-        const token = urlObj.searchParams.get('token');
-        const firstName = user?.profile?.firstName || user?.name?.split(' ')[0] || email.split('@')[0];
-
-        if (!token) {
-          console.error('[Auth EmailProvider] No token in URL:', url);
-          throw new Error('Missing verification token');
-        }
-
-        // Hash once and reuse
-        const { hash: hashFn } = await import('@/lib/security/encryption');
-        const hashedToken = hashFn(token);
-
-        // Store hashed token in database
-        await prisma.verificationToken.upsert({
-          where: { identifier_token: { identifier: email, token: hashedToken } },
-          create: {
-            identifier: email,
-            token: hashedToken,
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-          },
-          update: {
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-          },
-        });
-
-        // Use NextAuth's provided URL directly
-        await sendVerificationEmail(email, url, firstName);
-        console.log('[Auth EmailProvider] Verification email sent to:', email);
       },
     }),
   ],

@@ -147,7 +147,7 @@ function SearchContent() {
                       if (count === 0 && tab.id !== "all") return null
 
                       return (
-                        <button
+                        <Button
                           key={tab.id}
                           onClick={() => setActiveFilter(tab.id)}
                           className={cn(
@@ -166,9 +166,9 @@ function SearchContent() {
                                 : "bg-muted text-muted-foreground",
                             )}
                           >
-                            {count}
+                            {count}m
                           </span>
-                        </button>
+                        </Button>
                       )
                     })}
                   </div>
