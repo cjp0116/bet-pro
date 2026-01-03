@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/db/prisma';
 import { validateBetOdds, type BetSelectionInput } from '@/lib/odds/odds-validator';
+import { notifyBetPlaced } from '@/lib/notifications-server';
 import { Prisma } from '@/lib/generated/prisma/client';
 
 const Decimal = Prisma.Decimal;
@@ -175,6 +176,16 @@ export async function POST(req: NextRequest) {
 
       return newBet;
     });
+
+    // Create notification for successful bet (non-blocking)
+    notifyBetPlaced(
+      userId,
+      bet.id,
+      totalStake,
+      actualPayout,
+      betType,
+      selections.length
+    ).catch(err => console.error('Failed to create bet notification:', err));
 
     return NextResponse.json({
       success: true,

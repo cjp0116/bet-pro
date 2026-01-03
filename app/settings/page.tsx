@@ -1,3 +1,4 @@
+'use client'
 
 import { PageLayout } from "@/components/page-header"
 import { ResponsibleGamingSettingsCard } from '@/components/settings/responsible-gaming-card'
@@ -7,7 +8,7 @@ import { RegionSettingsCard } from '@/components/settings/region-settings-card'
 import { NotificationsSettingsCard } from '@/components/settings/notifications-settings-card';
 import { CheckCircle2 } from "lucide-react";
 
-export default async function SettingsPage() {
+export default function SettingsPage() {
   return (
     <PageLayout title="Settings">
       <div className="space-y-6">

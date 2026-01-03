@@ -1,13 +1,14 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+datasource db {
+  provider = "postgresql"
+  // url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
-}
-
-datasource db {
-  provider = "postgresql"
 }
 
 // ============================================
@@ -46,6 +47,7 @@ model User {
   bettingPatterns   BettingPattern[]
   activityLogs      AccountActivityLog[]
   devices           DeviceRegistry[]
+  notifications     Notification[]
   consents          GdprConsent[]
   deletionRequests  DataDeletionRequest[]
   exportRequests    DataExportRequest[]
@@ -800,4 +802,76 @@ model OddsChangeEvent {
   @@index([gameId, createdAt])
   @@index([selectionId, createdAt])
   @@map("odds_change_events")
+}
+
+// ============================================
+// API ODDS AUDIT TABLES
+// For fraud detection and audit trail
+// ============================================
+
+// Raw API response snapshots - full audit trail
+model ApiOddsSnapshot {
+  id             String   @id @default(cuid())
+  externalGameId String   @db.VarChar(100) // ID from Odds API
+  sportKey       String   @db.VarChar(50)
+  homeTeam       String   @db.VarChar(100)
+  awayTeam       String   @db.VarChar(100)
+  commenceTime   DateTime
+  bookmaker      String   @db.VarChar(50)
+  rawData        Json // Full market data from API
+  timestamp      DateTime @default(now())
+
+  @@unique([externalGameId, bookmaker, timestamp])
+  @@index([sportKey, timestamp])
+  @@index([externalGameId])
+  @@index([timestamp])
+  @@map("api_odds_snapshots")
+}
+
+// Odds change audit log - for fraud detection
+model OddsAuditLog {
+  id             String   @id @default(cuid())
+  externalGameId String   @db.VarChar(100)
+  sportKey       String   @db.VarChar(50)
+  marketKey      String   @db.VarChar(20) // h2h, spreads, totals
+  selectionName  String   @db.VarChar(200)
+  bookmaker      String   @db.VarChar(50)
+  oldOdds        Decimal  @db.Decimal(10, 3)
+  newOdds        Decimal  @db.Decimal(10, 3)
+  changePercent  Decimal  @db.Decimal(6, 2)
+  changeType     String   @db.VarChar(20) // significant, minor
+  createdAt      DateTime @default(now())
+
+  @@index([externalGameId, createdAt])
+  @@index([bookmaker, createdAt])
+  @@index([changeType, createdAt])
+  @@index([sportKey, createdAt])
+  @@map("odds_audit_log")
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+
+model Notification {
+  id          String    @id @default(cuid())
+  userId      String
+  type        String    @db.VarChar(30) // bet_placed, bet_won, bet_lost, deposit, withdrawal, promotion, account, system
+  priority    String    @default("normal") @db.VarChar(10) // low, normal, high, urgent
+  title       String    @db.VarChar(200)
+  message     String    @db.Text
+  read        Boolean   @default(false)
+  dismissed   Boolean   @default(false)
+  actionUrl   String?   @db.VarChar(500)
+  actionLabel String?   @db.VarChar(50)
+  metadata    Json? // betId, transactionId, amount, etc.
+  createdAt   DateTime  @default(now())
+  readAt      DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, dismissed])
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
+  @@map("notifications")
 }

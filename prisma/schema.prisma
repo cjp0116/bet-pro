@@ -5,6 +5,7 @@ datasource db {
   provider = "postgresql"
   // url      = env("DATABASE_URL")
 }
+
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -46,6 +47,7 @@ model User {
   bettingPatterns   BettingPattern[]
   activityLogs      AccountActivityLog[]
   devices           DeviceRegistry[]
+  notifications     Notification[]
   consents          GdprConsent[]
   deletionRequests  DataDeletionRequest[]
   exportRequests    DataExportRequest[]
@@ -845,4 +847,31 @@ model OddsAuditLog {
   @@index([changeType, createdAt])
   @@index([sportKey, createdAt])
   @@map("odds_audit_log")
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+
+model Notification {
+  id          String    @id @default(cuid())
+  userId      String
+  type        String    @db.VarChar(30) // bet_placed, bet_won, bet_lost, deposit, withdrawal, promotion, account, system
+  priority    String    @default("normal") @db.VarChar(10) // low, normal, high, urgent
+  title       String    @db.VarChar(200)
+  message     String    @db.Text
+  read        Boolean   @default(false)
+  dismissed   Boolean   @default(false)
+  actionUrl   String?   @db.VarChar(500)
+  actionLabel String?   @db.VarChar(50)
+  metadata    Json? // betId, transactionId, amount, etc.
+  createdAt   DateTime  @default(now())
+  readAt      DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, dismissed])
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
+  @@map("notifications")
 }

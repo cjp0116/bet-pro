@@ -1,4 +1,8 @@
+// Client-safe notification types, helpers, and mock data
+// Server-only database operations are in ./notifications-server.ts
+
 export type NotificationType =
+  | 'bet_placed'
   | 'bet_won'
   | 'bet_lost'
   | 'bet_pending'
@@ -25,10 +29,11 @@ export interface Notification {
     betId?: string
     transactionId?: string
     amount?: number
-    [key: string] : any
+    [key: string]: any
   }
 }
-// Mock notification data
+
+// Mock notification data (for demo/fallback)
 export const notifications: Notification[] = [
   {
     id: "notif-001",
@@ -98,7 +103,7 @@ export const notifications: Notification[] = [
     timestamp: "2024-12-21T16:20:00Z",
     read: true,
     dismissed: false,
-    actionUrl: "/withdraw",
+    actionUrl: "/transactions?id=txn-009",
     actionLabel: "View Status",
     metadata: {
       transactionId: "txn-009",
@@ -167,6 +172,7 @@ export function getRelativeTime(timestamp: string): string {
 
 // Notification type to icon mapping
 export const notificationIcons = {
+  bet_placed: "check-circle",
   bet_won: "trophy",
   bet_lost: "x-circle",
   bet_pending: "clock",
@@ -179,6 +185,7 @@ export const notificationIcons = {
 
 // Notification type to color mapping
 export const notificationColors = {
+  bet_placed: "text-green-500",
   bet_won: "text-green-500",
   bet_lost: "text-red-500",
   bet_pending: "text-yellow-500",

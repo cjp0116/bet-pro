@@ -203,6 +203,21 @@ export type OddsSyncStatus = $Result.DefaultSelection<Prisma.$OddsSyncStatusPayl
  * 
  */
 export type OddsChangeEvent = $Result.DefaultSelection<Prisma.$OddsChangeEventPayload>
+/**
+ * Model ApiOddsSnapshot
+ * 
+ */
+export type ApiOddsSnapshot = $Result.DefaultSelection<Prisma.$ApiOddsSnapshotPayload>
+/**
+ * Model OddsAuditLog
+ * 
+ */
+export type OddsAuditLog = $Result.DefaultSelection<Prisma.$OddsAuditLogPayload>
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -700,6 +715,36 @@ export class PrismaClient<
     * ```
     */
   get oddsChangeEvent(): Prisma.OddsChangeEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.apiOddsSnapshot`: Exposes CRUD operations for the **ApiOddsSnapshot** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApiOddsSnapshots
+    * const apiOddsSnapshots = await prisma.apiOddsSnapshot.findMany()
+    * ```
+    */
+  get apiOddsSnapshot(): Prisma.ApiOddsSnapshotDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.oddsAuditLog`: Exposes CRUD operations for the **OddsAuditLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OddsAuditLogs
+    * const oddsAuditLogs = await prisma.oddsAuditLog.findMany()
+    * ```
+    */
+  get oddsAuditLog(): Prisma.OddsAuditLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notifications
+    * const notifications = await prisma.notification.findMany()
+    * ```
+    */
+  get notification(): Prisma.NotificationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1171,7 +1216,10 @@ export namespace Prisma {
     CurrentOdds: 'CurrentOdds',
     OddsSnapshot: 'OddsSnapshot',
     OddsSyncStatus: 'OddsSyncStatus',
-    OddsChangeEvent: 'OddsChangeEvent'
+    OddsChangeEvent: 'OddsChangeEvent',
+    ApiOddsSnapshot: 'ApiOddsSnapshot',
+    OddsAuditLog: 'OddsAuditLog',
+    Notification: 'Notification'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1187,7 +1235,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "session" | "verificationToken" | "userProfile" | "userPassword" | "twoFactorAuth" | "userSession" | "loginAttempt" | "sport" | "league" | "team" | "game" | "betMarket" | "betSelection" | "bet" | "betSelectionBet" | "financialAccount" | "transaction" | "paymentMethod" | "deposit" | "withdrawal" | "fraudEvent" | "bettingPattern" | "accountActivityLog" | "deviceRegistry" | "ipAddress" | "auditLog" | "gdprConsent" | "dataDeletionRequest" | "dataExportRequest" | "securityAlert" | "promotion" | "userBonus" | "currentOdds" | "oddsSnapshot" | "oddsSyncStatus" | "oddsChangeEvent"
+      modelProps: "user" | "account" | "session" | "verificationToken" | "userProfile" | "userPassword" | "twoFactorAuth" | "userSession" | "loginAttempt" | "sport" | "league" | "team" | "game" | "betMarket" | "betSelection" | "bet" | "betSelectionBet" | "financialAccount" | "transaction" | "paymentMethod" | "deposit" | "withdrawal" | "fraudEvent" | "bettingPattern" | "accountActivityLog" | "deviceRegistry" | "ipAddress" | "auditLog" | "gdprConsent" | "dataDeletionRequest" | "dataExportRequest" | "securityAlert" | "promotion" | "userBonus" | "currentOdds" | "oddsSnapshot" | "oddsSyncStatus" | "oddsChangeEvent" | "apiOddsSnapshot" | "oddsAuditLog" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4003,6 +4051,228 @@ export namespace Prisma {
           }
         }
       }
+      ApiOddsSnapshot: {
+        payload: Prisma.$ApiOddsSnapshotPayload<ExtArgs>
+        fields: Prisma.ApiOddsSnapshotFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApiOddsSnapshotFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApiOddsSnapshotFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>
+          }
+          findFirst: {
+            args: Prisma.ApiOddsSnapshotFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApiOddsSnapshotFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>
+          }
+          findMany: {
+            args: Prisma.ApiOddsSnapshotFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>[]
+          }
+          create: {
+            args: Prisma.ApiOddsSnapshotCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>
+          }
+          createMany: {
+            args: Prisma.ApiOddsSnapshotCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApiOddsSnapshotCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>[]
+          }
+          delete: {
+            args: Prisma.ApiOddsSnapshotDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>
+          }
+          update: {
+            args: Prisma.ApiOddsSnapshotUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApiOddsSnapshotDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApiOddsSnapshotUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApiOddsSnapshotUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApiOddsSnapshotUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiOddsSnapshotPayload>
+          }
+          aggregate: {
+            args: Prisma.ApiOddsSnapshotAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApiOddsSnapshot>
+          }
+          groupBy: {
+            args: Prisma.ApiOddsSnapshotGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApiOddsSnapshotGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApiOddsSnapshotCountArgs<ExtArgs>
+            result: $Utils.Optional<ApiOddsSnapshotCountAggregateOutputType> | number
+          }
+        }
+      }
+      OddsAuditLog: {
+        payload: Prisma.$OddsAuditLogPayload<ExtArgs>
+        fields: Prisma.OddsAuditLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OddsAuditLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OddsAuditLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>
+          }
+          findFirst: {
+            args: Prisma.OddsAuditLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OddsAuditLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>
+          }
+          findMany: {
+            args: Prisma.OddsAuditLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>[]
+          }
+          create: {
+            args: Prisma.OddsAuditLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>
+          }
+          createMany: {
+            args: Prisma.OddsAuditLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OddsAuditLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>[]
+          }
+          delete: {
+            args: Prisma.OddsAuditLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>
+          }
+          update: {
+            args: Prisma.OddsAuditLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.OddsAuditLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OddsAuditLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OddsAuditLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.OddsAuditLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OddsAuditLogPayload>
+          }
+          aggregate: {
+            args: Prisma.OddsAuditLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOddsAuditLog>
+          }
+          groupBy: {
+            args: Prisma.OddsAuditLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OddsAuditLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OddsAuditLogCountArgs<ExtArgs>
+            result: $Utils.Optional<OddsAuditLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      Notification: {
+        payload: Prisma.$NotificationPayload<ExtArgs>
+        fields: Prisma.NotificationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NotificationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NotificationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findFirst: {
+            args: Prisma.NotificationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NotificationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findMany: {
+            args: Prisma.NotificationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
+          create: {
+            args: Prisma.NotificationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          createMany: {
+            args: Prisma.NotificationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NotificationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
+          delete: {
+            args: Prisma.NotificationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          update: {
+            args: Prisma.NotificationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          deleteMany: {
+            args: Prisma.NotificationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NotificationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NotificationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
+          upsert: {
+            args: Prisma.NotificationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          aggregate: {
+            args: Prisma.NotificationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotification>
+          }
+          groupBy: {
+            args: Prisma.NotificationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NotificationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NotificationCountArgs<ExtArgs>
+            result: $Utils.Optional<NotificationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4149,6 +4419,9 @@ export namespace Prisma {
     oddsSnapshot?: OddsSnapshotOmit
     oddsSyncStatus?: OddsSyncStatusOmit
     oddsChangeEvent?: OddsChangeEventOmit
+    apiOddsSnapshot?: ApiOddsSnapshotOmit
+    oddsAuditLog?: OddsAuditLogOmit
+    notification?: NotificationOmit
   }
 
   /* Types for Logging */
@@ -4240,6 +4513,7 @@ export namespace Prisma {
     bettingPatterns: number
     activityLogs: number
     devices: number
+    notifications: number
     consents: number
     deletionRequests: number
     exportRequests: number
@@ -4260,6 +4534,7 @@ export namespace Prisma {
     bettingPatterns?: boolean | UserCountOutputTypeCountBettingPatternsArgs
     activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
     devices?: boolean | UserCountOutputTypeCountDevicesArgs
+    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     consents?: boolean | UserCountOutputTypeCountConsentsArgs
     deletionRequests?: boolean | UserCountOutputTypeCountDeletionRequestsArgs
     exportRequests?: boolean | UserCountOutputTypeCountExportRequestsArgs
@@ -4354,6 +4629,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DeviceRegistryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
   }
 
   /**
@@ -5043,6 +5325,7 @@ export namespace Prisma {
     bettingPatterns?: boolean | User$bettingPatternsArgs<ExtArgs>
     activityLogs?: boolean | User$activityLogsArgs<ExtArgs>
     devices?: boolean | User$devicesArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     consents?: boolean | User$consentsArgs<ExtArgs>
     deletionRequests?: boolean | User$deletionRequestsArgs<ExtArgs>
     exportRequests?: boolean | User$exportRequestsArgs<ExtArgs>
@@ -5116,6 +5399,7 @@ export namespace Prisma {
     bettingPatterns?: boolean | User$bettingPatternsArgs<ExtArgs>
     activityLogs?: boolean | User$activityLogsArgs<ExtArgs>
     devices?: boolean | User$devicesArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     consents?: boolean | User$consentsArgs<ExtArgs>
     deletionRequests?: boolean | User$deletionRequestsArgs<ExtArgs>
     exportRequests?: boolean | User$exportRequestsArgs<ExtArgs>
@@ -5144,6 +5428,7 @@ export namespace Prisma {
       bettingPatterns: Prisma.$BettingPatternPayload<ExtArgs>[]
       activityLogs: Prisma.$AccountActivityLogPayload<ExtArgs>[]
       devices: Prisma.$DeviceRegistryPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
       consents: Prisma.$GdprConsentPayload<ExtArgs>[]
       deletionRequests: Prisma.$DataDeletionRequestPayload<ExtArgs>[]
       exportRequests: Prisma.$DataExportRequestPayload<ExtArgs>[]
@@ -5573,6 +5858,7 @@ export namespace Prisma {
     bettingPatterns<T extends User$bettingPatternsArgs<ExtArgs> = {}>(args?: Subset<T, User$bettingPatternsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BettingPatternPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activityLogs<T extends User$activityLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     devices<T extends User$devicesArgs<ExtArgs> = {}>(args?: Subset<T, User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DeviceRegistryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     consents<T extends User$consentsArgs<ExtArgs> = {}>(args?: Subset<T, User$consentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GdprConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     deletionRequests<T extends User$deletionRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$deletionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataDeletionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     exportRequests<T extends User$exportRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$exportRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataExportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6327,6 +6613,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DeviceRegistryScalarFieldEnum | DeviceRegistryScalarFieldEnum[]
+  }
+
+  /**
+   * User.notifications
+   */
+  export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
   /**
@@ -48996,6 +49306,3322 @@ export namespace Prisma {
 
 
   /**
+   * Model ApiOddsSnapshot
+   */
+
+  export type AggregateApiOddsSnapshot = {
+    _count: ApiOddsSnapshotCountAggregateOutputType | null
+    _min: ApiOddsSnapshotMinAggregateOutputType | null
+    _max: ApiOddsSnapshotMaxAggregateOutputType | null
+  }
+
+  export type ApiOddsSnapshotMinAggregateOutputType = {
+    id: string | null
+    externalGameId: string | null
+    sportKey: string | null
+    homeTeam: string | null
+    awayTeam: string | null
+    commenceTime: Date | null
+    bookmaker: string | null
+    timestamp: Date | null
+  }
+
+  export type ApiOddsSnapshotMaxAggregateOutputType = {
+    id: string | null
+    externalGameId: string | null
+    sportKey: string | null
+    homeTeam: string | null
+    awayTeam: string | null
+    commenceTime: Date | null
+    bookmaker: string | null
+    timestamp: Date | null
+  }
+
+  export type ApiOddsSnapshotCountAggregateOutputType = {
+    id: number
+    externalGameId: number
+    sportKey: number
+    homeTeam: number
+    awayTeam: number
+    commenceTime: number
+    bookmaker: number
+    rawData: number
+    timestamp: number
+    _all: number
+  }
+
+
+  export type ApiOddsSnapshotMinAggregateInputType = {
+    id?: true
+    externalGameId?: true
+    sportKey?: true
+    homeTeam?: true
+    awayTeam?: true
+    commenceTime?: true
+    bookmaker?: true
+    timestamp?: true
+  }
+
+  export type ApiOddsSnapshotMaxAggregateInputType = {
+    id?: true
+    externalGameId?: true
+    sportKey?: true
+    homeTeam?: true
+    awayTeam?: true
+    commenceTime?: true
+    bookmaker?: true
+    timestamp?: true
+  }
+
+  export type ApiOddsSnapshotCountAggregateInputType = {
+    id?: true
+    externalGameId?: true
+    sportKey?: true
+    homeTeam?: true
+    awayTeam?: true
+    commenceTime?: true
+    bookmaker?: true
+    rawData?: true
+    timestamp?: true
+    _all?: true
+  }
+
+  export type ApiOddsSnapshotAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiOddsSnapshot to aggregate.
+     */
+    where?: ApiOddsSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiOddsSnapshots to fetch.
+     */
+    orderBy?: ApiOddsSnapshotOrderByWithRelationInput | ApiOddsSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApiOddsSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiOddsSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiOddsSnapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApiOddsSnapshots
+    **/
+    _count?: true | ApiOddsSnapshotCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApiOddsSnapshotMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApiOddsSnapshotMaxAggregateInputType
+  }
+
+  export type GetApiOddsSnapshotAggregateType<T extends ApiOddsSnapshotAggregateArgs> = {
+        [P in keyof T & keyof AggregateApiOddsSnapshot]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApiOddsSnapshot[P]>
+      : GetScalarType<T[P], AggregateApiOddsSnapshot[P]>
+  }
+
+
+
+
+  export type ApiOddsSnapshotGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiOddsSnapshotWhereInput
+    orderBy?: ApiOddsSnapshotOrderByWithAggregationInput | ApiOddsSnapshotOrderByWithAggregationInput[]
+    by: ApiOddsSnapshotScalarFieldEnum[] | ApiOddsSnapshotScalarFieldEnum
+    having?: ApiOddsSnapshotScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApiOddsSnapshotCountAggregateInputType | true
+    _min?: ApiOddsSnapshotMinAggregateInputType
+    _max?: ApiOddsSnapshotMaxAggregateInputType
+  }
+
+  export type ApiOddsSnapshotGroupByOutputType = {
+    id: string
+    externalGameId: string
+    sportKey: string
+    homeTeam: string
+    awayTeam: string
+    commenceTime: Date
+    bookmaker: string
+    rawData: JsonValue
+    timestamp: Date
+    _count: ApiOddsSnapshotCountAggregateOutputType | null
+    _min: ApiOddsSnapshotMinAggregateOutputType | null
+    _max: ApiOddsSnapshotMaxAggregateOutputType | null
+  }
+
+  type GetApiOddsSnapshotGroupByPayload<T extends ApiOddsSnapshotGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApiOddsSnapshotGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApiOddsSnapshotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApiOddsSnapshotGroupByOutputType[P]>
+            : GetScalarType<T[P], ApiOddsSnapshotGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApiOddsSnapshotSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    homeTeam?: boolean
+    awayTeam?: boolean
+    commenceTime?: boolean
+    bookmaker?: boolean
+    rawData?: boolean
+    timestamp?: boolean
+  }, ExtArgs["result"]["apiOddsSnapshot"]>
+
+  export type ApiOddsSnapshotSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    homeTeam?: boolean
+    awayTeam?: boolean
+    commenceTime?: boolean
+    bookmaker?: boolean
+    rawData?: boolean
+    timestamp?: boolean
+  }, ExtArgs["result"]["apiOddsSnapshot"]>
+
+  export type ApiOddsSnapshotSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    homeTeam?: boolean
+    awayTeam?: boolean
+    commenceTime?: boolean
+    bookmaker?: boolean
+    rawData?: boolean
+    timestamp?: boolean
+  }, ExtArgs["result"]["apiOddsSnapshot"]>
+
+  export type ApiOddsSnapshotSelectScalar = {
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    homeTeam?: boolean
+    awayTeam?: boolean
+    commenceTime?: boolean
+    bookmaker?: boolean
+    rawData?: boolean
+    timestamp?: boolean
+  }
+
+  export type ApiOddsSnapshotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "externalGameId" | "sportKey" | "homeTeam" | "awayTeam" | "commenceTime" | "bookmaker" | "rawData" | "timestamp", ExtArgs["result"]["apiOddsSnapshot"]>
+
+  export type $ApiOddsSnapshotPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApiOddsSnapshot"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      externalGameId: string
+      sportKey: string
+      homeTeam: string
+      awayTeam: string
+      commenceTime: Date
+      bookmaker: string
+      rawData: Prisma.JsonValue
+      timestamp: Date
+    }, ExtArgs["result"]["apiOddsSnapshot"]>
+    composites: {}
+  }
+
+  type ApiOddsSnapshotGetPayload<S extends boolean | null | undefined | ApiOddsSnapshotDefaultArgs> = $Result.GetResult<Prisma.$ApiOddsSnapshotPayload, S>
+
+  type ApiOddsSnapshotCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApiOddsSnapshotFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApiOddsSnapshotCountAggregateInputType | true
+    }
+
+  export interface ApiOddsSnapshotDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApiOddsSnapshot'], meta: { name: 'ApiOddsSnapshot' } }
+    /**
+     * Find zero or one ApiOddsSnapshot that matches the filter.
+     * @param {ApiOddsSnapshotFindUniqueArgs} args - Arguments to find a ApiOddsSnapshot
+     * @example
+     * // Get one ApiOddsSnapshot
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApiOddsSnapshotFindUniqueArgs>(args: SelectSubset<T, ApiOddsSnapshotFindUniqueArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApiOddsSnapshot that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApiOddsSnapshotFindUniqueOrThrowArgs} args - Arguments to find a ApiOddsSnapshot
+     * @example
+     * // Get one ApiOddsSnapshot
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApiOddsSnapshotFindUniqueOrThrowArgs>(args: SelectSubset<T, ApiOddsSnapshotFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiOddsSnapshot that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiOddsSnapshotFindFirstArgs} args - Arguments to find a ApiOddsSnapshot
+     * @example
+     * // Get one ApiOddsSnapshot
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApiOddsSnapshotFindFirstArgs>(args?: SelectSubset<T, ApiOddsSnapshotFindFirstArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiOddsSnapshot that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiOddsSnapshotFindFirstOrThrowArgs} args - Arguments to find a ApiOddsSnapshot
+     * @example
+     * // Get one ApiOddsSnapshot
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApiOddsSnapshotFindFirstOrThrowArgs>(args?: SelectSubset<T, ApiOddsSnapshotFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApiOddsSnapshots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiOddsSnapshotFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApiOddsSnapshots
+     * const apiOddsSnapshots = await prisma.apiOddsSnapshot.findMany()
+     * 
+     * // Get first 10 ApiOddsSnapshots
+     * const apiOddsSnapshots = await prisma.apiOddsSnapshot.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const apiOddsSnapshotWithIdOnly = await prisma.apiOddsSnapshot.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApiOddsSnapshotFindManyArgs>(args?: SelectSubset<T, ApiOddsSnapshotFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApiOddsSnapshot.
+     * @param {ApiOddsSnapshotCreateArgs} args - Arguments to create a ApiOddsSnapshot.
+     * @example
+     * // Create one ApiOddsSnapshot
+     * const ApiOddsSnapshot = await prisma.apiOddsSnapshot.create({
+     *   data: {
+     *     // ... data to create a ApiOddsSnapshot
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApiOddsSnapshotCreateArgs>(args: SelectSubset<T, ApiOddsSnapshotCreateArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApiOddsSnapshots.
+     * @param {ApiOddsSnapshotCreateManyArgs} args - Arguments to create many ApiOddsSnapshots.
+     * @example
+     * // Create many ApiOddsSnapshots
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApiOddsSnapshotCreateManyArgs>(args?: SelectSubset<T, ApiOddsSnapshotCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApiOddsSnapshots and returns the data saved in the database.
+     * @param {ApiOddsSnapshotCreateManyAndReturnArgs} args - Arguments to create many ApiOddsSnapshots.
+     * @example
+     * // Create many ApiOddsSnapshots
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApiOddsSnapshots and only return the `id`
+     * const apiOddsSnapshotWithIdOnly = await prisma.apiOddsSnapshot.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApiOddsSnapshotCreateManyAndReturnArgs>(args?: SelectSubset<T, ApiOddsSnapshotCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApiOddsSnapshot.
+     * @param {ApiOddsSnapshotDeleteArgs} args - Arguments to delete one ApiOddsSnapshot.
+     * @example
+     * // Delete one ApiOddsSnapshot
+     * const ApiOddsSnapshot = await prisma.apiOddsSnapshot.delete({
+     *   where: {
+     *     // ... filter to delete one ApiOddsSnapshot
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApiOddsSnapshotDeleteArgs>(args: SelectSubset<T, ApiOddsSnapshotDeleteArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApiOddsSnapshot.
+     * @param {ApiOddsSnapshotUpdateArgs} args - Arguments to update one ApiOddsSnapshot.
+     * @example
+     * // Update one ApiOddsSnapshot
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApiOddsSnapshotUpdateArgs>(args: SelectSubset<T, ApiOddsSnapshotUpdateArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApiOddsSnapshots.
+     * @param {ApiOddsSnapshotDeleteManyArgs} args - Arguments to filter ApiOddsSnapshots to delete.
+     * @example
+     * // Delete a few ApiOddsSnapshots
+     * const { count } = await prisma.apiOddsSnapshot.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApiOddsSnapshotDeleteManyArgs>(args?: SelectSubset<T, ApiOddsSnapshotDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiOddsSnapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiOddsSnapshotUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApiOddsSnapshots
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApiOddsSnapshotUpdateManyArgs>(args: SelectSubset<T, ApiOddsSnapshotUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiOddsSnapshots and returns the data updated in the database.
+     * @param {ApiOddsSnapshotUpdateManyAndReturnArgs} args - Arguments to update many ApiOddsSnapshots.
+     * @example
+     * // Update many ApiOddsSnapshots
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApiOddsSnapshots and only return the `id`
+     * const apiOddsSnapshotWithIdOnly = await prisma.apiOddsSnapshot.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApiOddsSnapshotUpdateManyAndReturnArgs>(args: SelectSubset<T, ApiOddsSnapshotUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApiOddsSnapshot.
+     * @param {ApiOddsSnapshotUpsertArgs} args - Arguments to update or create a ApiOddsSnapshot.
+     * @example
+     * // Update or create a ApiOddsSnapshot
+     * const apiOddsSnapshot = await prisma.apiOddsSnapshot.upsert({
+     *   create: {
+     *     // ... data to create a ApiOddsSnapshot
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApiOddsSnapshot we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApiOddsSnapshotUpsertArgs>(args: SelectSubset<T, ApiOddsSnapshotUpsertArgs<ExtArgs>>): Prisma__ApiOddsSnapshotClient<$Result.GetResult<Prisma.$ApiOddsSnapshotPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApiOddsSnapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiOddsSnapshotCountArgs} args - Arguments to filter ApiOddsSnapshots to count.
+     * @example
+     * // Count the number of ApiOddsSnapshots
+     * const count = await prisma.apiOddsSnapshot.count({
+     *   where: {
+     *     // ... the filter for the ApiOddsSnapshots we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApiOddsSnapshotCountArgs>(
+      args?: Subset<T, ApiOddsSnapshotCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApiOddsSnapshotCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApiOddsSnapshot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiOddsSnapshotAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApiOddsSnapshotAggregateArgs>(args: Subset<T, ApiOddsSnapshotAggregateArgs>): Prisma.PrismaPromise<GetApiOddsSnapshotAggregateType<T>>
+
+    /**
+     * Group by ApiOddsSnapshot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiOddsSnapshotGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApiOddsSnapshotGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApiOddsSnapshotGroupByArgs['orderBy'] }
+        : { orderBy?: ApiOddsSnapshotGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApiOddsSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApiOddsSnapshotGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApiOddsSnapshot model
+   */
+  readonly fields: ApiOddsSnapshotFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApiOddsSnapshot.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApiOddsSnapshotClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApiOddsSnapshot model
+   */
+  interface ApiOddsSnapshotFieldRefs {
+    readonly id: FieldRef<"ApiOddsSnapshot", 'String'>
+    readonly externalGameId: FieldRef<"ApiOddsSnapshot", 'String'>
+    readonly sportKey: FieldRef<"ApiOddsSnapshot", 'String'>
+    readonly homeTeam: FieldRef<"ApiOddsSnapshot", 'String'>
+    readonly awayTeam: FieldRef<"ApiOddsSnapshot", 'String'>
+    readonly commenceTime: FieldRef<"ApiOddsSnapshot", 'DateTime'>
+    readonly bookmaker: FieldRef<"ApiOddsSnapshot", 'String'>
+    readonly rawData: FieldRef<"ApiOddsSnapshot", 'Json'>
+    readonly timestamp: FieldRef<"ApiOddsSnapshot", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApiOddsSnapshot findUnique
+   */
+  export type ApiOddsSnapshotFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiOddsSnapshot to fetch.
+     */
+    where: ApiOddsSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ApiOddsSnapshot findUniqueOrThrow
+   */
+  export type ApiOddsSnapshotFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiOddsSnapshot to fetch.
+     */
+    where: ApiOddsSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ApiOddsSnapshot findFirst
+   */
+  export type ApiOddsSnapshotFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiOddsSnapshot to fetch.
+     */
+    where?: ApiOddsSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiOddsSnapshots to fetch.
+     */
+    orderBy?: ApiOddsSnapshotOrderByWithRelationInput | ApiOddsSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiOddsSnapshots.
+     */
+    cursor?: ApiOddsSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiOddsSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiOddsSnapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiOddsSnapshots.
+     */
+    distinct?: ApiOddsSnapshotScalarFieldEnum | ApiOddsSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * ApiOddsSnapshot findFirstOrThrow
+   */
+  export type ApiOddsSnapshotFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiOddsSnapshot to fetch.
+     */
+    where?: ApiOddsSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiOddsSnapshots to fetch.
+     */
+    orderBy?: ApiOddsSnapshotOrderByWithRelationInput | ApiOddsSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiOddsSnapshots.
+     */
+    cursor?: ApiOddsSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiOddsSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiOddsSnapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiOddsSnapshots.
+     */
+    distinct?: ApiOddsSnapshotScalarFieldEnum | ApiOddsSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * ApiOddsSnapshot findMany
+   */
+  export type ApiOddsSnapshotFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiOddsSnapshots to fetch.
+     */
+    where?: ApiOddsSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiOddsSnapshots to fetch.
+     */
+    orderBy?: ApiOddsSnapshotOrderByWithRelationInput | ApiOddsSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApiOddsSnapshots.
+     */
+    cursor?: ApiOddsSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiOddsSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiOddsSnapshots.
+     */
+    skip?: number
+    distinct?: ApiOddsSnapshotScalarFieldEnum | ApiOddsSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * ApiOddsSnapshot create
+   */
+  export type ApiOddsSnapshotCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ApiOddsSnapshot.
+     */
+    data: XOR<ApiOddsSnapshotCreateInput, ApiOddsSnapshotUncheckedCreateInput>
+  }
+
+  /**
+   * ApiOddsSnapshot createMany
+   */
+  export type ApiOddsSnapshotCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApiOddsSnapshots.
+     */
+    data: ApiOddsSnapshotCreateManyInput | ApiOddsSnapshotCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiOddsSnapshot createManyAndReturn
+   */
+  export type ApiOddsSnapshotCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApiOddsSnapshots.
+     */
+    data: ApiOddsSnapshotCreateManyInput | ApiOddsSnapshotCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiOddsSnapshot update
+   */
+  export type ApiOddsSnapshotUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ApiOddsSnapshot.
+     */
+    data: XOR<ApiOddsSnapshotUpdateInput, ApiOddsSnapshotUncheckedUpdateInput>
+    /**
+     * Choose, which ApiOddsSnapshot to update.
+     */
+    where: ApiOddsSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ApiOddsSnapshot updateMany
+   */
+  export type ApiOddsSnapshotUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApiOddsSnapshots.
+     */
+    data: XOR<ApiOddsSnapshotUpdateManyMutationInput, ApiOddsSnapshotUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiOddsSnapshots to update
+     */
+    where?: ApiOddsSnapshotWhereInput
+    /**
+     * Limit how many ApiOddsSnapshots to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiOddsSnapshot updateManyAndReturn
+   */
+  export type ApiOddsSnapshotUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * The data used to update ApiOddsSnapshots.
+     */
+    data: XOR<ApiOddsSnapshotUpdateManyMutationInput, ApiOddsSnapshotUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiOddsSnapshots to update
+     */
+    where?: ApiOddsSnapshotWhereInput
+    /**
+     * Limit how many ApiOddsSnapshots to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiOddsSnapshot upsert
+   */
+  export type ApiOddsSnapshotUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ApiOddsSnapshot to update in case it exists.
+     */
+    where: ApiOddsSnapshotWhereUniqueInput
+    /**
+     * In case the ApiOddsSnapshot found by the `where` argument doesn't exist, create a new ApiOddsSnapshot with this data.
+     */
+    create: XOR<ApiOddsSnapshotCreateInput, ApiOddsSnapshotUncheckedCreateInput>
+    /**
+     * In case the ApiOddsSnapshot was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApiOddsSnapshotUpdateInput, ApiOddsSnapshotUncheckedUpdateInput>
+  }
+
+  /**
+   * ApiOddsSnapshot delete
+   */
+  export type ApiOddsSnapshotDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+    /**
+     * Filter which ApiOddsSnapshot to delete.
+     */
+    where: ApiOddsSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ApiOddsSnapshot deleteMany
+   */
+  export type ApiOddsSnapshotDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiOddsSnapshots to delete
+     */
+    where?: ApiOddsSnapshotWhereInput
+    /**
+     * Limit how many ApiOddsSnapshots to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiOddsSnapshot without action
+   */
+  export type ApiOddsSnapshotDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiOddsSnapshot
+     */
+    select?: ApiOddsSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiOddsSnapshot
+     */
+    omit?: ApiOddsSnapshotOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OddsAuditLog
+   */
+
+  export type AggregateOddsAuditLog = {
+    _count: OddsAuditLogCountAggregateOutputType | null
+    _avg: OddsAuditLogAvgAggregateOutputType | null
+    _sum: OddsAuditLogSumAggregateOutputType | null
+    _min: OddsAuditLogMinAggregateOutputType | null
+    _max: OddsAuditLogMaxAggregateOutputType | null
+  }
+
+  export type OddsAuditLogAvgAggregateOutputType = {
+    oldOdds: Decimal | null
+    newOdds: Decimal | null
+    changePercent: Decimal | null
+  }
+
+  export type OddsAuditLogSumAggregateOutputType = {
+    oldOdds: Decimal | null
+    newOdds: Decimal | null
+    changePercent: Decimal | null
+  }
+
+  export type OddsAuditLogMinAggregateOutputType = {
+    id: string | null
+    externalGameId: string | null
+    sportKey: string | null
+    marketKey: string | null
+    selectionName: string | null
+    bookmaker: string | null
+    oldOdds: Decimal | null
+    newOdds: Decimal | null
+    changePercent: Decimal | null
+    changeType: string | null
+    createdAt: Date | null
+  }
+
+  export type OddsAuditLogMaxAggregateOutputType = {
+    id: string | null
+    externalGameId: string | null
+    sportKey: string | null
+    marketKey: string | null
+    selectionName: string | null
+    bookmaker: string | null
+    oldOdds: Decimal | null
+    newOdds: Decimal | null
+    changePercent: Decimal | null
+    changeType: string | null
+    createdAt: Date | null
+  }
+
+  export type OddsAuditLogCountAggregateOutputType = {
+    id: number
+    externalGameId: number
+    sportKey: number
+    marketKey: number
+    selectionName: number
+    bookmaker: number
+    oldOdds: number
+    newOdds: number
+    changePercent: number
+    changeType: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type OddsAuditLogAvgAggregateInputType = {
+    oldOdds?: true
+    newOdds?: true
+    changePercent?: true
+  }
+
+  export type OddsAuditLogSumAggregateInputType = {
+    oldOdds?: true
+    newOdds?: true
+    changePercent?: true
+  }
+
+  export type OddsAuditLogMinAggregateInputType = {
+    id?: true
+    externalGameId?: true
+    sportKey?: true
+    marketKey?: true
+    selectionName?: true
+    bookmaker?: true
+    oldOdds?: true
+    newOdds?: true
+    changePercent?: true
+    changeType?: true
+    createdAt?: true
+  }
+
+  export type OddsAuditLogMaxAggregateInputType = {
+    id?: true
+    externalGameId?: true
+    sportKey?: true
+    marketKey?: true
+    selectionName?: true
+    bookmaker?: true
+    oldOdds?: true
+    newOdds?: true
+    changePercent?: true
+    changeType?: true
+    createdAt?: true
+  }
+
+  export type OddsAuditLogCountAggregateInputType = {
+    id?: true
+    externalGameId?: true
+    sportKey?: true
+    marketKey?: true
+    selectionName?: true
+    bookmaker?: true
+    oldOdds?: true
+    newOdds?: true
+    changePercent?: true
+    changeType?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type OddsAuditLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OddsAuditLog to aggregate.
+     */
+    where?: OddsAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OddsAuditLogs to fetch.
+     */
+    orderBy?: OddsAuditLogOrderByWithRelationInput | OddsAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OddsAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OddsAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OddsAuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OddsAuditLogs
+    **/
+    _count?: true | OddsAuditLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OddsAuditLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OddsAuditLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OddsAuditLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OddsAuditLogMaxAggregateInputType
+  }
+
+  export type GetOddsAuditLogAggregateType<T extends OddsAuditLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateOddsAuditLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOddsAuditLog[P]>
+      : GetScalarType<T[P], AggregateOddsAuditLog[P]>
+  }
+
+
+
+
+  export type OddsAuditLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OddsAuditLogWhereInput
+    orderBy?: OddsAuditLogOrderByWithAggregationInput | OddsAuditLogOrderByWithAggregationInput[]
+    by: OddsAuditLogScalarFieldEnum[] | OddsAuditLogScalarFieldEnum
+    having?: OddsAuditLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OddsAuditLogCountAggregateInputType | true
+    _avg?: OddsAuditLogAvgAggregateInputType
+    _sum?: OddsAuditLogSumAggregateInputType
+    _min?: OddsAuditLogMinAggregateInputType
+    _max?: OddsAuditLogMaxAggregateInputType
+  }
+
+  export type OddsAuditLogGroupByOutputType = {
+    id: string
+    externalGameId: string
+    sportKey: string
+    marketKey: string
+    selectionName: string
+    bookmaker: string
+    oldOdds: Decimal
+    newOdds: Decimal
+    changePercent: Decimal
+    changeType: string
+    createdAt: Date
+    _count: OddsAuditLogCountAggregateOutputType | null
+    _avg: OddsAuditLogAvgAggregateOutputType | null
+    _sum: OddsAuditLogSumAggregateOutputType | null
+    _min: OddsAuditLogMinAggregateOutputType | null
+    _max: OddsAuditLogMaxAggregateOutputType | null
+  }
+
+  type GetOddsAuditLogGroupByPayload<T extends OddsAuditLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OddsAuditLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OddsAuditLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OddsAuditLogGroupByOutputType[P]>
+            : GetScalarType<T[P], OddsAuditLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OddsAuditLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    marketKey?: boolean
+    selectionName?: boolean
+    bookmaker?: boolean
+    oldOdds?: boolean
+    newOdds?: boolean
+    changePercent?: boolean
+    changeType?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["oddsAuditLog"]>
+
+  export type OddsAuditLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    marketKey?: boolean
+    selectionName?: boolean
+    bookmaker?: boolean
+    oldOdds?: boolean
+    newOdds?: boolean
+    changePercent?: boolean
+    changeType?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["oddsAuditLog"]>
+
+  export type OddsAuditLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    marketKey?: boolean
+    selectionName?: boolean
+    bookmaker?: boolean
+    oldOdds?: boolean
+    newOdds?: boolean
+    changePercent?: boolean
+    changeType?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["oddsAuditLog"]>
+
+  export type OddsAuditLogSelectScalar = {
+    id?: boolean
+    externalGameId?: boolean
+    sportKey?: boolean
+    marketKey?: boolean
+    selectionName?: boolean
+    bookmaker?: boolean
+    oldOdds?: boolean
+    newOdds?: boolean
+    changePercent?: boolean
+    changeType?: boolean
+    createdAt?: boolean
+  }
+
+  export type OddsAuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "externalGameId" | "sportKey" | "marketKey" | "selectionName" | "bookmaker" | "oldOdds" | "newOdds" | "changePercent" | "changeType" | "createdAt", ExtArgs["result"]["oddsAuditLog"]>
+
+  export type $OddsAuditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OddsAuditLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      externalGameId: string
+      sportKey: string
+      marketKey: string
+      selectionName: string
+      bookmaker: string
+      oldOdds: Prisma.Decimal
+      newOdds: Prisma.Decimal
+      changePercent: Prisma.Decimal
+      changeType: string
+      createdAt: Date
+    }, ExtArgs["result"]["oddsAuditLog"]>
+    composites: {}
+  }
+
+  type OddsAuditLogGetPayload<S extends boolean | null | undefined | OddsAuditLogDefaultArgs> = $Result.GetResult<Prisma.$OddsAuditLogPayload, S>
+
+  type OddsAuditLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OddsAuditLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OddsAuditLogCountAggregateInputType | true
+    }
+
+  export interface OddsAuditLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OddsAuditLog'], meta: { name: 'OddsAuditLog' } }
+    /**
+     * Find zero or one OddsAuditLog that matches the filter.
+     * @param {OddsAuditLogFindUniqueArgs} args - Arguments to find a OddsAuditLog
+     * @example
+     * // Get one OddsAuditLog
+     * const oddsAuditLog = await prisma.oddsAuditLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OddsAuditLogFindUniqueArgs>(args: SelectSubset<T, OddsAuditLogFindUniqueArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OddsAuditLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OddsAuditLogFindUniqueOrThrowArgs} args - Arguments to find a OddsAuditLog
+     * @example
+     * // Get one OddsAuditLog
+     * const oddsAuditLog = await prisma.oddsAuditLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OddsAuditLogFindUniqueOrThrowArgs>(args: SelectSubset<T, OddsAuditLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OddsAuditLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OddsAuditLogFindFirstArgs} args - Arguments to find a OddsAuditLog
+     * @example
+     * // Get one OddsAuditLog
+     * const oddsAuditLog = await prisma.oddsAuditLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OddsAuditLogFindFirstArgs>(args?: SelectSubset<T, OddsAuditLogFindFirstArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OddsAuditLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OddsAuditLogFindFirstOrThrowArgs} args - Arguments to find a OddsAuditLog
+     * @example
+     * // Get one OddsAuditLog
+     * const oddsAuditLog = await prisma.oddsAuditLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OddsAuditLogFindFirstOrThrowArgs>(args?: SelectSubset<T, OddsAuditLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OddsAuditLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OddsAuditLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OddsAuditLogs
+     * const oddsAuditLogs = await prisma.oddsAuditLog.findMany()
+     * 
+     * // Get first 10 OddsAuditLogs
+     * const oddsAuditLogs = await prisma.oddsAuditLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const oddsAuditLogWithIdOnly = await prisma.oddsAuditLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OddsAuditLogFindManyArgs>(args?: SelectSubset<T, OddsAuditLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OddsAuditLog.
+     * @param {OddsAuditLogCreateArgs} args - Arguments to create a OddsAuditLog.
+     * @example
+     * // Create one OddsAuditLog
+     * const OddsAuditLog = await prisma.oddsAuditLog.create({
+     *   data: {
+     *     // ... data to create a OddsAuditLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends OddsAuditLogCreateArgs>(args: SelectSubset<T, OddsAuditLogCreateArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OddsAuditLogs.
+     * @param {OddsAuditLogCreateManyArgs} args - Arguments to create many OddsAuditLogs.
+     * @example
+     * // Create many OddsAuditLogs
+     * const oddsAuditLog = await prisma.oddsAuditLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OddsAuditLogCreateManyArgs>(args?: SelectSubset<T, OddsAuditLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OddsAuditLogs and returns the data saved in the database.
+     * @param {OddsAuditLogCreateManyAndReturnArgs} args - Arguments to create many OddsAuditLogs.
+     * @example
+     * // Create many OddsAuditLogs
+     * const oddsAuditLog = await prisma.oddsAuditLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OddsAuditLogs and only return the `id`
+     * const oddsAuditLogWithIdOnly = await prisma.oddsAuditLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OddsAuditLogCreateManyAndReturnArgs>(args?: SelectSubset<T, OddsAuditLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OddsAuditLog.
+     * @param {OddsAuditLogDeleteArgs} args - Arguments to delete one OddsAuditLog.
+     * @example
+     * // Delete one OddsAuditLog
+     * const OddsAuditLog = await prisma.oddsAuditLog.delete({
+     *   where: {
+     *     // ... filter to delete one OddsAuditLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OddsAuditLogDeleteArgs>(args: SelectSubset<T, OddsAuditLogDeleteArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OddsAuditLog.
+     * @param {OddsAuditLogUpdateArgs} args - Arguments to update one OddsAuditLog.
+     * @example
+     * // Update one OddsAuditLog
+     * const oddsAuditLog = await prisma.oddsAuditLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OddsAuditLogUpdateArgs>(args: SelectSubset<T, OddsAuditLogUpdateArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OddsAuditLogs.
+     * @param {OddsAuditLogDeleteManyArgs} args - Arguments to filter OddsAuditLogs to delete.
+     * @example
+     * // Delete a few OddsAuditLogs
+     * const { count } = await prisma.oddsAuditLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OddsAuditLogDeleteManyArgs>(args?: SelectSubset<T, OddsAuditLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OddsAuditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OddsAuditLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OddsAuditLogs
+     * const oddsAuditLog = await prisma.oddsAuditLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OddsAuditLogUpdateManyArgs>(args: SelectSubset<T, OddsAuditLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OddsAuditLogs and returns the data updated in the database.
+     * @param {OddsAuditLogUpdateManyAndReturnArgs} args - Arguments to update many OddsAuditLogs.
+     * @example
+     * // Update many OddsAuditLogs
+     * const oddsAuditLog = await prisma.oddsAuditLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OddsAuditLogs and only return the `id`
+     * const oddsAuditLogWithIdOnly = await prisma.oddsAuditLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OddsAuditLogUpdateManyAndReturnArgs>(args: SelectSubset<T, OddsAuditLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OddsAuditLog.
+     * @param {OddsAuditLogUpsertArgs} args - Arguments to update or create a OddsAuditLog.
+     * @example
+     * // Update or create a OddsAuditLog
+     * const oddsAuditLog = await prisma.oddsAuditLog.upsert({
+     *   create: {
+     *     // ... data to create a OddsAuditLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OddsAuditLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OddsAuditLogUpsertArgs>(args: SelectSubset<T, OddsAuditLogUpsertArgs<ExtArgs>>): Prisma__OddsAuditLogClient<$Result.GetResult<Prisma.$OddsAuditLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OddsAuditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OddsAuditLogCountArgs} args - Arguments to filter OddsAuditLogs to count.
+     * @example
+     * // Count the number of OddsAuditLogs
+     * const count = await prisma.oddsAuditLog.count({
+     *   where: {
+     *     // ... the filter for the OddsAuditLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends OddsAuditLogCountArgs>(
+      args?: Subset<T, OddsAuditLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OddsAuditLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OddsAuditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OddsAuditLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OddsAuditLogAggregateArgs>(args: Subset<T, OddsAuditLogAggregateArgs>): Prisma.PrismaPromise<GetOddsAuditLogAggregateType<T>>
+
+    /**
+     * Group by OddsAuditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OddsAuditLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OddsAuditLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OddsAuditLogGroupByArgs['orderBy'] }
+        : { orderBy?: OddsAuditLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OddsAuditLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOddsAuditLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OddsAuditLog model
+   */
+  readonly fields: OddsAuditLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OddsAuditLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OddsAuditLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OddsAuditLog model
+   */
+  interface OddsAuditLogFieldRefs {
+    readonly id: FieldRef<"OddsAuditLog", 'String'>
+    readonly externalGameId: FieldRef<"OddsAuditLog", 'String'>
+    readonly sportKey: FieldRef<"OddsAuditLog", 'String'>
+    readonly marketKey: FieldRef<"OddsAuditLog", 'String'>
+    readonly selectionName: FieldRef<"OddsAuditLog", 'String'>
+    readonly bookmaker: FieldRef<"OddsAuditLog", 'String'>
+    readonly oldOdds: FieldRef<"OddsAuditLog", 'Decimal'>
+    readonly newOdds: FieldRef<"OddsAuditLog", 'Decimal'>
+    readonly changePercent: FieldRef<"OddsAuditLog", 'Decimal'>
+    readonly changeType: FieldRef<"OddsAuditLog", 'String'>
+    readonly createdAt: FieldRef<"OddsAuditLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OddsAuditLog findUnique
+   */
+  export type OddsAuditLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which OddsAuditLog to fetch.
+     */
+    where: OddsAuditLogWhereUniqueInput
+  }
+
+  /**
+   * OddsAuditLog findUniqueOrThrow
+   */
+  export type OddsAuditLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which OddsAuditLog to fetch.
+     */
+    where: OddsAuditLogWhereUniqueInput
+  }
+
+  /**
+   * OddsAuditLog findFirst
+   */
+  export type OddsAuditLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which OddsAuditLog to fetch.
+     */
+    where?: OddsAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OddsAuditLogs to fetch.
+     */
+    orderBy?: OddsAuditLogOrderByWithRelationInput | OddsAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OddsAuditLogs.
+     */
+    cursor?: OddsAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OddsAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OddsAuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OddsAuditLogs.
+     */
+    distinct?: OddsAuditLogScalarFieldEnum | OddsAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * OddsAuditLog findFirstOrThrow
+   */
+  export type OddsAuditLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which OddsAuditLog to fetch.
+     */
+    where?: OddsAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OddsAuditLogs to fetch.
+     */
+    orderBy?: OddsAuditLogOrderByWithRelationInput | OddsAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OddsAuditLogs.
+     */
+    cursor?: OddsAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OddsAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OddsAuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OddsAuditLogs.
+     */
+    distinct?: OddsAuditLogScalarFieldEnum | OddsAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * OddsAuditLog findMany
+   */
+  export type OddsAuditLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which OddsAuditLogs to fetch.
+     */
+    where?: OddsAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OddsAuditLogs to fetch.
+     */
+    orderBy?: OddsAuditLogOrderByWithRelationInput | OddsAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OddsAuditLogs.
+     */
+    cursor?: OddsAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OddsAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OddsAuditLogs.
+     */
+    skip?: number
+    distinct?: OddsAuditLogScalarFieldEnum | OddsAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * OddsAuditLog create
+   */
+  export type OddsAuditLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * The data needed to create a OddsAuditLog.
+     */
+    data: XOR<OddsAuditLogCreateInput, OddsAuditLogUncheckedCreateInput>
+  }
+
+  /**
+   * OddsAuditLog createMany
+   */
+  export type OddsAuditLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OddsAuditLogs.
+     */
+    data: OddsAuditLogCreateManyInput | OddsAuditLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OddsAuditLog createManyAndReturn
+   */
+  export type OddsAuditLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many OddsAuditLogs.
+     */
+    data: OddsAuditLogCreateManyInput | OddsAuditLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OddsAuditLog update
+   */
+  export type OddsAuditLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * The data needed to update a OddsAuditLog.
+     */
+    data: XOR<OddsAuditLogUpdateInput, OddsAuditLogUncheckedUpdateInput>
+    /**
+     * Choose, which OddsAuditLog to update.
+     */
+    where: OddsAuditLogWhereUniqueInput
+  }
+
+  /**
+   * OddsAuditLog updateMany
+   */
+  export type OddsAuditLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OddsAuditLogs.
+     */
+    data: XOR<OddsAuditLogUpdateManyMutationInput, OddsAuditLogUncheckedUpdateManyInput>
+    /**
+     * Filter which OddsAuditLogs to update
+     */
+    where?: OddsAuditLogWhereInput
+    /**
+     * Limit how many OddsAuditLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OddsAuditLog updateManyAndReturn
+   */
+  export type OddsAuditLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * The data used to update OddsAuditLogs.
+     */
+    data: XOR<OddsAuditLogUpdateManyMutationInput, OddsAuditLogUncheckedUpdateManyInput>
+    /**
+     * Filter which OddsAuditLogs to update
+     */
+    where?: OddsAuditLogWhereInput
+    /**
+     * Limit how many OddsAuditLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OddsAuditLog upsert
+   */
+  export type OddsAuditLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * The filter to search for the OddsAuditLog to update in case it exists.
+     */
+    where: OddsAuditLogWhereUniqueInput
+    /**
+     * In case the OddsAuditLog found by the `where` argument doesn't exist, create a new OddsAuditLog with this data.
+     */
+    create: XOR<OddsAuditLogCreateInput, OddsAuditLogUncheckedCreateInput>
+    /**
+     * In case the OddsAuditLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OddsAuditLogUpdateInput, OddsAuditLogUncheckedUpdateInput>
+  }
+
+  /**
+   * OddsAuditLog delete
+   */
+  export type OddsAuditLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+    /**
+     * Filter which OddsAuditLog to delete.
+     */
+    where: OddsAuditLogWhereUniqueInput
+  }
+
+  /**
+   * OddsAuditLog deleteMany
+   */
+  export type OddsAuditLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OddsAuditLogs to delete
+     */
+    where?: OddsAuditLogWhereInput
+    /**
+     * Limit how many OddsAuditLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OddsAuditLog without action
+   */
+  export type OddsAuditLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OddsAuditLog
+     */
+    select?: OddsAuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OddsAuditLog
+     */
+    omit?: OddsAuditLogOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Notification
+   */
+
+  export type AggregateNotification = {
+    _count: NotificationCountAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  export type NotificationMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: string | null
+    priority: string | null
+    title: string | null
+    message: string | null
+    read: boolean | null
+    dismissed: boolean | null
+    actionUrl: string | null
+    actionLabel: string | null
+    createdAt: Date | null
+    readAt: Date | null
+  }
+
+  export type NotificationMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: string | null
+    priority: string | null
+    title: string | null
+    message: string | null
+    read: boolean | null
+    dismissed: boolean | null
+    actionUrl: string | null
+    actionLabel: string | null
+    createdAt: Date | null
+    readAt: Date | null
+  }
+
+  export type NotificationCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    priority: number
+    title: number
+    message: number
+    read: number
+    dismissed: number
+    actionUrl: number
+    actionLabel: number
+    metadata: number
+    createdAt: number
+    readAt: number
+    _all: number
+  }
+
+
+  export type NotificationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    priority?: true
+    title?: true
+    message?: true
+    read?: true
+    dismissed?: true
+    actionUrl?: true
+    actionLabel?: true
+    createdAt?: true
+    readAt?: true
+  }
+
+  export type NotificationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    priority?: true
+    title?: true
+    message?: true
+    read?: true
+    dismissed?: true
+    actionUrl?: true
+    actionLabel?: true
+    createdAt?: true
+    readAt?: true
+  }
+
+  export type NotificationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    priority?: true
+    title?: true
+    message?: true
+    read?: true
+    dismissed?: true
+    actionUrl?: true
+    actionLabel?: true
+    metadata?: true
+    createdAt?: true
+    readAt?: true
+    _all?: true
+  }
+
+  export type NotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notification to aggregate.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Notifications
+    **/
+    _count?: true | NotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type GetNotificationAggregateType<T extends NotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotification[P]>
+      : GetScalarType<T[P], AggregateNotification[P]>
+  }
+
+
+
+
+  export type NotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithAggregationInput | NotificationOrderByWithAggregationInput[]
+    by: NotificationScalarFieldEnum[] | NotificationScalarFieldEnum
+    having?: NotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificationCountAggregateInputType | true
+    _min?: NotificationMinAggregateInputType
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type NotificationGroupByOutputType = {
+    id: string
+    userId: string
+    type: string
+    priority: string
+    title: string
+    message: string
+    read: boolean
+    dismissed: boolean
+    actionUrl: string | null
+    actionLabel: string | null
+    metadata: JsonValue | null
+    createdAt: Date
+    readAt: Date | null
+    _count: NotificationCountAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  type GetNotificationGroupByPayload<T extends NotificationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    priority?: boolean
+    title?: boolean
+    message?: boolean
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: boolean
+    actionLabel?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    readAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notification"]>
+
+  export type NotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    priority?: boolean
+    title?: boolean
+    message?: boolean
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: boolean
+    actionLabel?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    readAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notification"]>
+
+  export type NotificationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    priority?: boolean
+    title?: boolean
+    message?: boolean
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: boolean
+    actionLabel?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    readAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notification"]>
+
+  export type NotificationSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    priority?: boolean
+    title?: boolean
+    message?: boolean
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: boolean
+    actionLabel?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    readAt?: boolean
+  }
+
+  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "priority" | "title" | "message" | "read" | "dismissed" | "actionUrl" | "actionLabel" | "metadata" | "createdAt" | "readAt", ExtArgs["result"]["notification"]>
+  export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type NotificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type NotificationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Notification"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: string
+      priority: string
+      title: string
+      message: string
+      read: boolean
+      dismissed: boolean
+      actionUrl: string | null
+      actionLabel: string | null
+      metadata: Prisma.JsonValue | null
+      createdAt: Date
+      readAt: Date | null
+    }, ExtArgs["result"]["notification"]>
+    composites: {}
+  }
+
+  type NotificationGetPayload<S extends boolean | null | undefined | NotificationDefaultArgs> = $Result.GetResult<Prisma.$NotificationPayload, S>
+
+  type NotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NotificationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NotificationCountAggregateInputType | true
+    }
+
+  export interface NotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Notification'], meta: { name: 'Notification' } }
+    /**
+     * Find zero or one Notification that matches the filter.
+     * @param {NotificationFindUniqueArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NotificationFindUniqueArgs>(args: SelectSubset<T, NotificationFindUniqueArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Notification that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NotificationFindUniqueOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NotificationFindUniqueOrThrowArgs>(args: SelectSubset<T, NotificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NotificationFindFirstArgs>(args?: SelectSubset<T, NotificationFindFirstArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notification that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NotificationFindFirstOrThrowArgs>(args?: SelectSubset<T, NotificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notifications
+     * const notifications = await prisma.notification.findMany()
+     * 
+     * // Get first 10 Notifications
+     * const notifications = await prisma.notification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const notificationWithIdOnly = await prisma.notification.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NotificationFindManyArgs>(args?: SelectSubset<T, NotificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Notification.
+     * @param {NotificationCreateArgs} args - Arguments to create a Notification.
+     * @example
+     * // Create one Notification
+     * const Notification = await prisma.notification.create({
+     *   data: {
+     *     // ... data to create a Notification
+     *   }
+     * })
+     * 
+     */
+    create<T extends NotificationCreateArgs>(args: SelectSubset<T, NotificationCreateArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Notifications.
+     * @param {NotificationCreateManyArgs} args - Arguments to create many Notifications.
+     * @example
+     * // Create many Notifications
+     * const notification = await prisma.notification.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NotificationCreateManyArgs>(args?: SelectSubset<T, NotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Notifications and returns the data saved in the database.
+     * @param {NotificationCreateManyAndReturnArgs} args - Arguments to create many Notifications.
+     * @example
+     * // Create many Notifications
+     * const notification = await prisma.notification.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Notifications and only return the `id`
+     * const notificationWithIdOnly = await prisma.notification.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NotificationCreateManyAndReturnArgs>(args?: SelectSubset<T, NotificationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Notification.
+     * @param {NotificationDeleteArgs} args - Arguments to delete one Notification.
+     * @example
+     * // Delete one Notification
+     * const Notification = await prisma.notification.delete({
+     *   where: {
+     *     // ... filter to delete one Notification
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NotificationDeleteArgs>(args: SelectSubset<T, NotificationDeleteArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Notification.
+     * @param {NotificationUpdateArgs} args - Arguments to update one Notification.
+     * @example
+     * // Update one Notification
+     * const notification = await prisma.notification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NotificationUpdateArgs>(args: SelectSubset<T, NotificationUpdateArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Notifications.
+     * @param {NotificationDeleteManyArgs} args - Arguments to filter Notifications to delete.
+     * @example
+     * // Delete a few Notifications
+     * const { count } = await prisma.notification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NotificationDeleteManyArgs>(args?: SelectSubset<T, NotificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notifications
+     * const notification = await prisma.notification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NotificationUpdateManyArgs>(args: SelectSubset<T, NotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notifications and returns the data updated in the database.
+     * @param {NotificationUpdateManyAndReturnArgs} args - Arguments to update many Notifications.
+     * @example
+     * // Update many Notifications
+     * const notification = await prisma.notification.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Notifications and only return the `id`
+     * const notificationWithIdOnly = await prisma.notification.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NotificationUpdateManyAndReturnArgs>(args: SelectSubset<T, NotificationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Notification.
+     * @param {NotificationUpsertArgs} args - Arguments to update or create a Notification.
+     * @example
+     * // Update or create a Notification
+     * const notification = await prisma.notification.upsert({
+     *   create: {
+     *     // ... data to create a Notification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notification we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NotificationUpsertArgs>(args: SelectSubset<T, NotificationUpsertArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationCountArgs} args - Arguments to filter Notifications to count.
+     * @example
+     * // Count the number of Notifications
+     * const count = await prisma.notification.count({
+     *   where: {
+     *     // ... the filter for the Notifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends NotificationCountArgs>(
+      args?: Subset<T, NotificationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificationAggregateArgs>(args: Subset<T, NotificationAggregateArgs>): Prisma.PrismaPromise<GetNotificationAggregateType<T>>
+
+    /**
+     * Group by Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NotificationGroupByArgs['orderBy'] }
+        : { orderBy?: NotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Notification model
+   */
+  readonly fields: NotificationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Notification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Notification model
+   */
+  interface NotificationFieldRefs {
+    readonly id: FieldRef<"Notification", 'String'>
+    readonly userId: FieldRef<"Notification", 'String'>
+    readonly type: FieldRef<"Notification", 'String'>
+    readonly priority: FieldRef<"Notification", 'String'>
+    readonly title: FieldRef<"Notification", 'String'>
+    readonly message: FieldRef<"Notification", 'String'>
+    readonly read: FieldRef<"Notification", 'Boolean'>
+    readonly dismissed: FieldRef<"Notification", 'Boolean'>
+    readonly actionUrl: FieldRef<"Notification", 'String'>
+    readonly actionLabel: FieldRef<"Notification", 'String'>
+    readonly metadata: FieldRef<"Notification", 'Json'>
+    readonly createdAt: FieldRef<"Notification", 'DateTime'>
+    readonly readAt: FieldRef<"Notification", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Notification findUnique
+   */
+  export type NotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification findUniqueOrThrow
+   */
+  export type NotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification findFirst
+   */
+  export type NotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification findFirstOrThrow
+   */
+  export type NotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification findMany
+   */
+  export type NotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notifications to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification create
+   */
+  export type NotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Notification.
+     */
+    data: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+  }
+
+  /**
+   * Notification createMany
+   */
+  export type NotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Notifications.
+     */
+    data: NotificationCreateManyInput | NotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Notification createManyAndReturn
+   */
+  export type NotificationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Notifications.
+     */
+    data: NotificationCreateManyInput | NotificationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Notification update
+   */
+  export type NotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Notification.
+     */
+    data: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+    /**
+     * Choose, which Notification to update.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification updateMany
+   */
+  export type NotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Notifications.
+     */
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which Notifications to update
+     */
+    where?: NotificationWhereInput
+    /**
+     * Limit how many Notifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notification updateManyAndReturn
+   */
+  export type NotificationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * The data used to update Notifications.
+     */
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which Notifications to update
+     */
+    where?: NotificationWhereInput
+    /**
+     * Limit how many Notifications to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Notification upsert
+   */
+  export type NotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Notification to update in case it exists.
+     */
+    where: NotificationWhereUniqueInput
+    /**
+     * In case the Notification found by the `where` argument doesn't exist, create a new Notification with this data.
+     */
+    create: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+    /**
+     * In case the Notification was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+  }
+
+  /**
+   * Notification delete
+   */
+  export type NotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter which Notification to delete.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification deleteMany
+   */
+  export type NotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notifications to delete
+     */
+    where?: NotificationWhereInput
+    /**
+     * Limit how many Notifications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notification without action
+   */
+  export type NotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -49608,6 +53234,57 @@ export namespace Prisma {
   export type OddsChangeEventScalarFieldEnum = (typeof OddsChangeEventScalarFieldEnum)[keyof typeof OddsChangeEventScalarFieldEnum]
 
 
+  export const ApiOddsSnapshotScalarFieldEnum: {
+    id: 'id',
+    externalGameId: 'externalGameId',
+    sportKey: 'sportKey',
+    homeTeam: 'homeTeam',
+    awayTeam: 'awayTeam',
+    commenceTime: 'commenceTime',
+    bookmaker: 'bookmaker',
+    rawData: 'rawData',
+    timestamp: 'timestamp'
+  };
+
+  export type ApiOddsSnapshotScalarFieldEnum = (typeof ApiOddsSnapshotScalarFieldEnum)[keyof typeof ApiOddsSnapshotScalarFieldEnum]
+
+
+  export const OddsAuditLogScalarFieldEnum: {
+    id: 'id',
+    externalGameId: 'externalGameId',
+    sportKey: 'sportKey',
+    marketKey: 'marketKey',
+    selectionName: 'selectionName',
+    bookmaker: 'bookmaker',
+    oldOdds: 'oldOdds',
+    newOdds: 'newOdds',
+    changePercent: 'changePercent',
+    changeType: 'changeType',
+    createdAt: 'createdAt'
+  };
+
+  export type OddsAuditLogScalarFieldEnum = (typeof OddsAuditLogScalarFieldEnum)[keyof typeof OddsAuditLogScalarFieldEnum]
+
+
+  export const NotificationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    priority: 'priority',
+    title: 'title',
+    message: 'message',
+    read: 'read',
+    dismissed: 'dismissed',
+    actionUrl: 'actionUrl',
+    actionLabel: 'actionLabel',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    readAt: 'readAt'
+  };
+
+  export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -49622,6 +53299,13 @@ export namespace Prisma {
   };
 
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -49779,6 +53463,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternListRelationFilter
     activityLogs?: AccountActivityLogListRelationFilter
     devices?: DeviceRegistryListRelationFilter
+    notifications?: NotificationListRelationFilter
     consents?: GdprConsentListRelationFilter
     deletionRequests?: DataDeletionRequestListRelationFilter
     exportRequests?: DataExportRequestListRelationFilter
@@ -49815,6 +53500,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternOrderByRelationAggregateInput
     activityLogs?: AccountActivityLogOrderByRelationAggregateInput
     devices?: DeviceRegistryOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
     consents?: GdprConsentOrderByRelationAggregateInput
     deletionRequests?: DataDeletionRequestOrderByRelationAggregateInput
     exportRequests?: DataExportRequestOrderByRelationAggregateInput
@@ -49854,6 +53540,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternListRelationFilter
     activityLogs?: AccountActivityLogListRelationFilter
     devices?: DeviceRegistryListRelationFilter
+    notifications?: NotificationListRelationFilter
     consents?: GdprConsentListRelationFilter
     deletionRequests?: DataDeletionRequestListRelationFilter
     exportRequests?: DataExportRequestListRelationFilter
@@ -52918,6 +56605,258 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"OddsChangeEvent"> | Date | string
   }
 
+  export type ApiOddsSnapshotWhereInput = {
+    AND?: ApiOddsSnapshotWhereInput | ApiOddsSnapshotWhereInput[]
+    OR?: ApiOddsSnapshotWhereInput[]
+    NOT?: ApiOddsSnapshotWhereInput | ApiOddsSnapshotWhereInput[]
+    id?: StringFilter<"ApiOddsSnapshot"> | string
+    externalGameId?: StringFilter<"ApiOddsSnapshot"> | string
+    sportKey?: StringFilter<"ApiOddsSnapshot"> | string
+    homeTeam?: StringFilter<"ApiOddsSnapshot"> | string
+    awayTeam?: StringFilter<"ApiOddsSnapshot"> | string
+    commenceTime?: DateTimeFilter<"ApiOddsSnapshot"> | Date | string
+    bookmaker?: StringFilter<"ApiOddsSnapshot"> | string
+    rawData?: JsonFilter<"ApiOddsSnapshot">
+    timestamp?: DateTimeFilter<"ApiOddsSnapshot"> | Date | string
+  }
+
+  export type ApiOddsSnapshotOrderByWithRelationInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    homeTeam?: SortOrder
+    awayTeam?: SortOrder
+    commenceTime?: SortOrder
+    bookmaker?: SortOrder
+    rawData?: SortOrder
+    timestamp?: SortOrder
+  }
+
+  export type ApiOddsSnapshotWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    externalGameId_bookmaker_timestamp?: ApiOddsSnapshotExternalGameIdBookmakerTimestampCompoundUniqueInput
+    AND?: ApiOddsSnapshotWhereInput | ApiOddsSnapshotWhereInput[]
+    OR?: ApiOddsSnapshotWhereInput[]
+    NOT?: ApiOddsSnapshotWhereInput | ApiOddsSnapshotWhereInput[]
+    externalGameId?: StringFilter<"ApiOddsSnapshot"> | string
+    sportKey?: StringFilter<"ApiOddsSnapshot"> | string
+    homeTeam?: StringFilter<"ApiOddsSnapshot"> | string
+    awayTeam?: StringFilter<"ApiOddsSnapshot"> | string
+    commenceTime?: DateTimeFilter<"ApiOddsSnapshot"> | Date | string
+    bookmaker?: StringFilter<"ApiOddsSnapshot"> | string
+    rawData?: JsonFilter<"ApiOddsSnapshot">
+    timestamp?: DateTimeFilter<"ApiOddsSnapshot"> | Date | string
+  }, "id" | "externalGameId_bookmaker_timestamp">
+
+  export type ApiOddsSnapshotOrderByWithAggregationInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    homeTeam?: SortOrder
+    awayTeam?: SortOrder
+    commenceTime?: SortOrder
+    bookmaker?: SortOrder
+    rawData?: SortOrder
+    timestamp?: SortOrder
+    _count?: ApiOddsSnapshotCountOrderByAggregateInput
+    _max?: ApiOddsSnapshotMaxOrderByAggregateInput
+    _min?: ApiOddsSnapshotMinOrderByAggregateInput
+  }
+
+  export type ApiOddsSnapshotScalarWhereWithAggregatesInput = {
+    AND?: ApiOddsSnapshotScalarWhereWithAggregatesInput | ApiOddsSnapshotScalarWhereWithAggregatesInput[]
+    OR?: ApiOddsSnapshotScalarWhereWithAggregatesInput[]
+    NOT?: ApiOddsSnapshotScalarWhereWithAggregatesInput | ApiOddsSnapshotScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApiOddsSnapshot"> | string
+    externalGameId?: StringWithAggregatesFilter<"ApiOddsSnapshot"> | string
+    sportKey?: StringWithAggregatesFilter<"ApiOddsSnapshot"> | string
+    homeTeam?: StringWithAggregatesFilter<"ApiOddsSnapshot"> | string
+    awayTeam?: StringWithAggregatesFilter<"ApiOddsSnapshot"> | string
+    commenceTime?: DateTimeWithAggregatesFilter<"ApiOddsSnapshot"> | Date | string
+    bookmaker?: StringWithAggregatesFilter<"ApiOddsSnapshot"> | string
+    rawData?: JsonWithAggregatesFilter<"ApiOddsSnapshot">
+    timestamp?: DateTimeWithAggregatesFilter<"ApiOddsSnapshot"> | Date | string
+  }
+
+  export type OddsAuditLogWhereInput = {
+    AND?: OddsAuditLogWhereInput | OddsAuditLogWhereInput[]
+    OR?: OddsAuditLogWhereInput[]
+    NOT?: OddsAuditLogWhereInput | OddsAuditLogWhereInput[]
+    id?: StringFilter<"OddsAuditLog"> | string
+    externalGameId?: StringFilter<"OddsAuditLog"> | string
+    sportKey?: StringFilter<"OddsAuditLog"> | string
+    marketKey?: StringFilter<"OddsAuditLog"> | string
+    selectionName?: StringFilter<"OddsAuditLog"> | string
+    bookmaker?: StringFilter<"OddsAuditLog"> | string
+    oldOdds?: DecimalFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    newOdds?: DecimalFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    changePercent?: DecimalFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    changeType?: StringFilter<"OddsAuditLog"> | string
+    createdAt?: DateTimeFilter<"OddsAuditLog"> | Date | string
+  }
+
+  export type OddsAuditLogOrderByWithRelationInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    marketKey?: SortOrder
+    selectionName?: SortOrder
+    bookmaker?: SortOrder
+    oldOdds?: SortOrder
+    newOdds?: SortOrder
+    changePercent?: SortOrder
+    changeType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OddsAuditLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OddsAuditLogWhereInput | OddsAuditLogWhereInput[]
+    OR?: OddsAuditLogWhereInput[]
+    NOT?: OddsAuditLogWhereInput | OddsAuditLogWhereInput[]
+    externalGameId?: StringFilter<"OddsAuditLog"> | string
+    sportKey?: StringFilter<"OddsAuditLog"> | string
+    marketKey?: StringFilter<"OddsAuditLog"> | string
+    selectionName?: StringFilter<"OddsAuditLog"> | string
+    bookmaker?: StringFilter<"OddsAuditLog"> | string
+    oldOdds?: DecimalFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    newOdds?: DecimalFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    changePercent?: DecimalFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    changeType?: StringFilter<"OddsAuditLog"> | string
+    createdAt?: DateTimeFilter<"OddsAuditLog"> | Date | string
+  }, "id">
+
+  export type OddsAuditLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    marketKey?: SortOrder
+    selectionName?: SortOrder
+    bookmaker?: SortOrder
+    oldOdds?: SortOrder
+    newOdds?: SortOrder
+    changePercent?: SortOrder
+    changeType?: SortOrder
+    createdAt?: SortOrder
+    _count?: OddsAuditLogCountOrderByAggregateInput
+    _avg?: OddsAuditLogAvgOrderByAggregateInput
+    _max?: OddsAuditLogMaxOrderByAggregateInput
+    _min?: OddsAuditLogMinOrderByAggregateInput
+    _sum?: OddsAuditLogSumOrderByAggregateInput
+  }
+
+  export type OddsAuditLogScalarWhereWithAggregatesInput = {
+    AND?: OddsAuditLogScalarWhereWithAggregatesInput | OddsAuditLogScalarWhereWithAggregatesInput[]
+    OR?: OddsAuditLogScalarWhereWithAggregatesInput[]
+    NOT?: OddsAuditLogScalarWhereWithAggregatesInput | OddsAuditLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OddsAuditLog"> | string
+    externalGameId?: StringWithAggregatesFilter<"OddsAuditLog"> | string
+    sportKey?: StringWithAggregatesFilter<"OddsAuditLog"> | string
+    marketKey?: StringWithAggregatesFilter<"OddsAuditLog"> | string
+    selectionName?: StringWithAggregatesFilter<"OddsAuditLog"> | string
+    bookmaker?: StringWithAggregatesFilter<"OddsAuditLog"> | string
+    oldOdds?: DecimalWithAggregatesFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    newOdds?: DecimalWithAggregatesFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    changePercent?: DecimalWithAggregatesFilter<"OddsAuditLog"> | Decimal | DecimalJsLike | number | string
+    changeType?: StringWithAggregatesFilter<"OddsAuditLog"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"OddsAuditLog"> | Date | string
+  }
+
+  export type NotificationWhereInput = {
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    type?: StringFilter<"Notification"> | string
+    priority?: StringFilter<"Notification"> | string
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    read?: BoolFilter<"Notification"> | boolean
+    dismissed?: BoolFilter<"Notification"> | boolean
+    actionUrl?: StringNullableFilter<"Notification"> | string | null
+    actionLabel?: StringNullableFilter<"Notification"> | string | null
+    metadata?: JsonNullableFilter<"Notification">
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type NotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    priority?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    read?: SortOrder
+    dismissed?: SortOrder
+    actionUrl?: SortOrderInput | SortOrder
+    actionLabel?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type NotificationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    userId?: StringFilter<"Notification"> | string
+    type?: StringFilter<"Notification"> | string
+    priority?: StringFilter<"Notification"> | string
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    read?: BoolFilter<"Notification"> | boolean
+    dismissed?: BoolFilter<"Notification"> | boolean
+    actionUrl?: StringNullableFilter<"Notification"> | string | null
+    actionLabel?: StringNullableFilter<"Notification"> | string | null
+    metadata?: JsonNullableFilter<"Notification">
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type NotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    priority?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    read?: SortOrder
+    dismissed?: SortOrder
+    actionUrl?: SortOrderInput | SortOrder
+    actionLabel?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    _count?: NotificationCountOrderByAggregateInput
+    _max?: NotificationMaxOrderByAggregateInput
+    _min?: NotificationMinOrderByAggregateInput
+  }
+
+  export type NotificationScalarWhereWithAggregatesInput = {
+    AND?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    OR?: NotificationScalarWhereWithAggregatesInput[]
+    NOT?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Notification"> | string
+    userId?: StringWithAggregatesFilter<"Notification"> | string
+    type?: StringWithAggregatesFilter<"Notification"> | string
+    priority?: StringWithAggregatesFilter<"Notification"> | string
+    title?: StringWithAggregatesFilter<"Notification"> | string
+    message?: StringWithAggregatesFilter<"Notification"> | string
+    read?: BoolWithAggregatesFilter<"Notification"> | boolean
+    dismissed?: BoolWithAggregatesFilter<"Notification"> | boolean
+    actionUrl?: StringNullableWithAggregatesFilter<"Notification"> | string | null
+    actionLabel?: StringNullableWithAggregatesFilter<"Notification"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"Notification">
+    createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
+    readAt?: DateTimeNullableWithAggregatesFilter<"Notification"> | Date | string | null
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -52946,6 +56885,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -52982,6 +56922,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -53018,6 +56959,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -53054,6 +56996,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -56433,6 +60376,299 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ApiOddsSnapshotCreateInput = {
+    id?: string
+    externalGameId: string
+    sportKey: string
+    homeTeam: string
+    awayTeam: string
+    commenceTime: Date | string
+    bookmaker: string
+    rawData: JsonNullValueInput | InputJsonValue
+    timestamp?: Date | string
+  }
+
+  export type ApiOddsSnapshotUncheckedCreateInput = {
+    id?: string
+    externalGameId: string
+    sportKey: string
+    homeTeam: string
+    awayTeam: string
+    commenceTime: Date | string
+    bookmaker: string
+    rawData: JsonNullValueInput | InputJsonValue
+    timestamp?: Date | string
+  }
+
+  export type ApiOddsSnapshotUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    homeTeam?: StringFieldUpdateOperationsInput | string
+    awayTeam?: StringFieldUpdateOperationsInput | string
+    commenceTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    rawData?: JsonNullValueInput | InputJsonValue
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiOddsSnapshotUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    homeTeam?: StringFieldUpdateOperationsInput | string
+    awayTeam?: StringFieldUpdateOperationsInput | string
+    commenceTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    rawData?: JsonNullValueInput | InputJsonValue
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiOddsSnapshotCreateManyInput = {
+    id?: string
+    externalGameId: string
+    sportKey: string
+    homeTeam: string
+    awayTeam: string
+    commenceTime: Date | string
+    bookmaker: string
+    rawData: JsonNullValueInput | InputJsonValue
+    timestamp?: Date | string
+  }
+
+  export type ApiOddsSnapshotUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    homeTeam?: StringFieldUpdateOperationsInput | string
+    awayTeam?: StringFieldUpdateOperationsInput | string
+    commenceTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    rawData?: JsonNullValueInput | InputJsonValue
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiOddsSnapshotUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    homeTeam?: StringFieldUpdateOperationsInput | string
+    awayTeam?: StringFieldUpdateOperationsInput | string
+    commenceTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    rawData?: JsonNullValueInput | InputJsonValue
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OddsAuditLogCreateInput = {
+    id?: string
+    externalGameId: string
+    sportKey: string
+    marketKey: string
+    selectionName: string
+    bookmaker: string
+    oldOdds: Decimal | DecimalJsLike | number | string
+    newOdds: Decimal | DecimalJsLike | number | string
+    changePercent: Decimal | DecimalJsLike | number | string
+    changeType: string
+    createdAt?: Date | string
+  }
+
+  export type OddsAuditLogUncheckedCreateInput = {
+    id?: string
+    externalGameId: string
+    sportKey: string
+    marketKey: string
+    selectionName: string
+    bookmaker: string
+    oldOdds: Decimal | DecimalJsLike | number | string
+    newOdds: Decimal | DecimalJsLike | number | string
+    changePercent: Decimal | DecimalJsLike | number | string
+    changeType: string
+    createdAt?: Date | string
+  }
+
+  export type OddsAuditLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    marketKey?: StringFieldUpdateOperationsInput | string
+    selectionName?: StringFieldUpdateOperationsInput | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    oldOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changeType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OddsAuditLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    marketKey?: StringFieldUpdateOperationsInput | string
+    selectionName?: StringFieldUpdateOperationsInput | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    oldOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changeType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OddsAuditLogCreateManyInput = {
+    id?: string
+    externalGameId: string
+    sportKey: string
+    marketKey: string
+    selectionName: string
+    bookmaker: string
+    oldOdds: Decimal | DecimalJsLike | number | string
+    newOdds: Decimal | DecimalJsLike | number | string
+    changePercent: Decimal | DecimalJsLike | number | string
+    changeType: string
+    createdAt?: Date | string
+  }
+
+  export type OddsAuditLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    marketKey?: StringFieldUpdateOperationsInput | string
+    selectionName?: StringFieldUpdateOperationsInput | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    oldOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changeType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OddsAuditLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalGameId?: StringFieldUpdateOperationsInput | string
+    sportKey?: StringFieldUpdateOperationsInput | string
+    marketKey?: StringFieldUpdateOperationsInput | string
+    selectionName?: StringFieldUpdateOperationsInput | string
+    bookmaker?: StringFieldUpdateOperationsInput | string
+    oldOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newOdds?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    changeType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationCreateInput = {
+    id?: string
+    type: string
+    priority?: string
+    title: string
+    message: string
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: string | null
+    actionLabel?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    readAt?: Date | string | null
+    user: UserCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type: string
+    priority?: string
+    title: string
+    message: string
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: string | null
+    actionLabel?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    readAt?: Date | string | null
+  }
+
+  export type NotificationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    actionUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    actionLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    actionUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    actionLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type NotificationCreateManyInput = {
+    id?: string
+    userId: string
+    type: string
+    priority?: string
+    title: string
+    message: string
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: string | null
+    actionLabel?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    readAt?: Date | string | null
+  }
+
+  export type NotificationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    actionUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    actionLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type NotificationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    actionUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    actionLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -56582,6 +60818,12 @@ export namespace Prisma {
     none?: DeviceRegistryWhereInput
   }
 
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
   export type GdprConsentListRelationFilter = {
     every?: GdprConsentWhereInput
     some?: GdprConsentWhereInput
@@ -56664,6 +60906,10 @@ export namespace Prisma {
   }
 
   export type DeviceRegistryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -58750,6 +62996,195 @@ export namespace Prisma {
     newOdds?: SortOrder
     changePercentage?: SortOrder
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type ApiOddsSnapshotExternalGameIdBookmakerTimestampCompoundUniqueInput = {
+    externalGameId: string
+    bookmaker: string
+    timestamp: Date | string
+  }
+
+  export type ApiOddsSnapshotCountOrderByAggregateInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    homeTeam?: SortOrder
+    awayTeam?: SortOrder
+    commenceTime?: SortOrder
+    bookmaker?: SortOrder
+    rawData?: SortOrder
+    timestamp?: SortOrder
+  }
+
+  export type ApiOddsSnapshotMaxOrderByAggregateInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    homeTeam?: SortOrder
+    awayTeam?: SortOrder
+    commenceTime?: SortOrder
+    bookmaker?: SortOrder
+    timestamp?: SortOrder
+  }
+
+  export type ApiOddsSnapshotMinOrderByAggregateInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    homeTeam?: SortOrder
+    awayTeam?: SortOrder
+    commenceTime?: SortOrder
+    bookmaker?: SortOrder
+    timestamp?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type OddsAuditLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    marketKey?: SortOrder
+    selectionName?: SortOrder
+    bookmaker?: SortOrder
+    oldOdds?: SortOrder
+    newOdds?: SortOrder
+    changePercent?: SortOrder
+    changeType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OddsAuditLogAvgOrderByAggregateInput = {
+    oldOdds?: SortOrder
+    newOdds?: SortOrder
+    changePercent?: SortOrder
+  }
+
+  export type OddsAuditLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    marketKey?: SortOrder
+    selectionName?: SortOrder
+    bookmaker?: SortOrder
+    oldOdds?: SortOrder
+    newOdds?: SortOrder
+    changePercent?: SortOrder
+    changeType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OddsAuditLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    externalGameId?: SortOrder
+    sportKey?: SortOrder
+    marketKey?: SortOrder
+    selectionName?: SortOrder
+    bookmaker?: SortOrder
+    oldOdds?: SortOrder
+    newOdds?: SortOrder
+    changePercent?: SortOrder
+    changeType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OddsAuditLogSumOrderByAggregateInput = {
+    oldOdds?: SortOrder
+    newOdds?: SortOrder
+    changePercent?: SortOrder
+  }
+
+  export type NotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    priority?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    read?: SortOrder
+    dismissed?: SortOrder
+    actionUrl?: SortOrder
+    actionLabel?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    readAt?: SortOrder
+  }
+
+  export type NotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    priority?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    read?: SortOrder
+    dismissed?: SortOrder
+    actionUrl?: SortOrder
+    actionLabel?: SortOrder
+    createdAt?: SortOrder
+    readAt?: SortOrder
+  }
+
+  export type NotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    priority?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    read?: SortOrder
+    dismissed?: SortOrder
+    actionUrl?: SortOrder
+    actionLabel?: SortOrder
+    createdAt?: SortOrder
+    readAt?: SortOrder
+  }
 
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
@@ -58844,6 +63279,13 @@ export namespace Prisma {
     connectOrCreate?: DeviceRegistryCreateOrConnectWithoutUserInput | DeviceRegistryCreateOrConnectWithoutUserInput[]
     createMany?: DeviceRegistryCreateManyUserInputEnvelope
     connect?: DeviceRegistryWhereUniqueInput | DeviceRegistryWhereUniqueInput[]
+  }
+
+  export type NotificationCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type GdprConsentCreateNestedManyWithoutUserInput = {
@@ -58981,6 +63423,13 @@ export namespace Prisma {
     connectOrCreate?: DeviceRegistryCreateOrConnectWithoutUserInput | DeviceRegistryCreateOrConnectWithoutUserInput[]
     createMany?: DeviceRegistryCreateManyUserInputEnvelope
     connect?: DeviceRegistryWhereUniqueInput | DeviceRegistryWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type GdprConsentUncheckedCreateNestedManyWithoutUserInput = {
@@ -59235,6 +63684,20 @@ export namespace Prisma {
     update?: DeviceRegistryUpdateWithWhereUniqueWithoutUserInput | DeviceRegistryUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DeviceRegistryUpdateManyWithWhereWithoutUserInput | DeviceRegistryUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DeviceRegistryScalarWhereInput | DeviceRegistryScalarWhereInput[]
+  }
+
+  export type NotificationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
   export type GdprConsentUpdateManyWithoutUserNestedInput = {
@@ -59503,6 +63966,20 @@ export namespace Prisma {
     update?: DeviceRegistryUpdateWithWhereUniqueWithoutUserInput | DeviceRegistryUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DeviceRegistryUpdateManyWithWhereWithoutUserInput | DeviceRegistryUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DeviceRegistryScalarWhereInput | DeviceRegistryScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
   export type GdprConsentUncheckedUpdateManyWithoutUserNestedInput = {
@@ -60981,6 +65458,20 @@ export namespace Prisma {
     update?: XOR<XOR<GameUpdateToOneWithWhereWithoutSyncStatusInput, GameUpdateWithoutSyncStatusInput>, GameUncheckedUpdateWithoutSyncStatusInput>
   }
 
+  export type UserCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    upsert?: UserUpsertWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -61257,6 +65748,29 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -61755,6 +66269,46 @@ export namespace Prisma {
 
   export type DeviceRegistryCreateManyUserInputEnvelope = {
     data: DeviceRegistryCreateManyUserInput | DeviceRegistryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type NotificationCreateWithoutUserInput = {
+    id?: string
+    type: string
+    priority?: string
+    title: string
+    message: string
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: string | null
+    actionLabel?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    readAt?: Date | string | null
+  }
+
+  export type NotificationUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: string
+    priority?: string
+    title: string
+    message: string
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: string | null
+    actionLabel?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    readAt?: Date | string | null
+  }
+
+  export type NotificationCreateOrConnectWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationCreateManyUserInputEnvelope = {
+    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -62423,6 +66977,41 @@ export namespace Prisma {
     lastSeenAt?: DateTimeFilter<"DeviceRegistry"> | Date | string
   }
 
+  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutUserInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    OR?: NotificationScalarWhereInput[]
+    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    type?: StringFilter<"Notification"> | string
+    priority?: StringFilter<"Notification"> | string
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    read?: BoolFilter<"Notification"> | boolean
+    dismissed?: BoolFilter<"Notification"> | boolean
+    actionUrl?: StringNullableFilter<"Notification"> | string | null
+    actionLabel?: StringNullableFilter<"Notification"> | string | null
+    metadata?: JsonNullableFilter<"Notification">
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+  }
+
   export type GdprConsentUpsertWithWhereUniqueWithoutUserInput = {
     where: GdprConsentWhereUniqueInput
     update: XOR<GdprConsentUpdateWithoutUserInput, GdprConsentUncheckedUpdateWithoutUserInput>
@@ -62635,6 +67224,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -62670,6 +67260,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -62721,6 +67312,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -62756,6 +67348,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -62791,6 +67384,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -62826,6 +67420,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -62877,6 +67472,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -62912,6 +67508,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -62947,6 +67544,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -62982,6 +67580,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -63033,6 +67632,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -63068,6 +67668,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -63103,6 +67704,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -63138,6 +67740,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -63189,6 +67792,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -63224,6 +67828,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -63259,6 +67864,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -63294,6 +67900,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -63345,6 +67952,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -63380,6 +67988,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -63415,6 +68024,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -63450,6 +68060,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -63501,6 +68112,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -63536,6 +68148,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -64834,6 +69447,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -64869,6 +69483,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -64946,6 +69561,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -64981,6 +69597,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -65180,6 +69797,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -65215,6 +69833,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -65312,6 +69931,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -65347,6 +69967,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -65398,6 +70019,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -65433,6 +70055,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -65624,6 +70247,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -65659,6 +70283,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -65858,6 +70483,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -65893,6 +70519,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -66070,6 +70697,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -66105,6 +70733,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -66570,6 +71199,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -66605,6 +71235,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -66656,6 +71287,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -66691,6 +71323,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -66726,6 +71359,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -66761,6 +71395,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -66812,6 +71447,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -66847,6 +71483,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -66882,6 +71519,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventCreateNestedManyWithoutUserInput
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -66917,6 +71555,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUncheckedCreateNestedManyWithoutUserInput
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -66968,6 +71607,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUpdateManyWithoutUserNestedInput
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -67003,6 +71643,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUncheckedUpdateManyWithoutUserNestedInput
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -67038,6 +71679,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventCreateNestedManyWithoutUserInput
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -67073,6 +71715,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUncheckedCreateNestedManyWithoutUserInput
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -67124,6 +71767,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUpdateManyWithoutUserNestedInput
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -67159,6 +71803,7 @@ export namespace Prisma {
     fraudEvents?: FraudEventUncheckedUpdateManyWithoutUserNestedInput
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -67195,6 +71840,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -67230,6 +71876,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -67281,6 +71928,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -67316,6 +71964,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -67351,6 +72000,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
     securityAlerts?: SecurityAlertCreateNestedManyWithoutUserInput
@@ -67386,6 +72036,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
     securityAlerts?: SecurityAlertUncheckedCreateNestedManyWithoutUserInput
@@ -67437,6 +72088,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
     securityAlerts?: SecurityAlertUpdateManyWithoutUserNestedInput
@@ -67472,6 +72124,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
     securityAlerts?: SecurityAlertUncheckedUpdateManyWithoutUserNestedInput
@@ -67507,6 +72160,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
     securityAlerts?: SecurityAlertCreateNestedManyWithoutUserInput
@@ -67542,6 +72196,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
     securityAlerts?: SecurityAlertUncheckedCreateNestedManyWithoutUserInput
@@ -67593,6 +72248,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
     securityAlerts?: SecurityAlertUpdateManyWithoutUserNestedInput
@@ -67628,6 +72284,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
     securityAlerts?: SecurityAlertUncheckedUpdateManyWithoutUserNestedInput
@@ -67663,6 +72320,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     securityAlerts?: SecurityAlertCreateNestedManyWithoutUserInput
@@ -67698,6 +72356,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     securityAlerts?: SecurityAlertUncheckedCreateNestedManyWithoutUserInput
@@ -67749,6 +72408,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     securityAlerts?: SecurityAlertUpdateManyWithoutUserNestedInput
@@ -67784,6 +72444,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     securityAlerts?: SecurityAlertUncheckedUpdateManyWithoutUserNestedInput
@@ -67819,6 +72480,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -67854,6 +72516,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -67905,6 +72568,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -67940,6 +72604,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -68025,6 +72690,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     consents?: GdprConsentCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
@@ -68060,6 +72726,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
     activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
     deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
     exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
@@ -68144,6 +72811,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
@@ -68179,6 +72847,7 @@ export namespace Prisma {
     bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
     activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
     deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
     exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
@@ -68445,6 +73114,166 @@ export namespace Prisma {
     markets?: BetMarketUncheckedUpdateManyWithoutGameNestedInput
   }
 
+  export type UserCreateWithoutNotificationsInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    accountStatus?: string
+    kycVerified?: boolean
+    kycLevel?: string
+    gdprConsentGiven?: boolean
+    marketingConsent?: boolean
+    riskScore?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
+    password?: UserPasswordCreateNestedOneWithoutUserInput
+    twoFactorAuth?: TwoFactorAuthCreateNestedOneWithoutUserInput
+    userSessions?: UserSessionCreateNestedManyWithoutUserInput
+    financialAccounts?: FinancialAccountCreateNestedManyWithoutUserInput
+    bets?: BetCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    paymentMethods?: PaymentMethodCreateNestedManyWithoutUserInput
+    fraudEvents?: FraudEventCreateNestedManyWithoutUserInput
+    bettingPatterns?: BettingPatternCreateNestedManyWithoutUserInput
+    activityLogs?: AccountActivityLogCreateNestedManyWithoutUserInput
+    devices?: DeviceRegistryCreateNestedManyWithoutUserInput
+    consents?: GdprConsentCreateNestedManyWithoutUserInput
+    deletionRequests?: DataDeletionRequestCreateNestedManyWithoutUserInput
+    exportRequests?: DataExportRequestCreateNestedManyWithoutUserInput
+    securityAlerts?: SecurityAlertCreateNestedManyWithoutUserInput
+    bonuses?: UserBonusCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutNotificationsInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    accountStatus?: string
+    kycVerified?: boolean
+    kycLevel?: string
+    gdprConsentGiven?: boolean
+    marketingConsent?: boolean
+    riskScore?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
+    password?: UserPasswordUncheckedCreateNestedOneWithoutUserInput
+    twoFactorAuth?: TwoFactorAuthUncheckedCreateNestedOneWithoutUserInput
+    userSessions?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    financialAccounts?: FinancialAccountUncheckedCreateNestedManyWithoutUserInput
+    bets?: BetUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    paymentMethods?: PaymentMethodUncheckedCreateNestedManyWithoutUserInput
+    fraudEvents?: FraudEventUncheckedCreateNestedManyWithoutUserInput
+    bettingPatterns?: BettingPatternUncheckedCreateNestedManyWithoutUserInput
+    activityLogs?: AccountActivityLogUncheckedCreateNestedManyWithoutUserInput
+    devices?: DeviceRegistryUncheckedCreateNestedManyWithoutUserInput
+    consents?: GdprConsentUncheckedCreateNestedManyWithoutUserInput
+    deletionRequests?: DataDeletionRequestUncheckedCreateNestedManyWithoutUserInput
+    exportRequests?: DataExportRequestUncheckedCreateNestedManyWithoutUserInput
+    securityAlerts?: SecurityAlertUncheckedCreateNestedManyWithoutUserInput
+    bonuses?: UserBonusUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutNotificationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type UserUpsertWithoutNotificationsInput = {
+    update: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type UserUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    accountStatus?: StringFieldUpdateOperationsInput | string
+    kycVerified?: BoolFieldUpdateOperationsInput | boolean
+    kycLevel?: StringFieldUpdateOperationsInput | string
+    gdprConsentGiven?: BoolFieldUpdateOperationsInput | boolean
+    marketingConsent?: BoolFieldUpdateOperationsInput | boolean
+    riskScore?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
+    password?: UserPasswordUpdateOneWithoutUserNestedInput
+    twoFactorAuth?: TwoFactorAuthUpdateOneWithoutUserNestedInput
+    userSessions?: UserSessionUpdateManyWithoutUserNestedInput
+    financialAccounts?: FinancialAccountUpdateManyWithoutUserNestedInput
+    bets?: BetUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    paymentMethods?: PaymentMethodUpdateManyWithoutUserNestedInput
+    fraudEvents?: FraudEventUpdateManyWithoutUserNestedInput
+    bettingPatterns?: BettingPatternUpdateManyWithoutUserNestedInput
+    activityLogs?: AccountActivityLogUpdateManyWithoutUserNestedInput
+    devices?: DeviceRegistryUpdateManyWithoutUserNestedInput
+    consents?: GdprConsentUpdateManyWithoutUserNestedInput
+    deletionRequests?: DataDeletionRequestUpdateManyWithoutUserNestedInput
+    exportRequests?: DataExportRequestUpdateManyWithoutUserNestedInput
+    securityAlerts?: SecurityAlertUpdateManyWithoutUserNestedInput
+    bonuses?: UserBonusUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    accountStatus?: StringFieldUpdateOperationsInput | string
+    kycVerified?: BoolFieldUpdateOperationsInput | boolean
+    kycLevel?: StringFieldUpdateOperationsInput | string
+    gdprConsentGiven?: BoolFieldUpdateOperationsInput | boolean
+    marketingConsent?: BoolFieldUpdateOperationsInput | boolean
+    riskScore?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
+    password?: UserPasswordUncheckedUpdateOneWithoutUserNestedInput
+    twoFactorAuth?: TwoFactorAuthUncheckedUpdateOneWithoutUserNestedInput
+    userSessions?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    financialAccounts?: FinancialAccountUncheckedUpdateManyWithoutUserNestedInput
+    bets?: BetUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    paymentMethods?: PaymentMethodUncheckedUpdateManyWithoutUserNestedInput
+    fraudEvents?: FraudEventUncheckedUpdateManyWithoutUserNestedInput
+    bettingPatterns?: BettingPatternUncheckedUpdateManyWithoutUserNestedInput
+    activityLogs?: AccountActivityLogUncheckedUpdateManyWithoutUserNestedInput
+    devices?: DeviceRegistryUncheckedUpdateManyWithoutUserNestedInput
+    consents?: GdprConsentUncheckedUpdateManyWithoutUserNestedInput
+    deletionRequests?: DataDeletionRequestUncheckedUpdateManyWithoutUserNestedInput
+    exportRequests?: DataExportRequestUncheckedUpdateManyWithoutUserNestedInput
+    securityAlerts?: SecurityAlertUncheckedUpdateManyWithoutUserNestedInput
+    bonuses?: UserBonusUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type AccountCreateManyUserInput = {
     id?: string
     type: string
@@ -68581,6 +73410,21 @@ export namespace Prisma {
     blocked?: boolean
     firstSeenAt?: Date | string
     lastSeenAt?: Date | string
+  }
+
+  export type NotificationCreateManyUserInput = {
+    id?: string
+    type: string
+    priority?: string
+    title: string
+    message: string
+    read?: boolean
+    dismissed?: boolean
+    actionUrl?: string | null
+    actionLabel?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    readAt?: Date | string | null
   }
 
   export type GdprConsentCreateManyUserInput = {
@@ -69074,6 +73918,51 @@ export namespace Prisma {
     blocked?: BoolFieldUpdateOperationsInput | boolean
     firstSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    actionUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    actionLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type NotificationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    actionUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    actionLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    actionUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    actionLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type GdprConsentUpdateWithoutUserInput = {
