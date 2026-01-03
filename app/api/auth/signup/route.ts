@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { hashPassword, checkPasswordStrength } from '@/lib/security/hashing';
+import { hashPassword } from '@/lib/security/hashing';
 import { hash, generateSecureToken } from '@/lib/security/encryption';
 import {
   generateDeviceFingerprint,
@@ -9,40 +9,18 @@ import {
   parseOS,
 } from '@/lib/security/device-fingerprint';
 import { sendVerificationEmail } from '@/lib/auth/mailer';
+import { parseBody, signupSchema } from '@/lib/input-validation';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { email, password, firstName, lastName } = body;
-
-    // Validate required fields
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
-      );
+    // Validate input with Zod
+    const parsed = await parseBody(req, signupSchema);
+    if (!parsed.success) {
+      return parsed.response;
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
-
-    // Check password strength
-    const passwordCheck = checkPasswordStrength(password);
-    if (!passwordCheck.meetsRequirements) {
-      return NextResponse.json(
-        { error: 'Password does not meet requirements', details: passwordCheck.feedback },
-        { status: 400 }
-      );
-    }
-
-    // Normalize email
-    const normalizedEmail = email.toLowerCase().trim();
+    const { email, password, firstName, lastName } = parsed.data;
+    const normalizedEmail = email; // Already normalized by schema
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({

@@ -7,20 +7,18 @@ import { prisma } from '@/lib/db/prisma';
 import { generateEmailVerificationToken } from '@/lib/auth/email';
 import { sendVerificationEmail } from '@/lib/auth/mailer';
 import { hash } from '@/lib/security/encryption';
+import { parseBody, resendVerificationSchema } from '@/lib/input-validation';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { email } = body;
-
-    if (!email || typeof email !== 'string') {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
+    // Validate input with Zod
+    const parsed = await parseBody(req, resendVerificationSchema);
+    if (!parsed.success) {
+      return parsed.response;
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
+    const { email } = parsed.data;
+    const normalizedEmail = email; // Already normalized by schema
 
     // Find user
     const user = await prisma.user.findUnique({

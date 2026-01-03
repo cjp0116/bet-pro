@@ -18,6 +18,10 @@ import {
   parseOS,
 } from '@/lib/security/device-fingerprint';
 import { logAccountActivity } from '@/lib/audit/logger';
+import {
+  detectAccountTakeover,
+  getSeverityFromRiskScore,
+} from '@/lib/fraud/detector';
 
 export interface SignInContext {
   userId: string;
@@ -69,6 +73,55 @@ export async function logSignInAttempt(context: SignInContext): Promise<void> {
 
     // Only create session and device records for successful logins
     if (success) {
+      // Check for account takeover patterns (new device/IP with immediate activity)
+      const knownSessions = await prisma.userSession.findMany({
+        where: { userId },
+        select: { deviceFingerprint: true, ipAddressHash: true },
+      });
+
+      const knownDevices = knownSessions.map(s => s.deviceFingerprint);
+      const knownIPs = knownSessions.map(s => s.ipAddressHash);
+
+      const takeoverPattern = detectAccountTakeover(
+        {
+          deviceFingerprint,
+          ipAddressHash: ipHash,
+          timestamp: new Date(),
+        },
+        knownDevices,
+        knownIPs,
+        0, // No bets yet in this session
+        30
+      );
+
+      if (takeoverPattern) {
+        // Log fraud event for potential account takeover
+        await prisma.fraudEvent.create({
+          data: {
+            userId,
+            eventType: 'account_takeover',
+            severity: getSeverityFromRiskScore(takeoverPattern.riskScore),
+            riskScore: takeoverPattern.riskScore,
+            description: 'Login from unknown device/location',
+            metadata: {
+              ...takeoverPattern.patternDetails,
+              deviceFingerprint,
+              ipAddressHash: ipHash,
+              deviceType,
+              browser,
+              os,
+            },
+            status: 'pending_review',
+          },
+        });
+
+        console.warn(`[SignInLogger] Potential account takeover detected for user ${userId}:`, {
+          riskScore: takeoverPattern.riskScore,
+          isNewDevice: takeoverPattern.patternDetails.isNewDevice,
+          isNewIP: takeoverPattern.patternDetails.isNewIP,
+        });
+      }
+
       await prisma.$transaction(async (tx) => {
         // 3. Create UserSession
         const sessionToken = generateSecureToken(32);

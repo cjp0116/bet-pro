@@ -9,27 +9,18 @@ import { prisma } from '@/lib/db/prisma';
 import { generatePasswordResetToken } from '@/lib/auth/email';
 import { sendPasswordResetEmail } from '@/lib/auth/mailer';
 import { hash } from '@/lib/security/encryption';
+import { parseBody, forgotPasswordSchema } from '@/lib/input-validation';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { email } = body;
-
-    if (!email || typeof email !== 'string') {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
+    // Validate input with Zod
+    const parsed = await parseBody(req, forgotPasswordSchema);
+    if (!parsed.success) {
+      return parsed.response;
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
+    const { email } = parsed.data;
+    const normalizedEmail = email; // Already normalized by schema
 
     // Find user (don't reveal if user exists or not for security)
     const user = await prisma.user.findUnique({

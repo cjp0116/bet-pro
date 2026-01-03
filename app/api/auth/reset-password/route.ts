@@ -6,36 +6,19 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { hashPassword, checkPasswordStrength, verifyPassword } from '@/lib/security/hashing';
+import { hashPassword, verifyPassword } from '@/lib/security/hashing';
 import { hash } from '@/lib/security/encryption';
+import { parseBody, parseQuery, resetPasswordSchema, validateTokenSchema } from '@/lib/input-validation';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { token, password } = body;
-
-    if (!token || typeof token !== 'string') {
-      return NextResponse.json(
-        { error: 'Reset token is required' },
-        { status: 400 }
-      );
+    // Validate input with Zod
+    const parsed = await parseBody(req, resetPasswordSchema);
+    if (!parsed.success) {
+      return parsed.response;
     }
 
-    if (!password || typeof password !== 'string') {
-      return NextResponse.json(
-        { error: 'Password is required' },
-        { status: 400 }
-      );
-    }
-
-    // Check password strength
-    const passwordCheck = checkPasswordStrength(password);
-    if (!passwordCheck.meetsRequirements) {
-      return NextResponse.json(
-        { error: passwordCheck.feedback.join(' ') },
-        { status: 400 }
-      );
-    }
+    const { token, password } = parsed.data;
 
     // Hash the token to compare with stored hash
     const tokenHash = hash(token);
@@ -67,7 +50,7 @@ export async function POST(req: NextRequest) {
     const passwordHistory = (userPassword.passwordHistory as string[] | null) || [];
     const allPasswordHistory = [userPassword.passwordHash, ...passwordHistory];
     for (const oldHash of allPasswordHistory) {
-      if(await verifyPassword(password, oldHash)) {
+      if (await verifyPassword(password, oldHash)) {
         return NextResponse.json(
           { error: 'Cannot reuse a recent password. Please choose a different password.' },
           { status: 400 }
@@ -122,16 +105,12 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
-    const token = req.nextUrl.searchParams.get('token');
-
-    if (!token) {
-      return NextResponse.json(
-        { valid: false, error: 'Token is required' },
-        { status: 400 }
-      );
+    const parsed = parseQuery(req.nextUrl.searchParams, validateTokenSchema);
+    if (!parsed.success) {
+      return NextResponse.json({ valid: false, error: 'Token is required' }, { status: 400 });
     }
 
-    const tokenHash = hash(token);
+    const tokenHash = hash(parsed.data.token);
 
     const userPassword = await prisma.userPassword.findFirst({
       where: {

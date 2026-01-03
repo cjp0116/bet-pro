@@ -10,24 +10,11 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/db/prisma';
 import { validateBetOdds, type BetSelectionInput } from '@/lib/odds/odds-validator';
 import { notifyBetPlaced } from '@/lib/notifications-server';
+import { checkBetFraud } from '@/lib/fraud/fraud-service';
+import { parseBody, placeBetSchema, type PlaceBetInput } from '@/lib/input-validation';
 import { Prisma } from '@/lib/generated/prisma/client';
 
 const Decimal = Prisma.Decimal;
-
-interface PlaceBetRequest {
-  betType: 'single' | 'parlay';
-  selections: Array<{
-    gameId: string;
-    type: 'spread' | 'moneyline' | 'total';
-    selection: string; // 'home', 'away', 'over', 'under'
-    odds: number;
-    stake?: number; // For single bets
-    team?: string;
-    line?: string;
-  }>;
-  totalStake: number;
-  potentialPayout: number;
-}
 
 function calculatePayout(stake: number, odds: number): number {
   if (odds > 0) {
@@ -58,23 +45,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body: PlaceBetRequest = await req.json();
-    const { betType, selections, totalStake } = body;
-
-    // Basic validation
-    if (!selections || selections.length === 0) {
-      return NextResponse.json(
-        { error: 'Invalid request', message: 'No selections provided' },
-        { status: 400 }
-      );
+    // Validate input with Zod
+    const parsed = await parseBody(req, placeBetSchema);
+    if (!parsed.success) {
+      return parsed.response;
     }
 
-    if (totalStake <= 0) {
-      return NextResponse.json(
-        { error: 'Invalid request', message: 'Invalid stake amount' },
-        { status: 400 }
-      );
-    }
+    const { betType, selections, totalStake } = parsed.data;
 
     // Validate odds for all selections
     const validationInputs: BetSelectionInput[] = selections.map(sel => ({
@@ -140,6 +117,36 @@ export async function POST(req: NextRequest) {
     }
 
     const userId = session.user.id;
+
+    // Run fraud detection checks
+    const firstSelection = selections[0];
+    const fraudCheck = await checkBetFraud(
+      userId,
+      totalStake,
+      firstSelection.gameId,
+      firstSelection.type,
+      firstSelection.selection
+    );
+
+    if (!fraudCheck.allowed) {
+      console.log(`[Bet] Fraud check blocked bet for user ${userId}:`, fraudCheck);
+      return NextResponse.json(
+        {
+          error: 'Bet blocked',
+          message: fraudCheck.message,
+          riskLevel: fraudCheck.riskLevel,
+        },
+        { status: 403 }
+      );
+    }
+
+    // Log high-risk bets but allow them through
+    if (fraudCheck.riskLevel === 'high') {
+      console.warn(`[Bet] High-risk bet allowed for user ${userId}:`, {
+        riskScore: fraudCheck.riskScore,
+        patterns: fraudCheck.patterns.map(p => p.patternType),
+      });
+    }
 
     // Check user's main financial account balance
     const account = await prisma.financialAccount.findUnique({

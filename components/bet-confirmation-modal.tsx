@@ -42,14 +42,14 @@ export function BetConfirmationModal({
 }: BetConfirmationModalProps) {
   const [status, setStatus] = useState<BetStatus>("confirming")
   const [betId, setBetId] = useState<string | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [errorMessages, setErrorMessages] = useState<string[]>([])
   const [oddsChanges, setOddsChanges] = useState<OddsChange[]>([])
 
   useEffect(() => {
     if (open) {
       setStatus("confirming")
       setBetId(null)
-      setErrorMessage(null)
+      setErrorMessages([])
       setOddsChanges([])
     }
   }, [open])
@@ -60,7 +60,7 @@ export function BetConfirmationModal({
 
   const handleConfirmBet = async () => {
     setStatus("processing")
-    setErrorMessage(null)
+    setErrorMessages([])
 
     try {
       const response = await fetch("/api/bets", {
@@ -93,15 +93,17 @@ export function BetConfirmationModal({
         setOddsChanges(data.changedSelections)
         setStatus("odds_changed")
       } else if (response.status === 401) {
-        setErrorMessage("Please sign in to place bets")
+        setErrorMessages(["Please sign in to place bets"])
         setStatus("error")
       } else {
-        setErrorMessage(data.message || "Failed to place bet")
+        // Use messages array if available, otherwise fall back to single message
+        const messages = data.messages || (data.message ? [data.message] : ["Failed to place bet"])
+        setErrorMessages(messages)
         setStatus("error")
       }
     } catch (err) {
       console.error("Error placing bet:", err)
-      setErrorMessage("Network error. Please try again.")
+      setErrorMessages(["Network error. Please try again."])
       setStatus("error")
     }
   }
@@ -236,9 +238,21 @@ export function BetConfirmationModal({
               <XCircle className="h-10 w-10 text-destructive" />
             </div>
             <p className="mt-4 text-lg font-semibold">Bet Failed</p>
-            <p className="mt-1 text-center text-sm text-muted-foreground">
-              {errorMessage || "Unable to place your bet. Please try again or contact support."}
-            </p>
+
+            {errorMessages.length > 0 ? (
+              <div className="mt-3 w-full space-y-1.5 rounded-lg border border-destructive/20 bg-destructive/5 p-3">
+                {errorMessages.map((msg, i) => (
+                  <p key={i} className="text-sm text-destructive flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    <span>{msg}</span>
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-1 text-center text-sm text-muted-foreground">
+                Unable to place your bet. Please try again or contact support.
+              </p>
+            )}
 
             <div className="mt-6 flex w-full gap-3">
               <Button variant="outline" onClick={handleClose} className="flex-1 bg-transparent">
