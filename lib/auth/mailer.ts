@@ -30,7 +30,7 @@ export interface SendEmailOptions {
  * Send an email using Resend API
  */
 export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
-  const from = process.env.EMAIL_FROM || 'BetPro <onboarding@resend.dev';
+  const from = process.env.EMAIL_FROM || 'BetPro <onboarding@resend.dev>';
 
   // In development without API key, log to console
   if (!process.env.RESEND_API_KEY && process.env.NODE_ENV === 'development') {

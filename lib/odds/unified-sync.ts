@@ -136,7 +136,7 @@ export class UnifiedOddsSync {
   /**
    * Sync games for a sport - Redis cache + DB persistence
    */
-  static async syncSport(sportId: string): Promise<SyncResult> {
+  static async syncSport(sportId: string, includeScores: boolean = false): Promise<SyncResult> {
     const cached = await GamesCache.getGames(sportId);
     const isStale = await GamesCache.isStale(sportId);
     const canSync = await GamesCache.canSync(sportId);
@@ -157,9 +157,10 @@ export class UnifiedOddsSync {
       return { games: cached || [], fromCache: !!cached, isStale: true, ageSeconds, dbPersisted: false };
     }
 
-    console.log(`[UnifiedSync] Fetching ${sportId} (cache age: ${ageSeconds}s)`);
+    console.log(`[UnifiedSync] Fetching ${sportId} (cache age: ${ageSeconds}s)${includeScores ? ' with scores' : ''}`);
 
-    const { games, rawEvents } = await this.fetchFromOddsApi(apiKeys);
+    // Fetch odds and scores in parallel if requested
+    const { games, rawEvents } = await this.fetchFromOddsApi(apiKeys, includeScores);
 
     if (games.length > 0) {
       // Update Redis cache
@@ -183,7 +184,7 @@ export class UnifiedOddsSync {
   /**
    * Sync featured games for home page
    */
-  static async syncFeatured(): Promise<SyncResult> {
+  static async syncFeatured(includeScores: boolean = false): Promise<SyncResult> {
     const cached = await GamesCache.getGames();
     const isStale = await GamesCache.isStale();
     const canSync = await GamesCache.canSync();
@@ -197,9 +198,10 @@ export class UnifiedOddsSync {
       return { games: cached, fromCache: true, isStale: true, ageSeconds, dbPersisted: false };
     }
 
-    console.log(`[UnifiedSync] Fetching featured (cache age: ${ageSeconds}s)`);
+    console.log(`[UnifiedSync] Fetching featured (cache age: ${ageSeconds}s)${includeScores ? ' with scores' : ''}`);
 
-    const { games, rawEvents } = await this.fetchFromOddsApi(FEATURED_SPORTS);
+    // Fetch odds and scores in parallel if requested
+    const { games, rawEvents } = await this.fetchFromOddsApi(FEATURED_SPORTS, includeScores);
 
     if (games.length > 0) {
       const featured = games.slice(0, 12);
@@ -219,9 +221,9 @@ export class UnifiedOddsSync {
   }
 
   /**
-   * Fetch from Odds API
+   * Fetch from Odds API (with optional parallel scores fetch)
    */
-  private static async fetchFromOddsApi(sportKeys: string[]): Promise<{
+  private static async fetchFromOddsApi(sportKeys: string[], includeScores: boolean = false): Promise<{
     games: CachedGame[];
     rawEvents: OddsApiEvent[];
   }> {
@@ -237,108 +239,112 @@ export class UnifiedOddsSync {
 
     const allGames: CachedGame[] = [];
     const allEvents: OddsApiEvent[] = [];
+    const scoresMap = new Map<string, ScoresApiEvent>();
 
-    for (const sportKey of sportKeys) {
+    // Fetch odds and scores in parallel for each sport key
+    const fetchPromises = sportKeys.map(async (sportKey) => {
+      const results: { odds: OddsApiEvent[]; scores: ScoresApiEvent[] } = { odds: [], scores: [] };
+
       try {
-        const url = new URL(`https://api.the-odds-api.com/v4/sports/${sportKey}/odds`);
-        url.searchParams.set('apiKey', apiKey);
-        url.searchParams.set('regions', 'us');
-        url.searchParams.set('markets', 'h2h,spreads,totals');
-        url.searchParams.set('oddsFormat', 'american');
-        
-        console.log(`[UnifiedSync] Fetching ${sportKey}`);
+        // Build parallel fetch promises
+        const oddsUrl = new URL(`https://api.the-odds-api.com/v4/sports/${sportKey}/odds`);
+        oddsUrl.searchParams.set('apiKey', apiKey);
+        oddsUrl.searchParams.set('regions', 'us');
+        oddsUrl.searchParams.set('markets', 'h2h,spreads,totals');
+        oddsUrl.searchParams.set('oddsFormat', 'american');
+
+        const scoresUrl = new URL(`https://api.the-odds-api.com/v4/sports/${sportKey}/scores`);
+        scoresUrl.searchParams.set('apiKey', apiKey);
+        scoresUrl.searchParams.set('daysFrom', '3');
+
+        console.log(`[UnifiedSync] Fetching ${sportKey}${includeScores ? ' (with scores)' : ''}`);
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
-        const response = await fetch(url.toString(), {
-          headers: { 'Accept': 'application/json' },
-          cache: 'no-store',
-          signal: controller.signal,
-        });
-        
-        clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          const errorBody = await response.text();
-          console.error(`[UnifiedSync] Odds API error for ${sportKey}: ${response.status}`);
-          console.error(`[UnifiedSync] Error body: ${errorBody}`);
-          console.error(`[UnifiedSync] Request URL: ${url.toString().replace(apiKey, 'REDACTED')}`);
-          continue;
+        // Fetch odds (always) and scores (if requested) in parallel
+        const fetchTasks: Promise<Response>[] = [
+          fetch(oddsUrl.toString(), {
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store',
+            signal: controller.signal,
+          })
+        ];
+
+        if (includeScores) {
+          fetchTasks.push(
+            fetch(scoresUrl.toString(), {
+              headers: { 'Accept': 'application/json' },
+              cache: 'no-store',
+              signal: controller.signal,
+            })
+          );
         }
 
-        const remaining = response.headers.get('x-requests-remaining');
-        console.log(`[UnifiedSync] ${sportKey} fetched, ${remaining} requests remaining`);
+        const responses = await Promise.all(fetchTasks);
+        clearTimeout(timeoutId);
 
-        const events: OddsApiEvent[] = await response.json();
-        allEvents.push(...events);
+        // Process odds response
+        const oddsResponse = responses[0];
+        if (oddsResponse.ok) {
+          const remaining = oddsResponse.headers.get('x-requests-remaining');
+          console.log(`[UnifiedSync] ${sportKey} odds fetched, ${remaining} requests remaining`);
+          results.odds = await oddsResponse.json();
+        } else {
+          const errorBody = await oddsResponse.text();
+          console.error(`[UnifiedSync] Odds API error for ${sportKey}: ${oddsResponse.status}`);
+          console.error(`[UnifiedSync] Error body: ${errorBody}`);
+        }
 
-        for (const event of events) {
-          const game = this.transformEventToGame(event);
-          if (game) {
-            allGames.push(game);
+        // Process scores response if fetched
+        if (includeScores && responses[1]) {
+          const scoresResponse = responses[1];
+          if (scoresResponse.ok) {
+            const remaining = scoresResponse.headers.get('x-requests-remaining');
+            console.log(`[UnifiedSync] ${sportKey} scores fetched, ${remaining} requests remaining`);
+            results.scores = await scoresResponse.json();
+          } else {
+            console.error(`[UnifiedSync] Scores API error for ${sportKey}: ${scoresResponse.status}`);
           }
         }
       } catch (error) {
         console.error(`[UnifiedSync] Failed to fetch ${sportKey}:`, error);
       }
-    }
 
-    // Sort by commence time
-    allGames.sort((a, b) =>
-      new Date(a.commenceTime).getTime() - new Date(b.commenceTime).getTime()
-    );
+      return { sportKey, results };
+    });
 
-    return { games: allGames, rawEvents: allEvents };
-  }
+    // Wait for all sport fetches to complete in parallel
+    const allResults = await Promise.all(fetchPromises);
 
-  /**
-   * Fetch live scores from Scores API
-   */
-  static async fetchScores(sportKeys: string[]): Promise<Map<string, ScoresApiEvent>> {
-    const apiKey = process.env.ODDS_API_KEY;
-    const scoresMap = new Map<string, ScoresApiEvent>();
+    // Process results
+    for (const { results } of allResults) {
+      allEvents.push(...results.odds);
 
-    if (!apiKey) {
-      console.error('[UnifiedSync] ODDS_API_KEY not configured');
-      return scoresMap;
-    }
+      for (const scoreEvent of results.scores) {
+        scoresMap.set(scoreEvent.id, scoreEvent);
+      }
 
-    for (const sportKey of sportKeys) {
-      try {
-        // The Odds API scores endpoint - only fetches games from last 3 days
-        const url = new URL(`https://api.the-odds-api.com/v4/sports/${sportKey}/scores`);
-        url.searchParams.set('apiKey', apiKey);
-        url.searchParams.set('daysFrom', '3'); // Get scores from last 3 days
-
-        console.log(`[UnifiedSync] Fetching scores for ${sportKey}`);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-        const response = await fetch(url.toString(), {
-          headers: { 'Accept': 'application/json' },
-          cache: 'no-store',
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          console.error(`[UnifiedSync] Scores API error for ${sportKey}: ${response.status}`);
-          continue;
+      for (const event of results.odds) {
+        const game = this.transformEventToGame(event);
+        if (game) {
+          allGames.push(game);
         }
-
-        const remaining = response.headers.get('x-requests-remaining');
-        console.log(`[UnifiedSync] ${sportKey} scores fetched, ${remaining} requests remaining`);
-
-        const events: ScoresApiEvent[] = await response.json();
-
-        for (const event of events) {
-          scoresMap.set(event.id, event);
-        }
-      } catch (error) {
-        console.error(`[UnifiedSync] Failed to fetch scores for ${sportKey}:`, error);
       }
     }
 
-    return scoresMap;
+    // Merge scores into games if we fetched them
+    let finalGames = allGames;
+    if (includeScores && scoresMap.size > 0) {
+      finalGames = this.mergeScoresIntoGames(allGames, scoresMap);
+    }
+
+    // Sort by commence time
+    finalGames.sort((a, b) =>
+      new Date(a.commenceTime).getTime() - new Date(b.commenceTime).getTime()
+    );
+
+    return { games: finalGames, rawEvents: allEvents };
   }
 
   /**
@@ -389,41 +395,17 @@ export class UnifiedOddsSync {
   }
 
   /**
-   * Sync games with scores - combines odds and scores in one call
+   * Sync games with scores - fetches odds and scores in parallel
    */
   static async syncSportWithScores(sportId: string): Promise<SyncResult> {
-    // First get the regular sync result
-    const result = await this.syncSport(sportId);
-
-    // Then fetch and merge scores
-    const apiKeys = SPORT_ID_TO_API_KEYS[sportId] || [];
-    if (apiKeys.length > 0 && result.games.length > 0) {
-      const scores = await this.fetchScores(apiKeys);
-      if (scores.size > 0) {
-        result.games = this.mergeScoresIntoGames(result.games, scores);
-        // Update cache with scores
-        await GamesCache.setGames(result.games, sportId);
-      }
-    }
-
-    return result;
+    return this.syncSport(sportId, true);
   }
 
   /**
-   * Sync featured games with scores
+   * Sync featured games with scores - fetches odds and scores in parallel
    */
   static async syncFeaturedWithScores(): Promise<SyncResult> {
-    const result = await this.syncFeatured();
-
-    if (result.games.length > 0) {
-      const scores = await this.fetchScores(FEATURED_SPORTS);
-      if (scores.size > 0) {
-        result.games = this.mergeScoresIntoGames(result.games, scores);
-        await GamesCache.setGames(result.games);
-      }
-    }
-
-    return result;
+    return this.syncFeatured(true);
   }
 
   /**

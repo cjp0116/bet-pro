@@ -39,18 +39,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const hashedToken = hashFn(token);
 
         // Store hashed token in database
-        await prisma.verificationToken.upsert({
-          where: { identifier_token: { identifier: email, token: hashedToken } },
-          create: {
+        // Invalidate any existing tokens for this user
+        await prisma.verificationToken.deleteMany({
+          where: { identifier: email },
+        });
+
+        // Store hashed token in database
+        await prisma.verificationToken.create({
+          data: {
             identifier: email,
             token: hashedToken,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
           },
-          update: {
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-          },
         });
-
         // Use NextAuth's provided URL directly
         await sendVerificationEmail(email, url, firstName);
         console.log('[Auth EmailProvider] Verification email sent to:', email);

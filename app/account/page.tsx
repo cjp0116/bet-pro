@@ -141,6 +141,16 @@ export default function AccountPage() {
                     <div className="text-sm text-muted-foreground">Upload government-issued ID</div>
                   </div>
                 </div>
+                {/* Implement ID upload functionality.
+
+                The "Upload ID" button needs:
+
+                onClick handler to trigger file input
+                File upload component/dialog
+                File validation (type, size limits)
+                Upload progress indication
+                Backend integration for secure document handling
+                Note: Identity verification typically requires secure file handling, encryption, and compliance with data protection regulations. */}
                 <Button variant="outline" size="sm">
                   Upload ID
                 </Button>
@@ -182,6 +192,20 @@ export default function AccountPage() {
                 <CardTitle>Betting Statistics</CardTitle>
               </div>
             </CardHeader>
+            {/* Implement dynamic data fetching for betting statistics.
+
+            The statistics are currently hardcoded. This section needs:
+
+            API integration to fetch user's actual betting data
+            Loading states while fetching
+            Error handling for failed requests
+            Empty state if user has no betting history
+            Additionally, consider:
+
+            Using a number formatting library (e.g., Intl.NumberFormat) for consistent currency and percentage display
+            Verifying that the text-win class (lines 193, 203) is defined in your theme/styles
+            
+            Verifying that the text-lose class (lines 193, 203) is defined in your theme/styles */}
             <CardContent className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Total Bets</span>
@@ -202,7 +226,9 @@ export default function AccountPage() {
                 <span className="text-muted-foreground">Net Profit</span>
                 <span className="font-semibold text-win">+$1,250</span>
               </div>
-            </CardContent>
+            </CardContent>Implement dynamic data fetching for betting statistics.
+
+            The stati
           </Card>
 
           <Card className="bg-primary/5 border-primary/20">
@@ -234,9 +260,27 @@ export default function AccountPage() {
               <CardTitle className="text-base text-destructive">Account Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
+              {/* Implement GDPR/CCPA-compliant data download.
+
+The "Download My Data" button needs implementation to comply with data protection regulations. Required functionality:
+
+onClick handler to initiate data export
+Backend process to generate user data archive
+Progress indication for export generation
+Secure download mechanism
+Data format consideration (JSON, CSV, PDF)
+Include all user data: profile, betting history, transactions, communications */}
               <Button variant="outline" size="sm" className="w-full bg-transparent">
                 Download My Data
               </Button>
+              {/* The "Close Account" button currently has no onClick handler. When implemented, this critical action must include:
+
+              Confirmation dialog with explicit warnings about data loss and irreversibility
+              Re-authentication to verify user identity
+              Cooling-off period or cancellation window (optional but recommended)
+              Data export reminder before closure
+              Backend API integration with proper authorization checks
+              Audit logging of the closure request */}
               <Button variant="outline" size="sm" className="w-full text-destructive bg-transparent">
                 Close Account
               </Button>

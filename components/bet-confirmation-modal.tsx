@@ -1,13 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { CheckCircle2, XCircle, Loader2, AlertTriangle } from "lucide-react"
+import { CheckCircle2, XCircle, Loader2, AlertTriangle, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { BetSelection } from "@/lib/betting-data"
 import { formatOdds, featuredGames } from "@/lib/betting-data"
 
-type BetStatus = "confirming" | "processing" | "success" | "error"
+type BetStatus = "confirming" | "processing" | "success" | "error" | "odds_changed"
+
+interface OddsChange {
+  gameId: string
+  selection: string
+  expectedOdds: number
+  currentOdds: number | null
+  reason?: string
+}
 
 interface BetConfirmationModalProps {
   open: boolean
@@ -34,11 +42,15 @@ export function BetConfirmationModal({
 }: BetConfirmationModalProps) {
   const [status, setStatus] = useState<BetStatus>("confirming")
   const [betId, setBetId] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [oddsChanges, setOddsChanges] = useState<OddsChange[]>([])
 
   useEffect(() => {
     if (open) {
       setStatus("confirming")
       setBetId(null)
+      setErrorMessage(null)
+      setOddsChanges([])
     }
   }, [open])
 
@@ -48,18 +60,48 @@ export function BetConfirmationModal({
 
   const handleConfirmBet = async () => {
     setStatus("processing")
+    setErrorMessage(null)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      const response = await fetch("/api/bets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          betType,
+          selections: selections.map((sel) => ({
+            gameId: sel.gameId,
+            type: sel.type,
+            selection: sel.selection,
+            odds: sel.odds,
+            stake: betType === "single" ? Number.parseFloat(stakes[sel.id] || "0") : undefined,
+            team: sel.team,
+            line: sel.line,
+          })),
+          totalStake,
+          potentialPayout: potentialWin,
+        }),
+      })
 
-    // 90% success rate for demo
-    const success = Math.random() > 0.1
+      const data = await response.json()
 
-    if (success) {
-      setBetId(`BET-${Date.now().toString(36).toUpperCase()}`)
-      setStatus("success")
-      onBetPlaced()
-    } else {
+      if (response.ok && data.success) {
+        setBetId(data.betId)
+        setStatus("success")
+        onBetPlaced()
+      } else if (response.status === 409 && data.changedSelections) {
+        // Odds have changed
+        setOddsChanges(data.changedSelections)
+        setStatus("odds_changed")
+      } else if (response.status === 401) {
+        setErrorMessage("Please sign in to place bets")
+        setStatus("error")
+      } else {
+        setErrorMessage(data.message || "Failed to place bet")
+        setStatus("error")
+      }
+    } catch (err) {
+      console.error("Error placing bet:", err)
+      setErrorMessage("Network error. Please try again.")
       setStatus("error")
     }
   }
@@ -195,7 +237,7 @@ export function BetConfirmationModal({
             </div>
             <p className="mt-4 text-lg font-semibold">Bet Failed</p>
             <p className="mt-1 text-center text-sm text-muted-foreground">
-              Unable to place your bet. Please try again or contact support.
+              {errorMessage || "Unable to place your bet. Please try again or contact support."}
             </p>
 
             <div className="mt-6 flex w-full gap-3">
@@ -204,6 +246,49 @@ export function BetConfirmationModal({
               </Button>
               <Button onClick={() => setStatus("confirming")} className="flex-1">
                 Try Again
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {status === "odds_changed" && (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10">
+              <RefreshCw className="h-10 w-10 text-amber-500" />
+            </div>
+            <p className="mt-4 text-lg font-semibold">Odds Have Changed</p>
+            <p className="mt-1 text-center text-sm text-muted-foreground">
+              The odds for some selections have moved since you added them.
+            </p>
+
+            <div className="mt-4 w-full space-y-2 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+              {oddsChanges.map((change, i) => {
+                const game = getGameForBet(change.gameId)
+                return (
+                  <div key={i} className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {game ? `${game.awayTeam.abbr} @ ${game.homeTeam.abbr}` : change.gameId}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="line-through text-muted-foreground">
+                        {formatOdds(change.expectedOdds)}
+                      </span>
+                      <span className="font-semibold text-amber-500">
+                        → {change.currentOdds !== null ? formatOdds(change.currentOdds) : "N/A"}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <p className="mt-3 text-xs text-muted-foreground text-center">
+              Please go back and refresh your selections to get the latest odds.
+            </p>
+
+            <div className="mt-6 flex w-full gap-3">
+              <Button variant="outline" onClick={handleClose} className="flex-1 bg-transparent">
+                Update Selections
               </Button>
             </div>
           </div>

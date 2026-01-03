@@ -22,12 +22,13 @@ const alertVariants = cva(
 function Alert({
   className,
   variant,
+  role = variant === 'destructive' ? 'alert' : 'status',
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof alertVariants>) {
   return (
     <div
       data-slot="alert"
-      role="alert"
+      role={role as 'alert' | 'status'}
       className={cn(alertVariants({ variant }), className)}
       {...props}
     />

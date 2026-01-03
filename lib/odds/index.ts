@@ -10,4 +10,11 @@
 
 export { UnifiedOddsSync, type SyncResult } from './unified-sync';
 export { GamesCache, type CachedGame } from './games-cache';
+export {
+  validateBetOdds,
+  validateSelectionOdds,
+  getCurrentOddsForGame,
+  type OddsValidationResult,
+  type BetSelectionInput,
+} from './odds-validator';
 

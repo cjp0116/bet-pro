@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CreditCard, Building2, Smartphone, DollarSign, CheckCircle2, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { DepositFlowModal } from "@/components/deposit-flow-modal"
 
 type PaymentMethod = "card" | "bank" | "paypal" | "crypto"
 
@@ -27,23 +28,23 @@ export default function DepositPage() {
   const [amount, setAmount] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const handleDeposit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsProcessing(true)
-
-    // Simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setIsProcessing(false)
-    setIsSuccess(true)
-
-    // Reset after success
-    setTimeout(() => {
-      setIsSuccess(false)
-      setAmount("")
-    }, 3000)
+    setIsModalOpen(true)
   }
+
+  const handleDepositSuccess = () => {
+    setIsModalOpen(false)
+    setAmount("")
+    setIsSuccess(true)
+    setTimeout(() => setIsSuccess(false), 2000)
+  }
+
+  const selectedMethodData = paymentMethods.find(m => m.id === selectedMethod)
+   
 
   return (
     <PageLayout title="Deposit Funds">
@@ -119,16 +120,36 @@ export default function DepositPage() {
                   <div className="space-y-4 pt-4 border-t border-border">
                     <div className="space-y-2">
                       <Label htmlFor="cardNumber">Card Number</Label>
-                      <Input id="cardNumber" placeholder="1234 5678 9012 3456" required />
+                      <Input
+                        id="cardNumber"
+                        placeholder="1234 5678 9012 3456"
+                        required
+                        inputMode="numeric"
+                        autoComplete="cc-number"
+                        maxLength={16}
+                      />
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
                         <Label htmlFor="expiry">Expiry Date</Label>
-                        <Input id="expiry" placeholder="MM/YY" required />
+                        <Input
+                          id="expiry"
+                          placeholder="MM/YY"
+                          required
+                          autoComplete="cc-expiry"
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="cvv">CVV</Label>
-                        <Input id="cvv" placeholder="123" maxLength={4} required />
+                        <Input
+                          id="cvv"
+                          type="password"
+                          autoComplete="cc-csc"
+                          inputMode="numeric"
+                          placeholder="123"
+                          maxLength={4}
+                          required
+                        />
                       </div>
                     </div>
                   </div>
@@ -194,7 +215,11 @@ export default function DepositPage() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm text-muted-foreground">
               <p>Set deposit limits to help manage your spending.</p>
-              <Button variant="link" className="h-auto p-0 text-primary">
+              <Button
+                variant="link"
+                className="h-auto p-0 text-primary"
+                onClick={() => {/* navigate to limits page or open modal */ }}
+              >
                 Set My Limits
               </Button>
             </CardContent>
@@ -211,6 +236,13 @@ export default function DepositPage() {
           </Card>
         </div>
       </div>
+      <DepositFlowModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        amount={amount}
+        method={selectedMethodData?.name || ""}
+        onSuccess={handleDepositSuccess}
+      />
     </PageLayout>
   )
 }

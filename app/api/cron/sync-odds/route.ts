@@ -2,7 +2,6 @@
 // Can be called by Vercel Cron, QStash, or any scheduler
 import { NextRequest, NextResponse } from 'next/server';
 import { UnifiedOddsSync } from '@/lib/odds/unified-sync';
-import { GamesCache } from '@/lib/odds/games-cache';
 
 // Verify cron secret to prevent unauthorized access
 function verifyCronSecret(req: NextRequest): boolean {
@@ -24,22 +23,19 @@ export async function GET(req: NextRequest) {
     const results: { sport: string; games: number; fromCache: boolean }[] = [];
 
     if (sportId) {
-      // Sync specific sport
-      await GamesCache.invalidate(sportId);
+      // Sync specific sport - let sync logic handle staleness
       const result = await UnifiedOddsSync.syncSport(sportId);
       results.push({ sport: sportId, games: result.games.length, fromCache: result.fromCache, dbPersisted: result.dbPersisted });
     } else {
-      // Sync all supported sports
+      // Sync all supported sports - let sync logic handle staleness
       const sports = UnifiedOddsSync.getSupportedSports();
 
       for (const sport of sports) {
-        await GamesCache.invalidate(sport);
         const result = await UnifiedOddsSync.syncSport(sport);
         results.push({ sport, games: result.games.length, fromCache: result.fromCache, dbPersisted: result.dbPersisted });
       }
 
       // Also sync featured
-      await GamesCache.invalidate();
       const featured = await UnifiedOddsSync.syncFeatured();
       results.push({ sport: 'featured', games: featured.games.length, fromCache: featured.fromCache, dbPersisted: featured.dbPersisted });
     }

@@ -166,7 +166,7 @@ function SearchContent() {
                                 : "bg-muted text-muted-foreground",
                             )}
                           >
-                            {count}m
+                            {count}
                           </span>
                         </Button>
                       )

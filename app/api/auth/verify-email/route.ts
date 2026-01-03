@@ -52,6 +52,26 @@ export async function GET(req: NextRequest) {
     }
 
     if (user.emailVerified) {
+      // Still clean up the token and log the activity
+      await prisma.$transaction([
+        prisma.verificationToken.delete({
+          where: {
+            identifier_token: {
+              identifier: verificationToken.identifier,
+              token: tokenHash,
+            },
+          },
+        }),
+        prisma.accountActivityLog.create({
+          data: {
+            userId: user.id,
+            activityType: 'email_verified',
+            ipAddressHash: hash(req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'),
+            success: true,
+          },
+        }),
+      ]);
+
       return NextResponse.json({
         success: true,
         message: 'Email already verified',

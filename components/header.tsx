@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { signOut } from "next-auth/react"
-
+import { NotificationPanel } from "@/components/notification-panel"
 
 interface HeaderProps {
   balance: number
@@ -82,12 +82,8 @@ export function Header({ balance, onMenuToggle, isMobileMenuOpen }: HeaderProps)
             <span className="font-semibold">${balance.toFixed(2)}</span>
           </div>
 
-          <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-              3
-            </span>
-          </Button>
+
+          <NotificationPanel />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -116,7 +112,7 @@ export function Header({ balance, onMenuToggle, isMobileMenuOpen }: HeaderProps)
               <DropdownMenuItem asChild>
                 <Link href="/responsible-gaming">Responsible Gaming</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href="/settings">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

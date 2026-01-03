@@ -49,7 +49,7 @@ const CACHE_KEYS = {
 
 // TTL in seconds - aggressive freshness for odds
 const CACHE_TTL = 30; // 30 second cache (hard expiry)
-const STALE_THRESHOLD = 10; // Consider stale after 10 seconds (triggers background refresh)
+const STALE_THRESHOLD = 15; // Consider stale after 15 seconds (> 10s client polling interval)
 const MIN_SYNC_INTERVAL = 5; // Minimum 5 seconds between API syncs (rate limit protection)
 
 export class GamesCache {

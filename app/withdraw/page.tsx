@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CreditCard, Building2, Smartphone, AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { WithdrawalFlowModal } from "@/components/withdrawl-flow-modal"
 
 type WithdrawalMethod = "card" | "bank" | "paypal"
 
@@ -32,28 +33,30 @@ export default function WithdrawPage() {
   const [amount, setAmount] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const availableBalance = 1250.0
   const maxAmount = Math.min(availableBalance, 5000)
 
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsProcessing(true)
+    setIsModalOpen(true)
+  }
 
-    // Simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setIsProcessing(false)
+  const handleWithdrawSuccess = () => {
+    setIsModalOpen(false)
+    setAmount("")
     setIsSuccess(true)
-
-    // Reset after success
-    setTimeout(() => {
-      setIsSuccess(false)
-      setAmount("")
-    }, 3000)
+    setTimeout(() => setIsSuccess(false), 2000)
   }
 
   const filteredAccounts = savedAccounts.filter((acc) => acc.method === selectedMethod)
+
+  const selectedMethodData = withdrawalMethods.find((m) => m.id === selectedMethod)
+  const selectedAccountData = savedAccounts.find((acc) => acc.id === selectedAccount)
+  const feeAmount = selectedMethod === "paypal" && amount ? Number.parseFloat(amount) * 0.029 : 0
+  const netAmount = amount ? (Number.parseFloat(amount) - feeAmount).toFixed(2) : "0.00"
+  const feeDisplay = selectedMethod === "paypal" && amount ? `$${feeAmount.toFixed(2)}` : "Free"
 
   return (
     <PageLayout title="Withdraw Funds">
@@ -162,23 +165,11 @@ export default function WithdrawPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Processing Fee</span>
-                    <span className="font-semibold">
-                      {selectedMethod === "paypal" && amount
-                        ? `$${(Number.parseFloat(amount) * 0.029).toFixed(2)}`
-                        : "Free"}
-                    </span>
+                    <span className="font-semibold">{feeDisplay}</span>
                   </div>
                   <div className="flex justify-between border-t border-border pt-2">
                     <span className="font-semibold">Total to Receive</span>
-                    <span className="font-bold text-primary">
-                      $
-                      {amount
-                        ? (
-                          Number.parseFloat(amount) -
-                          (selectedMethod === "paypal" ? Number.parseFloat(amount) * 0.029 : 0)
-                        ).toFixed(2)
-                        : "0.00"}
-                    </span>
+                    <span className="font-bold text-primary">${netAmount}</span>
                   </div>
                 </div>
 
@@ -252,6 +243,16 @@ export default function WithdrawPage() {
           </Card>
         </div>
       </div>
+      <WithdrawalFlowModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        amount={amount}
+        account={selectedAccountData?.label || ""}
+        method={selectedMethodData?.name || ""}
+        fee={feeDisplay}
+        netAmount={netAmount}
+        onSuccess={handleWithdrawSuccess}
+      />
     </PageLayout>
   )
 }
